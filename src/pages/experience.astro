@@ -1,16 +1,17 @@
 ---
+import { Image } from 'astro:assets'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { getCollection } from 'astro:content'
 
-const companies = await getCollection('companies')
+
 const experience = await getCollection('experience')
 
-const firstCompany = companies[0]
+
 const firstExperience = experience[0]
 ---
 
 <BaseLayout title="Experience" description="What I like to do">
-  <div class="text-center flex flex-col gap-24 mx-auto">
+  <div class="text-center flex flex-col gap-12 md:gap-24 mx-auto">
     <span
       class="px-4 py-1 bg-gray-800 rounded-full text-sm inline-block w-fit mx-auto"
     >
@@ -21,12 +22,12 @@ const firstExperience = experience[0]
       <h2 class="text-3xl font-bold">{firstExperience?.data?.title}</h2>
 
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 "
       >
         {
           firstExperience?.data?.skills?.map((item) => (
-            <div class="text-center p-6 bg-[#242424] rounded-lg">
-              <div class="text-3xl mb-4">{item.icon}</div>
+            <div class="text-center p-6 bg-[#242424] rounded-lg flex flex-col gap-2">
+              <Image src={item.icon} alt={item.title} width={48} height={48} class="mx-auto"/>
               <h3 class="font-medium mb-2">{item.title}</h3>
               <p class="text-gray-400 text-sm">{item.description}</p>
             </div>
@@ -35,20 +36,6 @@ const firstExperience = experience[0]
       </div>
     </div>
 
-    <div class="flex flex-col gap-4">
-      <h2 class="text-3xl font-bold">Companies I've Worked With</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {firstCompany?.data?.companies?.map((company) => (
-            <div class="bg-[#1E1E1E] rounded-lg shadow-lg overflow-hidden">
-              <div class="p-6 flex flex-col gap-4">
-                  <a class="text-xl font-semibold text-white" href={company.link} target="_blank" rel="noopener noreferrer">
-                  {company.name}
-                  </a>
-                <p class="text-gray-400 text-sm">{company.description}</p>
-              </div>
-            </div>
-          ))
-        }
-      </div>
+
     </div>
 

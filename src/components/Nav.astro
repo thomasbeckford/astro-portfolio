@@ -1,19 +1,31 @@
+---
+import Bash from '../assets/bash.svg'
+import { Image } from 'astro:assets'
+import { getCollection } from 'astro:content'
+const navbarItems = await getCollection('nav')
+const firstNavbarItems = navbarItems[0]
+
+console.log(firstNavbarItems)
+---
+
 <nav class="fixed top-0 w-full z-50 px-6 py-4 bg-slate-800">
   <div class="max-w-7xl mx-auto flex items-center justify-between">
     <div class="flex items-center gap-2">
       <div class="font-bold text-xl flex items-center gap-2">
-        <a href="/" class="text-white">
-          <span class="text-2xl">Thom.Beck</span>
+        <a href="/" class="text-white flex gap-2 items-center">
+          <Image src={Bash} alt="Thomas Beckford" width={42} height={42} />
+          <span class="text-2xl">Thom Beck</span>
         </a>
       </div>
     </div>
 
     <div class="hidden md:flex items-center gap-8">
-      <a href="/" class="text-gray-300 hover:text-white">Home</a>
-      <a href="/about" class="text-gray-300 hover:text-white">About</a>
-      <a href="/experience" class="text-gray-300 hover:text-white">Experience</a
-      >
-      <a href="/projects" class="text-gray-300 hover:text-white">Projects</a>
+
+      {
+        firstNavbarItems?.data?.items?.map((item) => (
+          <a href={item.link} class="text-gray-300 hover:text-white">{item.title}</a>
+        ))
+      }
 
       <button class="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">
         <a
@@ -21,7 +33,7 @@
           target="_blank"
           rel="noopener noreferrer"
         >
-          <span> Contact </span>
+          <span>Contact</span>
         </a>
       </button>
     </div>
@@ -30,6 +42,7 @@
       id="mobile-menu-button"
       class="md:hidden text-white bg-slate-800 rounded hover:bg-slate-800"
       aria-label="Toggle menu"
+      aria-expanded="false"
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -42,43 +55,57 @@
           stroke-linecap="round"
           stroke-linejoin="round"
           stroke-width="2"
-          d="M4 6h16M4 12h16M4 18h16"></path>
+          d="M4 6h16M4 12h16M4 18h16"
+        ></path>
       </svg>
     </button>
   </div>
 
-  <div class="md:hidden hidden" id="mobile-menu">
-    <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-      <a href="/" class="block text-gray-300 hover:text-white">Home</a>
-      <a href="/about" class="block text-gray-300 hover:text-white">About</a>
-      <a href="/experience" class="block text-gray-300 hover:text-white"
-        >Experience</a
-      >
-      <a href="/projects" class="block text-gray-300 hover:text-white"
-        >Projects</a
-      >
-      <a
-        href="https://www.linkedin.com/in/thomas-beckford-07520775/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="block text-gray-300 hover:text-white"
-      >
-        Contact
-      </a>
+  <div class="md:hidden" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-3 sm:px-3 text-center">
+
+      {
+          firstNavbarItems?.data?.items?.map((item) => (
+            <a href={item.link} class="block text-gray-300  hover:text-white">{item.title}</a>
+          ))
+        }
+          <a
+            href="https://www.linkedin.com/in/thomas-beckford-07520775/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="block text-gray-300 bg-slate-700 hover:text-white rounded w-fit mx-auto px-4 py-1"
+          >
+            Contact
+          </a>
     </div>
   </div>
 </nav>
 
+<style>
+  #mobile-menu {
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
+  }
+
+  #mobile-menu.open {
+    max-height: 300px;
+    opacity: 1;
+  }
+</style>
+
 <script>
+  document.addEventListener('astro:page-load', () => {
+    const mobileMenuButton = document.querySelector('#mobile-menu-button');
+    const mobileMenu = document.querySelector('#mobile-menu');
 
-
-
-document.addEventListener('astro:page-load', () => {
-  document.querySelector('#mobile-menu-button')?.addEventListener('click', () => {
-    document.querySelector('#mobile-menu')?.classList.toggle('hidden');
+    if (mobileMenuButton && mobileMenu) {
+      mobileMenuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('open');
+        const isExpanded = mobileMenuButton.getAttribute('aria-expanded') === 'true';
+        mobileMenuButton.setAttribute('aria-expanded', (!isExpanded).toString());
+      });
+    }
   });
-});
-
-
-
 </script>

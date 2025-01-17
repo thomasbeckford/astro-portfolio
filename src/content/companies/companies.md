@@ -1,11 +1,39 @@
 ---
 title: 'Companies Worked At'
 companies:
+  - name: 'KUBIKWARE'
+    link: 'https://kubikware.com'
+    role: 'Full Stack Developer'
+    type: 'Large Company'
+    duration: 'Oct 2018 - Jun 2021'
+    icon: '/src/assets/kubikware.gif'
+    description: 'In Kubikware I worked as a full-stack developer, creating efficient and user-friendly web applications using React, Next.js, and Node.js.'
+    technologies:
+      - 'REST'
+      - 'AWS'
+      - 'PostgreSQL'
+      - 'Express.js'
+      - 'Next.js'
+      - 'Node'
+      - 'React'
+      - 'Redux.js'
+
+  - name: 'SalesAI'
+    link: 'https://salesai.com'
+    role: 'Senior Frontend Developer'
+    type: 'Large Company'
+    duration: 'Sep 2023 - Present'
+    icon: '/src/assets/salesai.jpeg'
+    description: 'Currently working on the SalesAI project, focusing on building scalable and efficient frontend solutions for AI-driven sales applications.'
+    technologies:
+      - 'No specified in the CV'
+
   - name: 'FUEL'
     link: 'https://onfuel.io'
     role: 'Senior Frontend Developer'
     type: 'Startup'
     duration: 'Aug 2022 - Sep 2023'
+    icon: '/src/assets/fuel.svg'
     description: 'Worked as a senior frontend developer to create modern solutions for both creators and users in a Web3-focused environment.'
     technologies:
       - 'EthersJS'
@@ -24,27 +52,12 @@ companies:
     role: 'Frontend Developer'
     type: 'Startup'
     duration: 'Jun 2021 - Aug 2022'
-    description: 'Designed and developed a financial application from scratch, with a focus on performance and user satisfaction in the DeFi space.'
+    icon: '/src/assets/spiritswap.webp'
+    description: 'On Spiritswap we designed and developed a financial application from scratch, with a focus on performance and user satisfaction in the DeFi space.'
     technologies:
       - 'EthersJS'
       - 'Web3'
       - 'Chakra UI'
-      - 'React'
-      - 'Redux.js'
-
-  - name: 'KUBIKWARE'
-    link: 'https://kubikware.com'
-    role: 'Full Stack Developer'
-    type: 'Startup'
-    duration: 'Oct 2018 - Jun 2021'
-    description: 'Worked as a full-stack developer, creating efficient and user-friendly web applications using React, Next.js, and Node.js.'
-    technologies:
-      - 'REST'
-      - 'AWS'
-      - 'PostgreSQL'
-      - 'Express.js'
-      - 'Next.js'
-      - 'Node'
       - 'React'
       - 'Redux.js'
 
@@ -53,6 +66,7 @@ companies:
     role: 'Founder'
     type: 'Startup'
     duration: 'Feb 2019'
+    icon: '/src/assets/soymenu.svg'
     description: 'Founded and developed a platform that enables restaurants to create QR menus for their clients, allowing them to manage their menu in real-time.'
     technologies:
       - 'Next.js'
@@ -60,13 +74,4 @@ companies:
       - 'React'
       - 'TypeScript'
       - 'API Rest'
-
-  - name: 'SalesAI'
-    link: 'https://salesai.com'
-    role: 'Senior Frontend Developer'
-    type: 'Large Company'
-    duration: 'Sep 2023 - Present'
-    description: 'Currently working on the SalesAI project, focusing on building scalable and efficient frontend solutions for AI-driven sales applications.'
-    technologies:
-      - 'No specified in the CV'
 ---

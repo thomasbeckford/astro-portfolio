@@ -1,11 +1,55 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro'
-import Hero from '@/components/Hero.astro'
+import Thomas from '../assets/thombeck.png'
+import { Image } from 'astro:assets'
+import Linkedin from '../assets/linkedin.svg'
 ---
 
 <BaseLayout title="Home" description="Software Engineer">
-  <!-- Hero Section -->
+
   <main class="m-auto flex flex-col gap-12">
-    <Hero />
+<div class="flex flex-col md:flex-row gap-2 justify-center items-center">
+  <Image
+    src={Thomas}
+    alt="Thomas Beckford"
+    class="rounded-lg w-80 md:w-1/3"
+    style={{
+      maskImage:
+        'linear-gradient(to bottom, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)',
+      maskSize: 'cover',
+      viewTransitionName: 'thomas-1',
+    }}
+  />
+
+  <div class="text-left md:text-right">
+    <h1 class="text-5xl md:text-6xl font-bold">
+      My name is <span class="text-slate-300">Thomas</span>
+    </h1>
+    <p class="text-gray-400 text-2xl md:text-3xl max-w-2xl mx-auto mb-8">
+      I'm a software engineer from <br /> Argentina living in the UK
+    </p>
+
+    <button
+      class="px-4 py-1 md:px-8 md:py-3 rounded-lg transition-colors bg-[#0078d4] hover:bg-[#0078d4] font-bold"
+    >
+      <a
+        href="https://www.linkedin.com/in/thomas-beckford-07520775/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <div class="flex gap-2">
+          <span class="flex">Let's connect</span>
+          <Image
+            src={Linkedin}
+            alt="LinkedIn"
+            width="24"
+            height="24"
+            class="mix-blend-screen"
+          />
+        </div>
+      </a>
+    </button>
+  </div>
+</div>
   </main>
 </BaseLayout>
