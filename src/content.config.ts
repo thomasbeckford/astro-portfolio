@@ -27,4 +27,21 @@ const projects = defineCollection({
   }),
 })
 
-export const collections = { experience, projects }
+const companies = defineCollection({
+  schema: z.object({
+    title: z.string(),
+    companies: z.array(
+      z.object({
+        name: z.string(),
+        link: z.string(),
+        role: z.string(),
+        type: z.string(),
+        duration: z.string(),
+        description: z.string(),
+        technologies: z.array(z.string()),
+      }),
+    ),
+  }),
+})
+
+export const collections = { experience, projects, companies }

@@ -21,14 +21,6 @@ apps:
     description: 'This is a web application for Doctors and Patients, a platform that allows patients to book appointments with doctors.'
     link: 'https://app.swiftdoc.com/'
     tools: ['React']
-  - title: 'MatJoe'
-    description: 'Through the use of NFTs, MatJoe webapp is creating a new way for artists to connect with their fans. The platform will allow artists to sell NFTs.'
-    link: 'https://matjoelabamba.io/'
-    tools: ['React', 'NFT']
-  - title: 'Atlantis'
-    description: 'Atlantis is a web application that allows users to buy NFTs'
-    link: 'https://turkishflava.io/atlantis'
-    tools: ['React', 'NFT']
   - title: 'MovingSale'
     description: 'Experimenting new Frontend framework creating this new proyect to sel my own house hold items'
     link: 'https://astro-movingsale.vercel.app/'

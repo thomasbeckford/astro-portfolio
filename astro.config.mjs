@@ -4,5 +4,9 @@ import tailwind from '@astrojs/tailwind'
 
 export default defineConfig({
   site: 'https://tebeck.vercel.com',
-  integrations: [tailwind()],
+  integrations: [
+    tailwind({
+      applyBaseStyles: false,
+    }),
+  ],
 })
