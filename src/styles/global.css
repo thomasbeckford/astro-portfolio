@@ -1,0 +1,34 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply antialiased;
+}
+
+@view-transitions {
+  navigation: auto;
+}
+
+h1 {
+  color: slategray;
+}
+
+p {
+  color: #a6a6a6;
+}
+
+button {
+  background-color: #00b8d9;
+}
+
+button:hover {
+  background-color: #0097b2;
+}
+
+body {
+}
+
+.bg-blur {
+  backdrop-filter: blur(8px);
+}

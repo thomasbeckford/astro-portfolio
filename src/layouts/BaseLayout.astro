@@ -1,0 +1,41 @@
+---
+import '@fontsource/sunflower'
+import HeadSEO from '../components/HeadSEO.astro'
+import { ClientRouter } from 'astro:transitions'
+import Background from '@/components/Background.astro'
+import Nav from '@/components/Nav.astro'
+
+interface Props {
+  title?: string | undefined
+  description?: string | undefined
+  ogImage?: URL | undefined
+}
+
+const { title, description, ogImage } = Astro.props
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <HeadSEO title={title} description={description} ogImage={ogImage} />
+    <ClientRouter />
+  </head>
+  <body class="bg-[#15100b] text-white pt-32">
+    <Nav />
+
+    <div class="max-w-7xl mx-auto md:px-12 px-4 pb-6">
+      <slot />
+    </div>
+    <Background />
+  </body>
+</html>
+
+<style>
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+    font-family: 'Sunflower', sans-serif;
+  }
+</style>

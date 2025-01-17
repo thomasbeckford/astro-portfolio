@@ -1,0 +1,49 @@
+---
+import { Image } from 'astro:assets'
+import BaseLayout from '../layouts/BaseLayout.astro'
+import Thomas from '../assets/thombeck.png'
+---
+
+<BaseLayout title="About me" description="Software Engineer">
+  <div class="text-center flex flex-col gap-24 mx-auto">
+    <span
+      class="px-4 py-1 bg-gray-800 rounded-full text-sm inline-block w-fit mx-auto"
+    >
+      About me
+    </span>
+    <div class="flex gap-8 flex-col">
+      <div class="flex flex-col gap-8 md:flex-row items-center md:items-start">
+        <div class="flex flex-col gap-4">
+          <h2 class="text-3xl font-bold">Who am I?</h2>
+          <p class="text-gray-400 text-xl">
+            I'm a software engineer passionate about building things, with a
+            focus on <span class="font-bold">frontend development</span>. Born
+            in November 1989 and originally from Argentina, my primary language
+            is Spanish, though I also speak English at an upper-intermediate
+            (B2) level.
+            <span class="font-bold">Currently, I live in the UK</span> on a work
+            visa. With experience in full-stack web and mobile development, I’m working
+            on several projects, including <a
+              href="https://soymenu.com"
+              class="font-bold text-blue-500"
+              target="_blank">SoyMenu</a
+            > (<span class="italic">https://soymenu.com</span>), a personal
+            project that has been in production since 2019. Always eager to
+            learn, grow, and collaborate as a developer.
+          </p>
+        </div>
+        <Image
+          src={Thomas}
+          alt="Thomas Beckford"
+          class="rounded-lg max-w-96"
+          style={{
+            maskImage:
+              'linear-gradient(to bottom, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)',
+            maskSize: 'cover',
+            viewTransitionName: 'thomas-1',
+          }}
+        />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
