@@ -44,9 +44,26 @@ button:hover {
   background-color: #0097b2;
 }
 
-body {
-}
-
 .bg-blur {
   backdrop-filter: blur(8px);
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #484848;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #191919;
 }

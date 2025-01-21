@@ -1,29 +1,30 @@
 ---
-import Bash from '../assets/bash.svg'
+import Bash from '../assets/icons/bash.svg'
 import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 const navbarItems = await getCollection('nav')
 const firstNavbarItems = navbarItems[0]
 
-console.log(firstNavbarItems)
 ---
 
-<nav class="fixed top-0 w-full z-50 px-6 py-4 bg-slate-800">
-  <div class="max-w-7xl mx-auto flex items-center justify-between">
+<div class="top-2 md:top-5 w-full fixed z-10 ">
+  <div class="backdrop-blur-lg flex-col justify-center md:flex-row  mx-2 md:max-w-[1200px] bg-[#25272699] rounded-xl md:mx-auto flex items-center">
+
+  <div class="w-full flex justify-between items-center px-2 md:px-4">
     <div class="flex items-center gap-2">
       <div class="font-bold text-xl flex items-center gap-2">
-        <a href="/" class="text-white flex gap-2 items-center">
+        <a href="/" class="text-white py-4 flex gap-2 items-center">
           <Image src={Bash} alt="Thomas Beckford" width={42} height={42} />
           <span class="text-2xl">Thom Beck</span>
         </a>
       </div>
     </div>
 
-    <div class="hidden md:flex items-center gap-8">
+    <nav class="hidden md:flex items-center gap-8">
 
       {
         firstNavbarItems?.data?.items?.map((item) => (
-          <a href={item.link} class="text-gray-300 hover:text-white">{item.title}</a>
+          <a href={item.link} class="text-gray-300 hover:text-white font-bold">{item.title}</a>
         ))
       }
 
@@ -36,11 +37,11 @@ console.log(firstNavbarItems)
           <span>Contact</span>
         </a>
       </button>
-    </div>
+    </nav>
 
     <button
       id="mobile-menu-button"
-      class="md:hidden text-white bg-slate-800 rounded hover:bg-slate-800"
+      class="md:hidden text-white bg-transparent active:bg-slate-800 rounded hover:bg-slate-800"
       aria-label="Toggle menu"
       aria-expanded="false"
     >
@@ -61,12 +62,12 @@ console.log(firstNavbarItems)
     </button>
   </div>
 
-  <div class="md:hidden" id="mobile-menu">
-    <div class="px-2 pt-2 pb-3 space-y-3 sm:px-3 text-center">
+  <div class="md:hidden " id="mobile-menu">
+    <div class="px-2 w-full pt-2 pb-3 space-y-3 sm:px-3 text-center ">
 
       {
           firstNavbarItems?.data?.items?.map((item) => (
-            <a href={item.link} class="block text-gray-300  hover:text-white">{item.title}</a>
+            <a href={item.link} class="block text-gray-300  hover:text-white font-bold">{item.title}</a>
           ))
         }
           <a
@@ -79,7 +80,7 @@ console.log(firstNavbarItems)
           </a>
     </div>
   </div>
-</nav>
+</div>
 
 <style>
   #mobile-menu {
@@ -92,6 +93,7 @@ console.log(firstNavbarItems)
   #mobile-menu.open {
     max-height: 300px;
     opacity: 1;
+
   }
 </style>
 

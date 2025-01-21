@@ -13,15 +13,27 @@ const nav = defineCollection({
     }),
 })
 
-const experience = defineCollection({
+const skills = defineCollection({
   schema: ({ image }) =>
     z.object({
       title: z.string(),
-      skills: z.array(
+      data: z.array(
         z.object({
           title: z.string(),
           icon: image(),
           description: z.string(),
+        }),
+      ),
+    }),
+})
+
+const technologies = defineCollection({
+  schema: ({ image }) =>
+    z.object({
+      data: z.array(
+        z.object({
+          title: z.string(),
+          icon: image(),
         }),
       ),
     }),
@@ -61,4 +73,4 @@ const companies = defineCollection({
     }),
 })
 
-export const collections = { experience, projects, companies, nav }
+export const collections = { technologies, skills, projects, companies, nav }

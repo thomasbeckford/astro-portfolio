@@ -1,0 +1,113 @@
+---
+import { Image } from 'astro:assets'
+import { getCollection } from 'astro:content'
+const technologies = await getCollection('technologies')
+const firstTechnologies = technologies[0]
+
+---
+
+<div class="slider">
+  <div class="slide__track slide__track--skills">
+
+    {firstTechnologies?.data?.data?.map((technology) => (
+      <div class="slide">
+        <div class="tag">{technology}</div>
+        <Image src={technology.icon} alt={technology.title} width={60} height={60} class="mx-auto"/>
+      </div>
+    ))}
+
+  </div>
+</div>
+
+<style>
+
+
+
+.slider {
+    width: 70%;
+    margin: auto;
+    height: auto;
+    overflow-x: hidden;
+    position: relative;
+    padding: 3.5rem;
+}
+.slider:before{
+      content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 2;
+    width: 150px;
+    height: 100%;
+    background: linear-gradient(to right, #15100b,  #1510000a);
+}
+
+.slider::after{
+      content: "";
+    position: absolute;
+    width: 150px;
+    height: 100%;
+    background: linear-gradient(to right, #15100b,  #1510000a);
+    z-index: 2;
+    right: 0;
+    top: 0;
+    transform: rotate(180deg);
+}
+
+.slide__track  {
+    display: flex;
+    gap: 2rem;
+    padding: 3rem 0;
+}
+.slide__track--skills{
+    animation: scroll 19s linear infinite;
+    width: 285rem;
+}
+
+.slide .tag {
+  position: absolute;
+    background: #240269;
+    box-shadow: 0 0 3px 1px #3c03a5c4;
+    color: #33ff76;
+    padding: .2rem .5rem;
+    border-radius: 5px;
+    z-index: 20;
+    transition: all .2s ease-in-out;
+    opacity: 0;
+    font-size: 1.5rem;
+    font-family: sans-serif;
+}
+
+.slide {
+    width: 7.5rem;
+    height: 7.5rem;
+    padding: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #ceacff3d;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .2s ease-in-out;
+    position: relative;
+}
+
+.slide img {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+}
+
+@keyframes scroll {
+  0% {
+    transform: translate(0);
+  }
+  100% {
+    transform: translate(-142.5rem);
+  }
+}
+
+
+
+    </style>
+

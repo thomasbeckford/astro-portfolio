@@ -5,8 +5,8 @@ items:
     link: '/'
   - title: 'About'
     link: '/about'
-  - title: 'Experience'
-    link: '/experience'
+  - title: 'Skills'
+    link: '/skills'
   - title: 'Companies'
     link: '/companies'
 ---

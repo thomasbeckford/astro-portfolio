@@ -2,30 +2,30 @@
 import { Image } from 'astro:assets'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import { getCollection } from 'astro:content'
+import SkillsSlider from '../components/SkillsSlider.astro'
+
+const skills = await getCollection('skills')
 
 
-const experience = await getCollection('experience')
-
-
-const firstExperience = experience[0]
+const firstSkill = skills[0]
 ---
 
-<BaseLayout title="Experience" description="What I like to do">
+<BaseLayout title="Skills" description="What I like to do">
   <div class="text-center flex flex-col gap-12 md:gap-24 mx-auto">
     <span
       class="px-4 py-1 bg-gray-800 rounded-full text-sm inline-block w-fit mx-auto"
     >
-      Experience
+      Skills
     </span>
 
     <div class="flex flex-col gap-4">
-      <h2 class="text-3xl font-bold">{firstExperience?.data?.title}</h2>
+      <h2 class="text-3xl font-bold">{firstSkill?.data?.title}</h2>
 
       <div
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 "
       >
         {
-          firstExperience?.data?.skills?.map((item) => (
+          firstSkill?.data?.data?.map((item) => (
             <div class="text-center p-6 bg-[#242424] rounded-lg flex flex-col gap-2">
               <Image src={item.icon} alt={item.title} width={48} height={48} class="mx-auto"/>
               <h3 class="font-medium mb-2">{item.title}</h3>
@@ -37,5 +37,9 @@ const firstExperience = experience[0]
     </div>
 
 
+
+
+
     </div>
+
 
