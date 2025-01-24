@@ -30,6 +30,7 @@ const skills = defineCollection({
 const technologies = defineCollection({
   schema: ({ image }) =>
     z.object({
+      title: z.string(),
       data: z.array(
         z.object({
           title: z.string(),

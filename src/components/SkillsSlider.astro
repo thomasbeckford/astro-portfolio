@@ -3,21 +3,30 @@ import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 const technologies = await getCollection('technologies')
 const firstTechnologies = technologies[0]
+const firstHalf = firstTechnologies?.data.data.slice(0, Math.floor(firstTechnologies?.data.data.length / 2));
+const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologies?.data.data.length / 2));
 
 ---
 
-<div class="slider">
-  <div class="slide__track slide__track--skills">
-
-    {firstTechnologies?.data?.data?.map((technology) => (
-      <div class="slide">
-        <div class="tag">{technology}</div>
-        <Image src={technology.icon} alt={technology.title} width={60} height={60} class="mx-auto"/>
+    <div class="slider">
+      <div class="slide__track slide__track--skills-left">
+        {firstHalf.concat(firstHalf).map((technology, index) => (
+          <div class="slide" >
+            <div class="tag">{technology}</div>
+            <Image src={technology.icon} alt={technology.title} width={60} height={60} class="mx-auto"/>
+          </div>
+        ))}
       </div>
-    ))}
 
-  </div>
-</div>
+      <div class="slide__track slide__track--skills-right">
+        {secondHalf.concat(secondHalf).map((technology, index) => (
+          <div class="slide">
+            <div class="tag">{technology}</div>
+            <Image src={technology.icon} alt={technology.title} width={60} height={60} class="mx-auto"/>
+          </div>
+        ))}
+      </div>
+    </div>
 
 <style>
 
@@ -57,10 +66,15 @@ const firstTechnologies = technologies[0]
 .slide__track  {
     display: flex;
     gap: 2rem;
-    padding: 3rem 0;
+    padding: 1rem 0;
 }
-.slide__track--skills{
-    animation: scroll 19s linear infinite;
+
+.slide__track--skills-left{
+    animation: scrollLeft 35s linear infinite;
+    width: 285rem;
+}
+.slide__track--skills-right{
+    animation: scrollRight 35s linear infinite;
     width: 285rem;
 }
 
@@ -98,12 +112,21 @@ const firstTechnologies = technologies[0]
   object-fit: contain;
 }
 
-@keyframes scroll {
+@keyframes scrollLeft {
   0% {
     transform: translate(0);
   }
   100% {
-    transform: translate(-142.5rem);
+    transform: translate(-157.5rem);
+  }
+}
+
+@keyframes scrollRight {
+  0% {
+    transform: translate(-157.5rem)
+  }
+  100% {
+    transform:  translate(0rem);
   }
 }
 
