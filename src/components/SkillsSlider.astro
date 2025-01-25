@@ -8,8 +8,9 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
 
 ---
 
-    <div class="slider">
-      <div class="slide__track slide__track--skills-left">
+    <div class="wrapper">
+      <div class="marquee-text fadeout-horizontal [--speed:15s]">
+         <div class="marquee-text-track">
         {firstHalf.concat(firstHalf).map((technology, index) => (
           <div class="slide" >
             <div class="tag">{technology}</div>
@@ -17,8 +18,10 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
           </div>
         ))}
       </div>
+      </div>
 
-      <div class="slide__track slide__track--skills-right">
+      <div class="marquee-text fadeout-horizontal [--direction:reverse]">
+        <div class="marquee-text-track">
         {secondHalf.concat(secondHalf).map((technology, index) => (
           <div class="slide">
             <div class="tag">{technology}</div>
@@ -26,70 +29,54 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
           </div>
         ))}
       </div>
+      </div>
     </div>
+
+
+
 
 <style>
 
 
-
-.slider {
-    width: 70%;
-    margin: auto;
-    height: auto;
-    overflow-x: hidden;
-    position: relative;
-    padding: 3.5rem;
+.wrapper {
+    padding: 4.8rem 0px;
+    color: white;
+    font-size: 4rem;
 }
-.slider:before{
-      content: "";
-    position: absolute;
-    left: 0;
-    top: 0;
-    z-index: 2;
-    width: 150px;
-    height: 100%;
-    background: linear-gradient(to right, #15100b,  #1510000a);
+.marquee-text{
+  overflow: clip;
+}
+.marquee-text-track {
+  display: flex;
+  gap: 1rem;
+  animation : marque-move-text var(--speed, 10s) linear infinite var(--direction, forwards);
+  width: max-content;
+  padding-left: 1;
 }
 
-.slider::after{
-      content: "";
-    position: absolute;
-    width: 150px;
-    height: 100%;
-    background: linear-gradient(to right, #15100b,  #1510000a);
-    z-index: 2;
-    right: 0;
-    top: 0;
-    transform: rotate(180deg);
+.marquee-text p {
+  border: 1px solid white;
+  border-radius:999px;
+  padding: 1rem 2.5rem
 }
 
-.slide__track  {
-    display: flex;
-    gap: 2rem;
-    padding: 1rem 0;
+.fadeout-horizontal {
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    black 15rem,
+    black calc(100% - 15rem),
+    transparent
+  )
 }
 
-.slide__track--skills-left{
-    animation: scrollLeft 35s linear infinite;
-    width: 285rem;
-}
-.slide__track--skills-right{
-    animation: scrollRight 35s linear infinite;
-    width: 285rem;
-}
 
 .slide .tag {
   position: absolute;
-    background: #240269;
-    box-shadow: 0 0 3px 1px #3c03a5c4;
-    color: #33ff76;
+
     padding: .2rem .5rem;
     border-radius: 5px;
-    z-index: 20;
-    transition: all .2s ease-in-out;
     opacity: 0;
-    font-size: 1.5rem;
-    font-family: sans-serif;
 }
 
 .slide {
@@ -99,7 +86,7 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #ceacff3d;
+    background: #7974793d;
     border-radius: 10px;
     cursor: pointer;
     transition: all .2s ease-in-out;
@@ -112,21 +99,12 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
   object-fit: contain;
 }
 
-@keyframes scrollLeft {
-  0% {
-    transform: translate(0);
-  }
-  100% {
-    transform: translate(-157.5rem);
-  }
-}
 
-@keyframes scrollRight {
-  0% {
-    transform: translate(-157.5rem)
-  }
-  100% {
-    transform:  translate(0rem);
+
+
+@keyframes marque-move-text{
+  to {
+    transform: translateX(-50%)
   }
 }
 
