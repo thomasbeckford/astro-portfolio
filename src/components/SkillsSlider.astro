@@ -12,10 +12,14 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
       <div class="marquee-text fadeout-horizontal [--speed:15s]">
          <div class="marquee-text-track">
         {firstHalf.concat(firstHalf).map((technology, index) => (
+          <>
+
           <div class="slide" >
             <div class="tag">{technology}</div>
             <Image src={technology.icon} alt={technology.title} width={60} height={60} class="mx-auto"/>
           </div>
+
+</>
         ))}
       </div>
       </div>
@@ -23,9 +27,9 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
       <div class="marquee-text fadeout-horizontal [--direction:reverse]">
         <div class="marquee-text-track">
         {secondHalf.concat(secondHalf).map((technology, index) => (
-          <div class="slide">
+          <div class="slide tooltip">
             <div class="tag">{technology}</div>
-            <Image src={technology.icon} alt={technology.title} width={60} height={60} class="mx-auto"/>
+            <Image src={technology.icon} alt={technology.title} width={60} height={60} class="mx-auto " />
           </div>
         ))}
       </div>
@@ -52,6 +56,11 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
   animation : marque-move-text var(--speed, 10s) linear infinite var(--direction, forwards);
   width: max-content;
   padding-left: 1;
+
+}
+
+.marquee-text-track:hover {
+  animation-play-state: paused;
 }
 
 .marquee-text p {
@@ -102,6 +111,7 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
 
 
 
+
 @keyframes marque-move-text{
   to {
     transform: translateX(-50%)
@@ -111,4 +121,7 @@ const secondHalf = firstTechnologies?.data.data.slice(Math.floor(firstTechnologi
 
 
     </style>
+
+
+
 
