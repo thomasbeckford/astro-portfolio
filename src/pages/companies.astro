@@ -9,16 +9,15 @@ const firstCompany = companies[0]
 
 <BaseLayout title="Companies" description="What I like to do">
   <div class="text-center flex flex-col gap-12 md:gap-24 mx-auto">
-    <span
-      class="px-4 py-1 bg-gray-800 rounded-full text-sm inline-block w-fit mx-auto"
-    >
-      Companies
-    </span>
-
     <div class="flex flex-col gap-4">
       <h2 class="text-3xl font-bold">Companies I've Worked With</h2>
+      <span
+        class="px-4 py-1 bg-gray-800 rounded-full text-sm inline-block w-fit mx-auto"
+      >
+        Companies
+      </span>
       <div
-        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 my-10"
       >
         {
           firstCompany?.data?.companies?.map((company) => (
