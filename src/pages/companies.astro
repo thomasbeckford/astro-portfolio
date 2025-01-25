@@ -4,7 +4,6 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 import { getCollection } from 'astro:content'
 const companies = await getCollection('companies')
 const firstCompany = companies[0]
-
 ---
 
 <BaseLayout title="Companies" description="What I like to do">
@@ -15,23 +14,33 @@ const firstCompany = companies[0]
       Companies
     </span>
 
-
-
     <div class="flex flex-col gap-4">
       <h2 class="text-3xl font-bold">Companies I've Worked With</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {firstCompany?.data?.companies?.map((company) => (
-
-            <a class="text-xl font-semibold text-white bg-[#1E1E1E] rounded-lg shadow-lg overflow-hidden flex items-center hover:bg-[#1E1E1A] transition-all hover:ring-1  ring-slate-500" href={company.link} target="_blank" rel="noopener noreferrer">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+      >
+        {
+          firstCompany?.data?.companies?.map((company) => (
+            <a
+              class="text-xl font-semibold text-white bg-[#1E1E1E] rounded-lg shadow-lg overflow-hidden flex items-center hover:bg-[#1E1E1A] transition-all hover:ring-1  ring-slate-500"
+              href={company.link}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <div class="p-6 flex flex-col gap-4">
-
-                <Image src={company.icon} alt={company.name} width={48} height={48} class="mx-auto"/>
+                <Image
+                  src={company.icon}
+                  alt={company.name}
+                  width={48}
+                  height={48}
+                  class="mx-auto"
+                />
                 <p class="text-gray-400 text-sm">{company.description}</p>
               </div>
-                  </a>
-
+            </a>
           ))
         }
       </div>
     </div>
-
+  </div></BaseLayout
+>
