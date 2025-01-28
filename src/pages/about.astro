@@ -2,6 +2,7 @@
 import { Image } from 'astro:assets'
 import BaseLayout from '../layouts/BaseLayout.astro'
 import Thomas from '../assets/thomas-laser-bg.png'
+import Flag from '../assets/flag.gif'
 ---
 
 <BaseLayout title="About me" description="Software Engineer">
@@ -9,13 +10,17 @@ import Thomas from '../assets/thomas-laser-bg.png'
     <div class="flex gap-8 flex-col">
       <div class="flex flex-col gap-8 md:flex-row items-center md:items-start">
         <div class="flex flex-col gap-4 order-2 md:order-1">
-          <h2 class="text-3xl font-bold">Who am I?</h2>
+          <div class="flex items-center justify-center">
+            <h2 class="text-3xl font-bold">Who am I?</h2>
+            <Image src={Flag} alt="flag" width={64} height={64} />
+          </div>
           <p class="text-gray-400 text-xl">
             I'm a software engineer passionate about building things, with a
             focus on <span class="font-bold">frontend development</span>. Born
-            in November 1989 and originally from Argentina, my primary language
-            is Spanish, though I also speak English at an upper-intermediate
-            (B2) level.
+            in November 1989 and originally from <span class="font-bold"
+              >Argentina, Buenos Aires</span
+            >, my primary language is Spanish, though I also speak English at an
+            upper-intermediate (B2) level.
             <span class="font-bold">Currently, I live in the UK</span> on a work
             visa. With experience in full-stack web and mobile development, I’m working
             on several projects, including <a

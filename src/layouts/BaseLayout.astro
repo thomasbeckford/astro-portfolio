@@ -21,7 +21,7 @@ const { title, description, ogImage } = Astro.props
     <HeadSEO title={title} description={description} ogImage={ogImage} />
     <ClientRouter />
   </head>
-  <body class="bg-[#15100b] text-white pt-24 md:pt-32">
+  <body class="pt-24 md:pt-32">
     <Nav />
 
     <div class="max-w-7xl mx-auto md:px-12 px-4 pb-6">
@@ -31,13 +31,3 @@ const { title, description, ogImage } = Astro.props
     <Background />
   </body>
 </html>
-
-<style>
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-    font-family: 'Sunflower', sans-serif;
-  }
-</style>
