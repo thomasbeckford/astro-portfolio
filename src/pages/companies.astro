@@ -12,7 +12,7 @@ const firstCompany = companies[0]
     <div class="flex flex-col gap-4">
       <h2 class="text-3xl font-bold">Companies I've Worked With</h2>
       <span
-        class="px-4 py-1 bg-gray-800 rounded-full text-sm inline-block w-fit mx-auto"
+        class="px-4 py-1 bg-[#2A303D] rounded-full text-sm inline-block w-fit mx-auto"
       >
         Companies
       </span>
@@ -22,7 +22,7 @@ const firstCompany = companies[0]
         {
           firstCompany?.data?.companies?.map((company) => (
             <a
-              class="text-xl font-semibold text-white bg-[#1E1E1E] rounded-lg shadow-lg overflow-hidden flex items-center hover:bg-[#1E1E1A] transition-all hover:ring-1  ring-slate-500"
+              class="text-xl font-semibold text-white bg-[#2a303d] rounded-lg shadow-lg overflow-hidden flex items-center hover:bg-[#2a303dAA] transition-all hover:ring-1  ring-slate-500"
               href={company.link}
               target="_blank"
               rel="noopener noreferrer"
