@@ -6,7 +6,6 @@ const navbarItems = await getCollection('nav')
 const firstNavbarItems = navbarItems[0]
 ---
 
-<!-- hsl(var(--b1)/var(--tw-bg-opacity)) -->
 <div class="top-2 md:top-5 w-full fixed z-10">
   <div
     class="bg-[#2A303D] backdrop-blur-lg flex-col justify-center md:flex-row mx-2 md:max-w-[1200px] rounded-xl md:mx-auto flex items-center"
@@ -34,15 +33,15 @@ const firstNavbarItems = navbarItems[0]
           ))
         }
 
-        <button class="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">
-          <a
-            href="https://www.linkedin.com/in/thomas-beckford-07520775/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+        <a
+          href="https://www.linkedin.com/in/thomas-beckford-07520775/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <button class="px-4 py-2 bg-gray-700 rounded-lg hover:bg-gray-600">
             <span>Contact</span>
-          </a>
-        </button>
+          </button>
+        </a>
       </nav>
 
       <button
