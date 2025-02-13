@@ -53,17 +53,48 @@ const secondHalf = firstTechnologies?.data.data.slice(
 </div>
 
 <style>
+  /* Mobile first (por defecto) */
   .marquee {
-    max-width: 1800px;
+    max-width: 300px;
     overflow: hidden;
     --speed: 25s;
-    --item-width: 100px;
+    --item-width: 50px;
     --item-gap: 25px;
     --single-slide-speed: calc(var(--speed) / var(--num-items));
     --item-width-plus-gap: calc(var(--item-width) + var(--item-gap));
     --track-width: calc(
       var(--item-width-plus-gap) * calc(var(--num-items) - 1)
     );
+  }
+
+  /* Para pantallas de hasta 768px */
+  @media (max-width: 768px) {
+    .marquee {
+      max-width: 300px;
+      --item-width: 50px;
+    }
+  }
+
+  /* Para pantallas de hasta 1180px */
+  @media (min-width: 768px) and (max-width: 1180px) {
+    .marquee {
+      max-width: 680px;
+      --item-width: 75px;
+    }
+  }
+
+  /* Para pantallas mayores a 1180px (desktop) */
+  @media (min-width: 1181px) {
+    .marquee {
+      max-width: 1800px;
+      --item-width: 100px;
+      --item-gap: 25px;
+      --single-slide-speed: calc(var(--speed) / var(--num-items));
+      --item-width-plus-gap: calc(var(--item-width) + var(--item-gap));
+      --track-width: calc(
+        var(--item-width-plus-gap) * calc(var(--num-items) - 1)
+      );
+    }
   }
 
   .marquee-track {
