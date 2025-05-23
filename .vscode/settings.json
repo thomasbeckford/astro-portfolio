@@ -236,7 +236,7 @@
   "workbench.layoutControl.enabled": true,
   "workbench.list.horizontalScrolling": true,
   "workbench.list.keyboardNavigation": "filter",
-  "workbench.preferredDarkColorTheme": "poimandres",
+  "workbench.preferredDarkColorTheme": "Default Dark Modern",
   "workbench.preferredHighContrastColorTheme": "GitHub Light",
   "workbench.preferredLightColorTheme": "GitHub Light",
   "workbench.productIconTheme": "icons-carbon",

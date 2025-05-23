@@ -1,5 +1,5 @@
 import { z, defineCollection } from 'astro:content'
-
+import { file } from 'astro/loaders'
 const nav = defineCollection({
   schema: ({ image }) =>
     z.object({
@@ -67,11 +67,29 @@ const companies = defineCollection({
           type: z.string(),
           duration: z.string(),
           icon: image(),
-          description: z.string(),
+          responsabilities: z.string(),
+          about: z.string(),
           technologies: z.array(z.string()),
         }),
       ),
     }),
 })
 
-export const collections = { technologies, skills, projects, companies, nav }
+const marqueeItems = defineCollection({
+  loader: file('src/content/components/marquee/items.json'),
+  schema: ({ image }) =>
+    z.object({
+      id: z.number(),
+      title: z.string(),
+      icon: image(),
+    }),
+})
+
+export const collections = {
+  technologies,
+  skills,
+  projects,
+  companies,
+  nav,
+  marqueeItems,
+}

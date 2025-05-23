@@ -1,0 +1,102 @@
+[
+  {
+    "id": 0,
+    "title": "React",
+    "icon": "/src/assets/icons/reactjs.svg"
+  },
+  {
+    "id": 1,
+    "title": "AWS",
+    "icon": "/src/assets/icons/aws.svg"
+  },
+  {
+    "id": 2,
+    "title": "BunjS",
+    "icon": "/src/assets/icons/bunjs.svg"
+  },
+  {
+    "id": 3,
+    "title": "Chakra UI",
+    "icon": "/src/assets/icons/chakraui.svg"
+  },
+  {
+    "id": 4,
+    "title": "CSS3",
+    "icon": "/src/assets/icons/css3.svg"
+  },
+  {
+    "id": 5,
+    "title": "Docker",
+    "icon": "/src/assets/icons/docker.svg"
+  },
+  {
+    "id": 6,
+    "title": "Figma",
+    "icon": "/src/assets/icons/figma.svg"
+  },
+  {
+    "id": 7,
+    "title": "Firebase",
+    "icon": "/src/assets/icons/firebase.svg"
+  },
+  {
+    "id": 8,
+    "title": "GraphQL",
+    "icon": "/src/assets/icons/graphql.svg"
+  },
+  {
+    "id": 9,
+    "title": "HTML5",
+    "icon": "/src/assets/icons/html5.svg"
+  },
+  {
+    "id": 10,
+    "title": "Next.js",
+    "icon": "/src/assets/icons/nextjs.svg"
+  },
+  {
+    "id": 11,
+    "title": "Node.js",
+    "icon": "/src/assets/icons/nodejs.svg"
+  },
+  {
+    "id": 12,
+    "title": "React Query",
+    "icon": "/src/assets/icons/react-query.svg"
+  },
+  {
+    "id": 13,
+    "title": "Redux",
+    "icon": "/src/assets/icons/redux.svg"
+  },
+  {
+    "id": 14,
+    "title": "Sass",
+    "icon": "/src/assets/icons/sass.svg"
+  },
+  {
+    "id": 15,
+    "title": "Storybook",
+    "icon": "/src/assets/icons/storybook.svg"
+  },
+  {
+    "id": 16,
+    "title": "Supabase",
+    "icon": "/src/assets/icons/supabase.svg"
+  },
+  {
+    "id": 17,
+    "title": "Tailwind CSS",
+    "icon": "/src/assets/icons/tRPC.svg"
+  },
+  {
+    "id": 18,
+    "title": "Vite.js",
+    "icon": "/src/assets/icons/vitejs.svg"
+  },
+  {
+    "id": 19,
+    "title": "Astro",
+    "icon": "/src/assets/icons/astro.svg"
+  }
+]

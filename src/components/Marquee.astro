@@ -2,48 +2,28 @@
 import { Image } from 'astro:assets'
 import { getCollection } from 'astro:content'
 
-const technologies = await getCollection('technologies')
-const firstTechnologies = technologies[0]
-const firstHalf = firstTechnologies?.data.data.slice(
-  0,
-  Math.floor(firstTechnologies?.data.data.length / 2),
-)
-const secondHalf = firstTechnologies?.data.data.slice(
-  Math.floor(firstTechnologies?.data.data.length / 2),
-)
+const items = await getCollection('marqueeItems')
+const diagonal = Astro.props.diagonal
+const reverse = Astro.props.reverse
 ---
 
 <div
   class="marquee fadeout-horizontal"
-  style={{ '--num-items': firstHalf.length }}
+  style={{ '--num-items': items?.length }}
 >
   <div class="marquee-track">
     {
-      firstHalf.map((technology, index) => (
-        <div class="marquee-item" style={{ '--item-position': index }}>
+      items?.map((item, index) => (
+        <div
+          class="marquee-item"
+          style={{
+            '--item-position': index,
+            '--animation-name': reverse ? 'marquee-reverse' : 'marquee-move',
+          }}
+        >
           <Image
-            src={technology.icon}
-            alt={technology.title}
-            width={60}
-            height={60}
-          />
-        </div>
-      ))
-    }
-  </div>
-</div>
-
-<div
-  class="marquee fadeout-horizontal [--direction:reverse]"
-  style={{ '--num-items': secondHalf.length }}
->
-  <div class="marquee-track">
-    {
-      secondHalf.map((technology, index) => (
-        <div class="marquee-item" style={{ '--item-position': index }}>
-          <Image
-            src={technology.icon}
-            alt={technology.title}
+            src={item.data.icon}
+            alt={item.data.title}
             width={60}
             height={60}
           />
@@ -87,7 +67,7 @@ const secondHalf = firstTechnologies?.data.data.slice(
   /* Para pantallas mayores a 1180px (desktop) */
   @media (min-width: 1181px) {
     .marquee {
-      max-width: 1800px;
+      max-width: 1400px;
       --item-width: 100px;
       --item-gap: 25px;
       --single-slide-speed: calc(var(--speed) / var(--num-items));
@@ -115,8 +95,7 @@ const secondHalf = firstTechnologies?.data.data.slice(
     background-color: rgba(255, 255, 255, 0.1);
     color: #fff;
     grid-area: resting;
-    animation: marquee-move var(--speed) linear infinite
-      var(--direction, forwards);
+    animation: var(--animation-name, marquee-move) var(--speed) linear infinite;
     animation-delay: calc(
       var(--single-slide-speed) * var(--item-position) * -1
     );
@@ -143,9 +122,12 @@ const secondHalf = firstTechnologies?.data.data.slice(
     }
   }
 
-  @keyframes marque-move-text {
+  @keyframes marquee-reverse {
+    from {
+      transform: translateX(calc(-100cqw - 100%));
+    }
     to {
-      transform: translateX(-50%);
+      transform: translateX(0);
     }
   }
 </style>
