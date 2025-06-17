@@ -50,6 +50,7 @@ const projects = defineCollection({
           description: z.string(),
           link: z.string(),
           tools: z.array(z.string()),
+          image: image(),
         }),
       ),
     }),
