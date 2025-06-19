@@ -23,13 +23,13 @@ console.log(allApps)
           href={app?.link}
           target="_blank"
           rel="noopener noreferrer"
-          class="flex flex-col gap-6 border border-gray-900 p-6 rounded-lg shadow-lg"
+          class="flex flex-col gap-6 border border-slate-900 p-6 rounded-lg shadow-lg"
         >
-          <div class="relative bg-gray-900 rounded-lg">
+          <div class="relative bg-gray-900 hover:bg-gray-800 rounded-lg transition-colors duration-300">
             <Image
               src={app?.image}
               alt="SoyMenu"
-              class="opacity-20 w-full h-auto rounded-lg"
+              class="opacity-20 w-full h-auto rounded-lg "
             />
             <div class="absolute inset-0 flex items-center justify-center flex-col">
               <h2 class="text-white text-4xl font-bold">{app?.title}</h2>
