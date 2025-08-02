@@ -7,9 +7,15 @@ apps:
     tools: ['React', 'NextJs 14', 'React Query', 'TailwindCSS']
     image: '/src/assets/soymenu_landing.png'
 
-  - title: 'Nextjs + Headless CMS + NextIntl + Motion Boilerplate'
-    description: 'Boilerplate for a Nextjs + CMS + Internationalization project'
-    link: 'https://next-multilang-template.vercel.app/'
+  - title: 'SuiteAI'
+    description: 'Vectorize your data, store it and use it to create custom AI Agents all in one place'
+    link: 'https://suite-ia.vercel.app'
+    tools: ['Nextjs', 'OpenAI', 'Postgres', 'TailwindCSS', 'Typescript']
+    image: '/src/assets/suite_ai.jpg'
+
+  - title: 'MVP Boilerplate'
+    description: 'Boilerplate for a Nextjs + CMS + Intl project'
+    link: 'https://clearspeak1.vercel.app/'
     tools:
       ['Nextjs', 'Sanity', 'Next Intl', 'TailwindCSS', 'TypeScript', 'Motion']
     image: '/src/assets/boilerplate.png'
