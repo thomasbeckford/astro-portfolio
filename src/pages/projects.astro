@@ -5,7 +5,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
 const projects = await getCollection('projects')
 const allApps = projects.map((project) => project.data.apps).flat()
-console.log(allApps)
+
 ---
 
 <BaseLayout title="Projects" description="What I have built">

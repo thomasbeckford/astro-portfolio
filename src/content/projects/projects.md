@@ -5,13 +5,25 @@ apps:
     description: 'Web application that allows users to create and manage their own menus. The platform will allow users to sell menus.'
     link: 'https://soymenu.com/'
     tools: ['React', 'NextJs 14', 'React Query', 'TailwindCSS']
-    image: '/src/assets/soymenu_landing.png'
+    image: '/src/assets/soymenu.png'
 
   - title: 'SuiteAI'
     description: 'Vectorize your data, store it and use it to create custom AI Agents all in one place'
     link: 'https://suite-ia.vercel.app'
     tools: ['Nextjs', 'OpenAI', 'Postgres', 'TailwindCSS', 'Typescript']
     image: '/src/assets/suite_ai.jpg'
+
+  - title: 'AwaitCode'
+    description: 'A platform to help clients to build their own MVP'
+    link: 'https://awaitcode.com/'
+    tools: ['React', 'TailwindCSS', 'Typescript', 'Astro']
+    image: '/src/assets/awaitcode.png'
+
+  - title: 'Five Iron Golf'
+    description: 'MVP for Five Iron Golf, a golf booking platform '
+    link: 'https://fiveirongolf.vercel.app/'
+    tools: ['PayloadCMS', 'React', 'TailwindCSS', 'Typescript', 'Nextjs']
+    image: '/src/assets/fiveiron.png'
 
   - title: 'MVP Boilerplate'
     description: 'Boilerplate for a Nextjs + CMS + Intl project'
