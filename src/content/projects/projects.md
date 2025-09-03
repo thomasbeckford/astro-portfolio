@@ -11,7 +11,7 @@ apps:
     description: 'Headless CMS for entertainment venues with dynamic pricing and event management'
     link: 'https://lane7.vercel.app/'
     tools: ['Payload CMS', 'Next.js', 'TailwindCSS', 'TypeScript']
-    image: '/src/assets/1lane7.png'
+    image: '/src/assets/2lane7.png'
 
   - title: 'SuiteAI'
     description: 'AI platform that vectorizes company data to create custom AI agents with semantic search'
