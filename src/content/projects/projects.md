@@ -4,8 +4,14 @@ apps:
   - title: 'SoyMenu'
     description: 'Web application that allows users to create and manage their own menus. The platform will allow users to sell menus.'
     link: 'https://soymenu.com/'
-    tools: ['React', 'NextJs 14', 'React Query', 'TailwindCSS']
+    tools: ['React', 'NextJs', 'React Query', 'TailwindCSS']
     image: '/src/assets/soymenu.png'
+
+  - title: 'Lane7'
+    description: 'Web application that allows users to create and manage their own menus. The platform will allow users to sell menus.'
+    link: 'https://lane7.vercel.app/'
+    tools: ['PayloadCMS', 'NextJS', 'TailwindCSS', 'Typescript']
+    image: '/src/assets/1lane7.png'
 
   - title: 'SuiteAI'
     description: 'Vectorize your data, store it and use it to create custom AI Agents all in one place'
