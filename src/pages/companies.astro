@@ -1,53 +1,62 @@
 ---
 import { Image } from 'astro:assets'
-import BaseLayout from '../layouts/BaseLayout.astro'
 import { getCollection } from 'astro:content'
+import BaseLayout from '../layouts/BaseLayout.astro'
 
 const companies = await getCollection('companies')
 const firstCompany = companies[0]
 ---
 
-<BaseLayout title="Companies" description="What I like to do">
-  <div class="text-center flex flex-col gap-12 md:gap-24 mx-auto">
-    <div class="flex flex-col gap-4">
-      <h2 class="text-3xl font-bold">Companies I've Worked With</h2>
-      <span
-        class="px-4 py-1 bg-[#2A303D] rounded-full text-sm inline-block w-fit mx-auto"
-      >
-        Companies
-      </span>
+<BaseLayout
+  title="Companies I've Worked With"
+  description="Professional experience and companies I've collaborated with as a Next.js React developer. View my work history and contributions."
+>
+  <article class="text-center flex flex-col gap-12 md:gap-24 mx-auto">
+    <section class="flex flex-col gap-4">
+      <header>
+        <h1 class="text-3xl font-bold">Companies I've Worked With</h1>
+        <span
+          class="px-4 py-1 bg-[#2A303D] rounded-full text-sm inline-block w-fit mx-auto"
+        >
+          Companies
+        </span>
+      </header>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-10">
         {
           firstCompany?.data?.companies?.map((company) => (
-            <a
-              class="text-white bg-gradient-to-r from-teal-900 to-blue-900 rounded-lg shadow-lg overflow-hidden flex flex-col hover:scale-105 transition-transform duration-300"
+            <article class="text-white bg-gradient-to-r from-teal-900 to-blue-900 rounded-lg shadow-lg overflow-hidden flex flex-col hover:scale-105 transition-transform duration-300">
               href={company.link}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <div class="p-6 flex flex-col gap-6">
+              target="_blank" rel="noopener noreferrer" aria-label=
+              {`Visit ${company.name} - ${company.about}`}
+              class="p-6 flex flex-col gap-6 h-full" >
+              <a
+                href={company.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Visit ${company.name} - ${company.about}`}
+              >
                 <div class="flex justify-center items-center">
                   <Image
                     src={company.icon}
-                    alt={company.name}
+                    alt={`${company.name} logo`}
                     width={60}
                     height={60}
+                    loading="lazy"
                   />
                 </div>
 
-                <div class="text-center">
-                  <h3 class="text-2xl font-bold text-white">{company.name}</h3>
+                <div class="text-center flex-grow">
+                  <h2 class="text-2xl font-bold text-white">{company.name}</h2>
                   <p class="text-gray-200 text-sm mt-2">{company.about}</p>
-
                   <p class="text-gray-300 text-sm mt-2">
                     {company.responsabilities}
                   </p>
                 </div>
-              </div>
-            </a>
+              </a>
+            </article>
           ))
         }
       </div>
-    </div>
-  </div></BaseLayout
->
+    </section>
+  </article>
+</BaseLayout>

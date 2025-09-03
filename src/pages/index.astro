@@ -1,18 +1,24 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro'
-import Thomas from '../assets/thombeck.png'
 import { Image } from 'astro:assets'
 import Linkedin from '../assets/linkedin.svg'
+import Thomas from '../assets/thombeck.png'
 import SkillsSlider from '../components/SkillsSlider.astro'
+import BaseLayout from '../layouts/BaseLayout.astro'
 ---
 
-<BaseLayout title="Home" description="Welcome to my portfolio">
+<BaseLayout
+  title="Thomas Beckford - Senior Next.js React Developer"
+  description="Senior Next.js & React developer with 8+ years experience from Argentina, living in the UK. PayloadCMS specialist available for freelance and full-time opportunities."
+>
   <main class="m-auto flex flex-col gap-4 md:gap-12">
-    <div class="flex flex-col md:flex-row gap-2 justify-center items-center">
+    <section
+      class="flex flex-col md:flex-row gap-2 justify-center items-center"
+    >
       <Image
         src={Thomas}
-        alt="Thomas Beckford"
+        alt="Thomas Beckford - Senior Next.js React Developer"
         class="rounded-lg w-64 md:w-1/3"
+        loading="eager"
         style={{
           maskImage:
             'linear-gradient(to bottom, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)',
@@ -26,31 +32,34 @@ import SkillsSlider from '../components/SkillsSlider.astro'
           My name is <span class="text-slate-300">Thomas</span>
         </h1>
         <p class="text-gray-400 text-2xl md:text-3xl max-w-2xl mx-auto mb-8">
-          I'm a software engineer from <br /> Argentina currently living in the UK
+          I'm a <strong>software engineer</strong> from <br />
+          <strong>Argentina</strong> currently living in the <strong>UK</strong>
         </p>
 
-        <button
-          class="w-full md:w-fit px-8 py-3 rounded-lg transition-colors bg-[#0078d4] hover:bg-[#0078d4] font-bold"
+        <a
+          href="https://www.linkedin.com/in/thomas-beckford-07520775/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Connect with
+        Thomas Beckford on LinkedIn"
+          class="w-full md:w-fit px-8 py-3 rounded-lg
+        transition-colors bg-[#0078d4] hover:bg-[#0078d4] font-bold
+        inline-block"
         >
-          <a
-            href="https://www.linkedin.com/in/thomas-beckford-07520775/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <div class="flex gap-2 justify-center md:justify-normal">
-              <span class="flex text-xl">Let's connect</span>
-              <Image
-                src={Linkedin}
-                alt="LinkedIn"
-                width="26"
-                height="26"
-                class="mix-blend-screen"
-              />
-            </div>
-          </a>
-        </button>
+          <div class="flex gap-2 justify-center md:justify-normal">
+            <span class="flex text-xl">Let's connect</span>
+            <Image
+              src={Linkedin}
+              alt="LinkedIn icon"
+              width="26"
+              height="26"
+              class="mix-blend-screen"
+              loading="lazy"
+            />
+          </div>
+        </a>
       </div>
-    </div>
+    </section>
 
     <SkillsSlider />
   </main>

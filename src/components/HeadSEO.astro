@@ -14,6 +14,16 @@ if (Astro.props.ogImage === undefined) {
 }
 
 const { title, description, ogImage } = Astro.props
+
+// Títulos optimizados
+const pageTitle = title
+  ? `${title} | Thomas Beckford - Next.js Developer`
+  : 'Thomas Beckford | Senior Next.js React Developer | PayloadCMS Specialist'
+
+// Descripción por defecto
+const pageDescription =
+  description ||
+  'Senior Next.js & React developer with 8+ years experience. PayloadCMS specialist available for freelance and full-time opportunities.'
 ---
 
 <meta charset="utf-8" />
@@ -23,18 +33,49 @@ const { title, description, ogImage } = Astro.props
 <meta name="generator" content={Astro.generator} />
 <link rel="canonical" href={canonicalURL} />
 <link rel="shortcut icon" type="image/svg+xml" href={`/favicon.ico`} />
-<title>Thomas - {title}</title>
-<meta name="title" content={title} />
-<meta name="description" content={description} />
 
+<!-- SEO Tags -->
+<title>{pageTitle}</title>
+<meta name="title" content={pageTitle} />
+<meta name="description" content={pageDescription} />
+<meta
+  name="keywords"
+  content="nextjs developer, react developer, payloadcms, typescript, full stack developer, freelance developer"
+/>
+<meta name="author" content="Thomas Beckford" />
+
+<!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={canonicalURL} />
-<meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
+<meta property="og:title" content={pageTitle} />
+<meta property="og:description" content={pageDescription} />
 <meta property="og:image" content={ogImage} />
+<meta property="og:site_name" content="Thomas Beckford Portfolio" />
 
+<!-- Twitter -->
 <meta property="twitter:card" content="summary_large_image" />
 <meta property="twitter:url" content={canonicalURL} />
-<meta property="twitter:title" content={title} />
-<meta property="twitter:description" content={description} />
+<meta property="twitter:title" content={pageTitle} />
+<meta property="twitter:description" content={pageDescription} />
 <meta property="twitter:image" content={ogImage} />
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Thomas Beckford",
+    "jobTitle": "Senior Next.js React Developer",
+    "description": "Senior Next.js & React developer with 8+ years experience, specializing in PayloadCMS",
+    "url": "https://tebeck.vercel.app",
+    "email": "tebeckford@gmail.com",
+    "knowsAbout": [
+      "Next.js",
+      "React",
+      "PayloadCMS",
+      "TypeScript",
+      "JavaScript"
+    ],
+    "yearsOfExperience": "8+"
+  }
+</script>

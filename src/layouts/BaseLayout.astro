@@ -1,10 +1,10 @@
 ---
-import '@fontsource/sunflower'
-import HeadSEO from '../components/HeadSEO.astro'
-import { ClientRouter } from 'astro:transitions'
 import Background from '@/components/Background.astro'
-import Nav from '@/components/Nav.astro'
 import Footer from '@/components/Footer.astro'
+import Nav from '@/components/Nav.astro'
+import '@fontsource/sunflower'
+import { ClientRouter } from 'astro:transitions'
+import HeadSEO from '../components/HeadSEO.astro'
 
 interface Props {
   title?: string | undefined
@@ -21,12 +21,13 @@ const { title, description, ogImage } = Astro.props
     <HeadSEO title={title} description={description} ogImage={ogImage} />
     <ClientRouter />
   </head>
-  <body class="pt-24 md:pt-32 min-h-sreen flex flex-col justify-between">
+  <body class="pt-24 md:pt-32 min-h-screen flex flex-col justify-between">
     <Nav />
 
-    <div class="max-w-7xl mx-auto md:px-12 px-4 pb-6">
+    <main class="max-w-7xl mx-auto md:px-12 px-4 pb-6">
       <slot />
-    </div>
+    </main>
+
     <Footer />
     <Background />
   </body>

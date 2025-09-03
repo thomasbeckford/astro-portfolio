@@ -1,56 +1,64 @@
 ---
 import { Image } from 'astro:assets'
-import BaseLayout from '../layouts/BaseLayout.astro'
-import Thomas from '../assets/thomas-laser-bg.png'
 import Flag from '../assets/flag.gif'
+import Thomas from '../assets/thomas-laser-bg.png'
+import BaseLayout from '../layouts/BaseLayout.astro'
 ---
 
-<BaseLayout title="About me" description="Software Engineer">
-  <div class="text-center flex flex-col gap-12 md:gap-24 mx-auto">
+<BaseLayout
+  title="About Thomas Beckford"
+  description="Senior Next.js & React developer from Argentina, living in the UK. 8+ years experience in full-stack development, PayloadCMS specialist. Available for freelance opportunities."
+>
+  <article class="text-center flex flex-col gap-12 md:gap-24 mx-auto">
     <div class="flex gap-8 flex-col">
       <div class="flex flex-col gap-8 md:flex-row items-center md:items-start">
-        <div class="flex flex-col gap-4 order-2 md:order-1">
-          <div class="flex items-center justify-center">
-            <h2 class="text-3xl font-bold">Who am I?</h2>
-            <Image src={Flag} alt="flag" width={64} height={64} />
-          </div>
+        <section class="flex flex-col gap-4 order-2 md:order-1">
+          <header class="flex items-center justify-center">
+            <h1 class="text-3xl font-bold">Who am I?</h1>
+            <Image src={Flag} alt="Argentina flag" width={64} height={64} />
+          </header>
           <p class="text-gray-400 text-xl">
-            I'm a software engineer passionate about building things, with a
-            focus on <span class="font-bold">frontend development</span>. Born
-            in November 1989 and originally from <span class="font-bold"
-              >Argentina, Buenos Aires</span
+            I'm a <strong>software engineer</strong> passionate about building things,
+            with a focus on <strong>frontend development</strong>. Born in
+            November 1989 and originally from <strong
+              >Argentina, Buenos Aires</strong
             >, my primary language is Spanish, though I also speak English at an
             upper-intermediate (B2) level.
-            <span class="font-bold">Currently, I live in the UK</span> on a work
-            visa. With experience in full-stack web and mobile development, I’m working
-            on several projects, including <a
+            <strong>Currently, I live in the UK</strong> on a work visa. With experience
+            in full-stack web and mobile development, I'm working on several projects,
+            including <a
               href="https://soymenu.com"
               class="font-bold text-blue-500"
-              target="_blank">SoyMenu</a
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Visit SoyMenu -
+            my restaurant menu project"
+              >SoyMenu</a
             > (<span class="italic">https://soymenu.com</span>), a personal
             project that has been in production since 2019.
           </p>
 
           <p class="text-gray-400 text-xl">
             Always eager to learn, grow, and collaborate as a developer, I also
-            have an interest in crypto and blockchain. While I’m not an expert,
-            I’ve had the opportunity to work on projects like Spiritswap (a DeFi
+            have an interest in crypto and blockchain. While I'm not an expert,
+            I've had the opportunity to work on projects like Spiritswap (a DeFi
             project) and at Fuel, where we worked with NFTs, gaining valuable
             knowledge in the space.
           </p>
 
           <p class="text-gray-400 text-xl">
-            <b
+            <strong
               >Fun fact: In my spare time, I enjoy playing chess, a game that
               not only entertains me but also helps me improve my strategic
-              thinking and problem-solving skills.</b
+              thinking and problem-solving skills.</strong
             >
           </p>
-        </div>
+        </section>
         <Image
           src={Thomas}
-          alt="Thomas Beckford"
+          alt="Thomas Beckford - Senior Next.js React Developer"
           class="rounded-lg w-64 md:w-1/3 order-1"
+          loading="eager"
           style={{
             maskImage:
               'linear-gradient(to bottom, rgba(0,0,0,1) 80%, rgba(0,0,0,0) 100%)',
@@ -60,5 +68,5 @@ import Flag from '../assets/flag.gif'
         />
       </div>
     </div>
-  </div>
+  </article>
 </BaseLayout>
