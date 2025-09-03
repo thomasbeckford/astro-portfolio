@@ -1,45 +1,52 @@
 ---
-title: 'Some projects I have worked on'
+title: 'Featured Projects'
 apps:
   - title: 'SoyMenu'
-    description: 'Web application that allows users to create and manage their own menus. The platform will allow users to sell menus.'
+    description: 'Digital menu platform for restaurants with payment processing and customizable designs'
     link: 'https://soymenu.com/'
-    tools: ['React', 'NextJs', 'React Query', 'TailwindCSS']
+    tools: ['React', 'Next.js', 'React Query', 'TailwindCSS']
     image: '/src/assets/soymenu.png'
 
   - title: 'Lane7'
-    description: 'Web application that allows users to create and manage their own menus. The platform will allow users to sell menus.'
+    description: 'Headless CMS for entertainment venues with dynamic pricing and event management'
     link: 'https://lane7.vercel.app/'
-    tools: ['PayloadCMS', 'NextJS', 'TailwindCSS', 'Typescript']
+    tools: ['Payload CMS', 'Next.js', 'TailwindCSS', 'TypeScript']
     image: '/src/assets/1lane7.png'
 
   - title: 'SuiteAI'
-    description: 'Vectorize your data, store it and use it to create custom AI Agents all in one place'
+    description: 'AI platform that vectorizes company data to create custom AI agents with semantic search'
     link: 'https://suite-ia.vercel.app'
-    tools: ['Nextjs', 'OpenAI', 'Postgres', 'TailwindCSS', 'Typescript']
+    tools: ['Next.js', 'OpenAI', 'PostgreSQL', 'TailwindCSS', 'TypeScript']
     image: '/src/assets/suite_ai.jpg'
 
   - title: 'AwaitCode'
-    description: 'A platform to help clients to build their own MVP'
+    description: 'Development agency platform connecting clients with custom MVP solutions'
     link: 'https://awaitcode.com/'
-    tools: ['React', 'TailwindCSS', 'Typescript', 'Astro']
+    tools: ['Astro', 'React', 'TailwindCSS', 'TypeScript']
     image: '/src/assets/awaitcode.png'
 
   - title: 'Five Iron Golf'
-    description: 'MVP for Five Iron Golf, a golf booking platform '
+    description: 'Golf facility booking platform with real-time availability and automated scheduling'
     link: 'https://fiveirongolf.vercel.app/'
-    tools: ['PayloadCMS', 'React', 'TailwindCSS', 'Typescript', 'Nextjs']
+    tools: ['Payload CMS', 'Next.js', 'TailwindCSS', 'TypeScript']
     image: '/src/assets/fiveiron.png'
 
   - title: 'MVP Boilerplate'
-    description: 'Boilerplate for a Nextjs + CMS + Intl project'
+    description: 'Production-ready starter template with CMS, internationalization, and animations'
     link: 'https://clearspeak1.vercel.app/'
     tools:
-      ['Nextjs', 'Sanity', 'Next Intl', 'TailwindCSS', 'TypeScript', 'Motion']
+      [
+        'Next.js',
+        'Sanity',
+        'Next-Intl',
+        'TailwindCSS',
+        'TypeScript',
+        'Framer Motion',
+      ]
     image: '/src/assets/boilerplate.png'
 
   - title: 'Scroll Animation'
-    description: 'This is a portfolio website created with React and Framer Motion, to show off my skills in scroll animation.'
+    description: 'Interactive portfolio showcasing advanced scroll-triggered animations and micro-interactions'
     link: 'https://scroll-animated.vercel.app/'
     tools: ['React', 'Framer Motion']
     image: '/src/assets/background.svg'
