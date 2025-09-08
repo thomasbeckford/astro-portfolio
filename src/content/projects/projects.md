@@ -93,6 +93,17 @@ apps:
     image: '/src/assets/background.svg'
     isLive: true
 
+  - title: 'Roman Rosell'
+    description: 'Argentina national rehabilitation center for blind and visually impaired people'
+    tools: ['React', 'Nextjs', 'Chakra UI', 'TypeScript']
+    images:
+      [
+        '/src/assets/dashboard/romanrosell.png',
+        '/src/assets/dashboard/romanrosell1.png',
+        '/src/assets/dashboard/romanrosell2.png',
+      ]
+    isCRM: true
+
   - title: 'SoyMenu'
     description: 'CRM for restaurants with payment processing and customizable designs'
     tools: ['React', 'Nextjs', 'TailwindCSS', 'TypeScript']
@@ -119,8 +130,9 @@ apps:
     tools: ['React', 'Nextjs', 'TailwindCSS', 'TypeScript']
     images:
       [
-        '/src/assets/dashboard/fuel-creators.png',
-        '/src/assets/dashboard/fuel-creators1.png',
+        '/src/assets/dashboard/creators.png',
+        '/src/assets/dashboard/creators1.png',
+        '/src/assets/dashboard/creators2.png',
       ]
     isCRM: true
 
@@ -131,6 +143,7 @@ apps:
       [
         '/src/assets/dashboard/levygorvy.png',
         '/src/assets/dashboard/levygorvy1.png',
+        '/src/assets/dashboard/levygorvy2.png',
       ]
     isCRM: true
 ---
