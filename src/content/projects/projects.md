@@ -25,6 +25,12 @@ apps:
     tools: ['Astro', 'React', 'TailwindCSS', 'TypeScript']
     image: '/src/assets/awaitcode.png'
 
+  - title: 'SpiritSwap'
+    description: 'NFT marketplace for trading and buying NFTs'
+    link: 'https://spiritswap.io/'
+    tools: ['Next.js', 'TailwindCSS', 'TypeScript']
+    image: '/src/assets/spiritswap.png'
+
   - title: 'FUEL'
     description: 'Contribute to create Fuel ecosystem and all its web applications'
     link: 'http://onfuel.io'
