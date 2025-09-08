@@ -11,13 +11,10 @@ interface DashboardProject {
   images: string[]
 }
 
-
-
 const projects = await getCollection('projects')
 const allApps = projects.map((project) => project.data.apps).flat()
 
 const nonCRMProjects = allApps.filter(app => !app.isCRM).sort((a: any, b: any) => b.isLive - a.isLive)
-
 
 // Transformar las imágenes de objetos a strings
 const crmProjects = allApps
@@ -35,107 +32,183 @@ const crmProjects = allApps
 <BaseLayout
   title="My Projects & Portfolio"
   description="Collection of projects built with Next.js, React, and PayloadCMS. View my work including SoyMenu and other full-stack applications."
+  className="flex flex-col items-center min-h-screen py-16 md:py-24"
 >
-  <main class="text-center flex flex-col gap-16 mx-auto max-w-7xl px-4 py-8">
-    <header class="space-y-4">
-      <span
-        class="px-6 py-2 bg-gray-800/80 border border-gray-700 rounded-full text-sm inline-block w-fit mx-auto text-gray-300"
-      >
-        Projects
-      </span>
-      <h1 class="text-3xl md:text-4xl font-bold text-white">Some of my work</h1>
-      <p class="text-gray-400 max-w-2xl mx-auto">
+  <main class="max-w-7xl mx-auto px-6 py-16">
+    <!-- Hero Section -->
+    <div class="text-center mb-16">
+
+
+      <h1 class="text-4xl md:text-5xl xl:text-6xl font-bold bg-gradient-to-r from-white via-blue-100 to-purple-200 bg-clip-text text-transparent mb-6 leading-tight">
+        Some of my work
+      </h1>
+
+      <p class="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
         A collection of projects I've built, showcasing different technologies and approaches.
       </p>
-    </header>
+
+      <div class="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full mt-8"></div>
+    </div>
 
     <!-- Live Projects Section -->
-    <section class="space-y-8">
-      <div class="flex items-center gap-4">
+    <section class="mb-16">
+      <div class="flex items-center gap-4 mb-12">
         <div class="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent flex-1"></div>
-        <h2 class="text-2xl font-bold text-white flex items-center gap-2">
-          <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-          </svg>
-          Live Projects
-        </h2>
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 bg-gradient-to-r from-green-500 to-emerald-500 rounded-lg flex items-center justify-center">
+            <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+          </div>
+          <h2 class="text-2xl font-bold text-white">Live Projects</h2>
+        </div>
         <div class="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent flex-1"></div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-        {
-          nonCRMProjects.map((app) => (
-            <article class="group">
-              <a
-                href={app?.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label={`View ${app?.title || 'project'} - ${app?.description}`}
-                class="block relative border border-gray-800 rounded-xl p-8 hover:border-gray-700 transition-all duration-300 bg-gray-900/50 hover:bg-gray-900/70"
-              >
-                <div class="relative bg-gray-800 rounded-lg overflow-hidden mb-6 aspect-video">
-                {app?.image && <Image
+        {nonCRMProjects.map((app) => (
+          <article class="group">
+            <a
+              href={app?.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label={`View ${app?.title || 'project'} - ${app?.description}`}
+              class="block glass-card rounded-xl p-6 hover:border-blue-500/30 transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/10"
+            >
+              <!-- Project Image -->
+              <div class="relative bg-gray-800/50 rounded-lg overflow-hidden mb-6 aspect-video">
+                {app?.image && (
+                  <Image
                     src={app?.image}
                     alt={`${app?.title || 'Project'} screenshot`}
-                    class="opacity-50 group-hover:opacity-80 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
+                    class="w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
                     loading="lazy"
                     style={{
-
+                      opacity: app.isLive ? '0.8' : '0.5',
                       filter: app.isLive ? 'none' : 'grayscale(100%)',
                     }}
-                  /> }
-                  <div class="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-transparent to-transparent" />
+                  />
+                )}
 
-                  <!-- Live indicator -->
-                  { app.isLive ? (
-                  <div class="absolute top-3 right-3 flex items-center gap-1 bg-green-500/20 border border-green-500/30 rounded-full px-2 py-1">
-                    <div class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                    <span class="text-xs text-green-400 font-medium">Live</span>
+                <!-- Gradient overlay -->
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/60 via-transparent to-transparent"></div>
+
+                <!-- Status indicator -->
+                {app.isLive ? (
+                  <div class="absolute top-3 right-3 flex items-center gap-2 bg-green-500/20 border border-green-500/30 rounded-full px-3 py-1.5 backdrop-blur-sm">
+                    <div class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                    <span class="text-xs text-green-300 font-medium">Live</span>
                   </div>
-                  ) :
-                  <div class="absolute top-3 right-3 flex items-center gap-1 bg-red-500/20 border border-red-500/30 rounded-full px-2 py-1">
-                    <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
-                    <span class="text-xs text-red-400 font-medium">Not Live</span>
+                ) : (
+                  <div class="absolute top-3 right-3 flex items-center gap-2 bg-red-500/20 border border-red-500/30 rounded-full px-3 py-1.5 backdrop-blur-sm">
+                    <div class="w-2 h-2 bg-red-400 rounded-full"></div>
+                    <span class="text-xs text-red-300 font-medium">Archived</span>
                   </div>
-                  }
+                )}
+              </div>
+
+              <!-- Project Info -->
+              <div class="space-y-4">
+                <h3 class="text-xl font-bold text-white group-hover:text-blue-300 transition-colors">
+                  {app?.title}
+                </h3>
+
+                <p class="text-gray-400 group-hover:text-gray-300 leading-relaxed transition-colors text-sm">
+                  {app?.description}
+                </p>
+
+                <!-- Tools/Tech stack if available -->
+                {app?.tools && app.tools.length > 0 && (
+                  <div class="flex flex-wrap gap-2">
+                    {app.tools.slice(0, 3).map((tool: string) => (
+                      <span class="px-2 py-1 bg-gray-700/50 text-gray-300 rounded text-xs border border-gray-600/50">
+                        {tool}
+                      </span>
+                    ))}
+                    {app.tools.length > 3 && (
+                      <span class="px-2 py-1 text-gray-400 text-xs">
+                        +{app.tools.length - 3} more
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                <!-- View project link -->
+                <div class="flex items-center gap-2 text-sm text-blue-400 group-hover:text-blue-300 transition-colors pt-2">
+                  <span>View project</span>
+                  <svg
+                    class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
+                    />
+                  </svg>
                 </div>
-
-                <div class="space-y-3">
-                  <h3 class="text-xl md:text-2xl font-bold text-white group-hover:text-gray-100 transition-colors">
-                    {app?.title}
-                  </h3>
-                  <p class="text-gray-400 group-hover:text-gray-300 leading-relaxed transition-colors">
-                    {app?.description}
-                  </p>
-
-                  <div class="flex items-center gap-2 text-sm text-gray-500 group-hover:text-gray-400 transition-colors pt-2">
-                    <span>View project</span>
-                    <svg
-                      class="w-4 h-4 transform group-hover:translate-x-1 transition-transform"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"
-                      />
-                    </svg>
-                  </div>
-                </div>
-
-                <div class="absolute inset-0 rounded-xl ring-1 ring-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
-              </a>
-            </article>
-          ))
-        }
+              </div>
+            </a>
+          </article>
+        ))}
       </div>
+
+      <!-- Empty state if no projects -->
+      {nonCRMProjects.length === 0 && (
+        <div class="text-center py-16">
+          <div class="w-16 h-16 bg-gray-700/50 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-semibold text-gray-300 mb-2">No projects available</h3>
+          <p class="text-gray-500">Check back soon for new projects!</p>
+        </div>
+      )}
     </section>
 
-    <!-- Dashboard Section with React Component -->
-<DashboardGallery projects={crmProjects} client:load />
+    <!-- Dashboard/CRM Section -->
+    {crmProjects.length > 0 && (
+      <section>
+        <div class="flex items-center gap-4 mb-12">
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent flex-1"></div>
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-lg flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+              </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-white">Dashboard Projects</h2>
+          </div>
+          <div class="h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent flex-1"></div>
+        </div>
+
+        <DashboardGallery projects={crmProjects} client:load />
+      </section>
+    )}
   </main>
 </BaseLayout>
+
+<style>
+  /* Additional project-specific styles */
+  .project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+
+  @media (max-width: 768px) {
+    .project-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+
+  /* Enhance project card animations */
+  article:hover .glass-card {
+    transform: translateY(-4px);
+  }
+</style>

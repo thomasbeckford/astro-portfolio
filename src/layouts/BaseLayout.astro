@@ -1,5 +1,4 @@
 ---
-import Background from '@/components/Background.astro'
 import Footer from '@/components/Footer.astro'
 import Nav from '@/components/Nav.astro'
 import '@fontsource/sunflower'
@@ -10,9 +9,10 @@ interface Props {
   title?: string | undefined
   description?: string | undefined
   ogImage?: URL | undefined
+  className?: string | undefined
 }
 
-const { title, description, ogImage } = Astro.props
+const { title, description, ogImage, className = '' } = Astro.props
 ---
 
 <!doctype html>
@@ -20,15 +20,222 @@ const { title, description, ogImage } = Astro.props
   <head>
     <HeadSEO title={title} description={description} ogImage={ogImage} />
     <ClientRouter />
+    <style is:global>
+      /* Global optimizations */
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      main {
+        flex: 1;
+        position: relative;
+        z-index: 10;
+      }
+
+      /* Shared animations */
+      @keyframes gradient-x {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      @keyframes tilt {
+        0%,
+        50%,
+        100% {
+          transform: rotate(0deg);
+        }
+        25% {
+          transform: rotate(0.5deg);
+        }
+        75% {
+          transform: rotate(-0.5deg);
+        }
+      }
+
+      .animate-tilt {
+        animation: tilt 8s infinite linear;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-10px);
+        }
+      }
+
+      .animate-float {
+        animation: float 3s ease-in-out infinite;
+      }
+
+      /* Glass effect utility */
+      .glass-card {
+        background: rgba(17, 24, 39, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(55, 65, 81, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .glass-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(59, 130, 246, 0.3);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.1);
+      }
+
+      /* Status badge utility */
+      .status-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 0.5rem 1rem;
+        background: rgba(16, 185, 129, 0.1);
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        border-radius: 9999px;
+        backdrop-filter: blur(4px);
+      }
+
+      .status-indicator {
+        width: 0.5rem;
+        height: 0.5rem;
+        background: rgb(52, 211, 153);
+        border-radius: 50%;
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+
+      /* Button utilities */
+      .btn-primary {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        font-weight: 700;
+        font-size: 1.125rem;
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+        overflow: hidden;
+        background: linear-gradient(135deg, #0078d4 0%, #0086e6 100%);
+        color: white;
+        text-decoration: none;
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(0, 120, 212, 0.3);
+      }
+
+      .btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem 2rem;
+        font-weight: 700;
+        font-size: 1.125rem;
+        border: 2px solid rgb(75, 85, 99);
+        color: rgb(209, 213, 219);
+        border-radius: 0.75rem;
+        transition: all 0.3s ease;
+        background: transparent;
+        text-decoration: none;
+      }
+
+      .btn-secondary:hover {
+        border-color: rgb(59, 130, 246);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2);
+      }
+
+      /* Tech stack tags */
+      .tech-tag {
+        padding: 0.5rem 1rem;
+        border-radius: 9999px;
+        font-size: 0.875rem;
+        border: 1px solid;
+        backdrop-filter: blur(4px);
+        transition: all 0.2s ease;
+      }
+
+      .tech-tag:hover {
+        transform: translateY(-1px);
+      }
+
+      .tech-tag.react {
+        background: rgba(59, 130, 246, 0.2);
+        color: rgb(147, 197, 253);
+        border-color: rgba(59, 130, 246, 0.3);
+      }
+
+      .tech-tag.nextjs {
+        background: rgba(75, 85, 99, 0.2);
+        color: rgb(209, 213, 219);
+        border-color: rgba(75, 85, 99, 0.3);
+      }
+
+      .tech-tag.nodejs {
+        background: rgba(34, 197, 94, 0.2);
+        color: rgb(134, 239, 172);
+        border-color: rgba(34, 197, 94, 0.3);
+      }
+
+      .tech-tag.cms {
+        background: rgba(139, 92, 246, 0.2);
+        color: rgb(196, 181, 253);
+        border-color: rgba(139, 92, 246, 0.3);
+      }
+
+      .tech-tag.experience {
+        background: rgba(245, 158, 11, 0.2);
+        color: rgb(252, 211, 77);
+        border-color: rgba(245, 158, 11, 0.3);
+      }
+
+      /* Responsive typography */
+      @media (max-width: 768px) {
+        .text-responsive-xl {
+          font-size: 2rem;
+          line-height: 1.2;
+        }
+
+        .text-responsive-lg {
+          font-size: 1.25rem;
+        }
+
+        .glass-card {
+          padding: 1.5rem;
+        }
+      }
+
+      @media (max-width: 640px) {
+        .text-responsive-xl {
+          font-size: 1.75rem;
+        }
+
+        .text-responsive-lg {
+          font-size: 1.125rem;
+        }
+      }
+    </style>
   </head>
-  <body class="pt-24 md:pt-32 min-h-screen flex flex-col justify-between">
-    <Nav />
-
-    <main class="max-w-7xl mx-auto md:px-12 px-4 pb-6">
+  <body>
+    <main class={className}>
+      <Nav />
       <slot />
+      <Footer />
     </main>
-
-    <Footer />
-    <Background />
   </body>
 </html>
