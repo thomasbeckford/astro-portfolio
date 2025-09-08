@@ -1,5 +1,5 @@
-import { z, defineCollection } from 'astro:content'
 import { file } from 'astro/loaders'
+import { defineCollection, z } from 'astro:content'
 const nav = defineCollection({
   schema: ({ image }) =>
     z.object({
@@ -48,9 +48,12 @@ const projects = defineCollection({
         z.object({
           title: z.string(),
           description: z.string(),
-          link: z.string(),
+          link: z.string().optional(),
           tools: z.array(z.string()),
-          image: image(),
+          image: image().optional(),
+          isCRM: z.boolean().optional(),
+          images: z.array(image()).optional(),
+          isLive: z.boolean().optional(),
         }),
       ),
     }),
