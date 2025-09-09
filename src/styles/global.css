@@ -29,6 +29,13 @@ body {
   background-color: #242933;
   color: white;
   font-family: 'Sunflower', sans-serif;
+
+  ::selection {
+    background: #000000;
+    color: hsl(186, 77%, 38%);
+    font-weight: bold;
+    text-shadow: 0px 0px 10px #00b8d9;
+  }
 }
 
 @view-transitions {

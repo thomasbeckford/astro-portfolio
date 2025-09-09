@@ -3,7 +3,7 @@ title: 'Featured Projects'
 apps:
   - title: 'SoyMenu'
     description: 'Digital menu platform for restaurants with payment processing and customizable designs'
-    link: 'https://soymenu.com/'
+    link: 'https://soymenu.com.ar/'
     tools: ['React', 'Next.js', 'React Query', 'TailwindCSS']
     image: '/src/assets/soymenu.png'
     isLive: true

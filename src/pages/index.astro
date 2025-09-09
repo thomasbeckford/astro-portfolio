@@ -16,12 +16,6 @@ import BaseLayout from '../layouts/BaseLayout.astro'
     <section class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center py-12">
       <!-- Text Content -->
       <div class="order-2 lg:order-1 text-center lg:text-left space-y-8">
-        <!-- Availability Badge -->
-        <div class="status-badge text-emerald-300 text-sm font-medium">
-          <div class="status-indicator"></div>
-          Available for new opportunities
-        </div>
-
         <!-- Main Headline -->
         <div class="space-y-6">
           <h1 class="text-5xl md:text-6xl xl:text-7xl font-bold leading-tight">
@@ -35,12 +29,11 @@ import BaseLayout from '../layouts/BaseLayout.astro'
 
           <!-- Subtitle -->
           <div class="space-y-2">
-            <p class="text-gray-300 text-responsive-lg leading-relaxed">
-              I'm a <strong class="text-blue-400">software engineer</strong> from
+            <p class="text-gray-300 text-2xl leading-relaxed">
+              I'm a <strong>software engineer</strong> from
             </p>
-            <p class="text-gray-300 text-responsive-lg leading-relaxed">
-              <strong class="text-blue-400">Argentina</strong> currently living in
-              the <strong class="text-blue-400">UK</strong>
+            <p class="text-gray-300 text-2xl leading-relaxed">
+              Argentina, currently living in the UK
             </p>
           </div>
         </div>
@@ -49,7 +42,7 @@ import BaseLayout from '../layouts/BaseLayout.astro'
         <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
           <span class="tech-tag react">React</span>
           <span class="tech-tag nextjs">Next.js</span>
-          <span class="tech-tag nodejs">Node.js</span>
+          <span class="tech-tag nodejs">TailwindCSS</span>
           <span class="tech-tag cms">PayloadCMS</span>
           <span class="tech-tag experience">+8 years exp</span>
         </div>
@@ -118,34 +111,9 @@ import BaseLayout from '../layouts/BaseLayout.astro'
               }}
             />
           </div>
-
-          <!-- Experience badges -->
-          <div
-            class="absolute -top-3 -left-3 bg-blue-500/90 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg"
-          >
-            8+ Years
-          </div>
         </div>
       </div>
     </section>
-
-    <!-- Scroll indicator -->
-    <div class="text-center pb-8">
-      <div class="inline-block text-gray-400 animate-bounce">
-        <svg
-          class="w-6 h-6"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M19 14l-7 7m0 0l-7-7m7 7V3"></path>
-        </svg>
-      </div>
-    </div>
   </div>
 
   <!-- Skills Section -->

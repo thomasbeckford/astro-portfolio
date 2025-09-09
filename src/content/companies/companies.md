@@ -67,7 +67,7 @@ companies:
       - 'Next.js'
 
   - name: 'SOYMENU'
-    link: 'https://soymenu.com'
+    link: 'https://soymenu.com.ar'
     role: 'Founder'
     type: 'Startup'
     duration: 'Feb 2019'

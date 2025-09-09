@@ -95,6 +95,13 @@ const secondHalf = firstTechnologies?.data.data.slice(
       --track-width: calc(
         var(--item-width-plus-gap) * calc(var(--num-items) - 1)
       );
+      mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        black 10%,
+        black 90%,
+        transparent 100%
+      );
     }
   }
 
@@ -111,6 +118,7 @@ const secondHalf = firstTechnologies?.data.data.slice(
     display: flex;
     justify-content: center;
     align-items: center;
+
     color: #fff;
     grid-area: resting;
     animation: marquee-move var(--speed) linear infinite
@@ -118,6 +126,11 @@ const secondHalf = firstTechnologies?.data.data.slice(
     animation-delay: calc(
       var(--single-slide-speed) * var(--item-position) * -1
     );
+
+    /* Efectos visuales */
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    transition: transform 0.3s ease;
+    flex-shrink: 0;
   }
 
   .marquee-item img {
