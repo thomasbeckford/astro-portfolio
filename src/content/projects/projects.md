@@ -8,19 +8,19 @@ apps:
     image: '/src/assets/soymenu.png'
     isLive: true
 
-  - title: 'Lane7'
-    description: 'Headless CMS for entertainment venues with dynamic pricing and event management'
-    link: 'https://lane7.vercel.app/'
-    tools: ['Payload CMS', 'Next.js', 'TailwindCSS', 'TypeScript']
-    image: '/src/assets/2lane7.png'
-    isLive: true
+  # - title: 'Lane7'
+  #   description: 'Headless CMS for entertainment venues with dynamic pricing and event management'
+  #   link: 'https://lane7.vercel.app/'
+  #   tools: ['Payload CMS', 'Next.js', 'TailwindCSS', 'TypeScript']
+  #   image: '/src/assets/2lane7.png'
+  #   isLive: true
 
-  - title: 'Five Iron Golf'
-    description: 'Golf facility booking platform with real-time availability and automated scheduling'
-    link: 'https://fiveirongolf.vercel.app/'
-    tools: ['Payload CMS', 'Next.js', 'TailwindCSS', 'TypeScript']
-    image: '/src/assets/fiveiron.png'
-    isLive: true
+  # - title: 'Five Iron Golf'
+  #   description: 'Golf facility booking platform with real-time availability and automated scheduling'
+  #   link: 'https://fiveirongolf.vercel.app/'
+  #   tools: ['Payload CMS', 'Next.js', 'TailwindCSS', 'TypeScript']
+  #   image: '/src/assets/fiveiron.png'
+  #   isLive: true
 
   - title: 'AwaitCode'
     description: 'Development agency platform connecting clients with custom MVP solutions'
