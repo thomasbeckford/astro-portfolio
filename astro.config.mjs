@@ -1,14 +1,15 @@
 // @ts-check
 import { defineConfig } from 'astro/config'
-import tailwind from '@astrojs/tailwind'
-import react from '@astrojs/react'
+import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  site: 'https://tebeck.vercel.com',
-  integrations: [
-    react(),
-    tailwind({
-      applyBaseStyles: false,
-    }),
-  ],
+  site: 'https://tebeck.vercel.app',
+  // old portfolio pages — keep shared links working
+  redirects: {
+    '/about': '/#about',
+    '/projects': '/#work',
+    '/companies': '/#about',
+    '/skills': '/',
+  },
+  vite: { plugins: [tailwindcss()] },
 })

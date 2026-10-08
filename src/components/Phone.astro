@@ -1,0 +1,13 @@
+---
+// Device frame: thin black bezel with a hairline metal edge, like a current phone. Radii are % of width/height, so it scales with any size.
+const { class: cls = '' } = Astro.props
+---
+
+<div class:list={['@container', cls]}>
+  <!-- padding in cqw, not %: % padding resolves against the containing block's width (the
+  card, way bigger than the phone), not the phone's own width, which made the bezel huge
+  at small sizes like the work-list thumbnails. cqw is 1% of this wrapper's own width. -->
+  <div class="rounded-[13%/6.5%] bg-[#0a0a0b] p-[1.6cqw] shadow-[0_0_0_1px_rgb(255_255_255/0.16),0_40px_80px_-30px_rgb(0_0_0/0.8)]">
+    <div class="overflow-hidden rounded-[11.5%/5.75%] bg-black [&_img]:block [&_img]:w-full"><slot /></div>
+  </div>
+</div>

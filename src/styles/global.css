@@ -1,83 +1,505 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import 'tailwindcss';
+
+@theme {
+  --color-night: #1c2334;
+  --color-paper: #eceef4;
+  --color-fg: #1f2737;
+  --color-muted: #5d6577;
+  --color-line: rgb(31 39 55 / 0.12);
+  --color-accent: #2563eb;
+  /* Accent for small text: #2563eb is 4.46:1 on paper, under AA. */
+  --color-accent-ink: #1d4ed8;
+  --color-whatsapp: #25d366;
+  --font-sans: 'Geist Variable', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+}
 
 @layer base {
-  :root {
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+  /* Cookie chat is a modal: the page behind it stays put. */
+  html:has(dialog[open]) {
+    overflow: hidden;
   }
-
-  .dark {
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
   }
-}
-
-html,
-body {
-  @apply antialiased;
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #242933;
-  color: white;
-  font-family: 'Sunflower', sans-serif;
-
+  body {
+    @apply bg-paper font-sans text-fg antialiased;
+  }
+  [id] {
+    scroll-margin-top: 6rem;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-accent;
+  }
+  /* Paper grain: fixed noise so the flat paper doesn't feel sterile. Inline SVG, no request. */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
   ::selection {
-    background: #000000;
-    color: hsl(186, 77%, 38%);
-    font-weight: bold;
-    text-shadow: 0px 0px 10px #00b8d9;
+    @apply bg-accent text-white;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 }
 
-@view-transitions {
-  navigation: auto;
+/* Light page by default (trust). `light` = white band to alternate with the paper body; `night-band` = dark tokens for small inset pieces. */
+@utility light {
+  @apply bg-white;
 }
 
-h1 {
-  color: slategray;
+/* The one loud surface: solid accent with white text. Used for the lead offer and the lead stack group only. */
+@utility accent-band {
+  --color-fg: #ffffff;
+  --color-muted: rgb(255 255 255 / 0.92);
+  --color-line: rgb(255 255 255 / 0.22);
+  --color-accent: #ffffff;
+  --color-accent-ink: #ffffff;
+  @apply bg-[#2563eb] text-fg;
 }
 
-p {
-  color: #a6a6a6;
+@utility night-band {
+  --color-fg: #eef0f6;
+  --color-muted: #9aa1b2;
+  --color-line: rgb(255 255 255 / 0.1);
+  --color-accent: #60a5fa;
+  @apply bg-night text-fg;
 }
 
-button {
-  background-color: #00b8d9;
+/* Display type: Geist 800, sentence case, tight tracking. Mono is kept for small numbers and labels only. */
+@utility display {
+  @apply font-sans font-extrabold tracking-[-0.045em];
 }
 
-button:hover {
-  background-color: #0097b2;
+/* Highlighter behind the low half of the letters, drawn in on load. `clone` repeats it on every wrapped line. */
+@utility mark {
+  background-image: linear-gradient(to top, transparent 0.12em, rgb(37 99 235 / 0.26) 0.12em, rgb(37 99 235 / 0.26) 0.7em, transparent 0.7em);
+  background-repeat: no-repeat;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  @media (prefers-reduced-motion: no-preference) {
+    animation: mark-draw 0.6s cubic-bezier(0.16, 1, 0.3, 1) 600ms both;
+  }
+}
+@keyframes mark-draw {
+  from {
+    background-size: 0% 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
 }
 
-.bg-blur {
-  backdrop-filter: blur(8px);
+/* Radii, one rule: buttons = rounded-xl, tags = pill, containers = rounded-3xl, inner pieces = rounded-xl.
+   Buttons: flat fill, no sheen or glow. Hover darkens, press nudges. */
+@utility btn {
+  @apply inline-flex min-h-12 items-center justify-center gap-2 rounded-xl px-6 text-[0.9375rem] font-semibold whitespace-nowrap transition-[background-color,translate,scale,box-shadow] duration-200 ease-out hover:-translate-y-0.5 active:translate-y-0 active:scale-[0.97];
+  & > svg {
+    transition: translate 0.2s ease-out;
+  }
+  &:hover > svg {
+    translate: 3px 0;
+  }
+}
+@utility btn-primary {
+  @apply btn bg-accent text-white hover:bg-[#1d4ed8];
+}
+@utility btn-whatsapp {
+  @apply btn bg-whatsapp text-fg hover:bg-[#1ebe59];
+}
+@utility btn-ghost {
+  @apply btn text-fg ring-1 ring-fg/15 ring-inset hover:bg-white hover:shadow-lg hover:shadow-fg/10 hover:ring-fg/30;
+}
+@utility eyebrow {
+  @apply font-mono text-xs font-medium tracking-[0.08em] text-accent-ink uppercase;
+}
+@utility h2 {
+  @apply display text-[2.25rem] leading-[1] text-balance sm:text-[3.5rem];
+}
+@utility field {
+  @apply w-full rounded-xl bg-fg/[0.04] px-3.5 py-2.5 text-base text-fg ring-1 ring-fg/15 transition ring-inset placeholder:text-muted/70 focus:ring-2 focus:ring-accent focus:outline-none;
 }
 
-/* width */
-::-webkit-scrollbar {
-  width: 8px;
+@utility card {
+  @apply rounded-3xl bg-white shadow-[0_1px_2px_rgb(31_39_55/0.04),0_12px_32px_-16px_rgb(31_39_55/0.18)] ring-1 ring-fg/10 ring-inset;
+}
+/* Spotlight: a soft glow follows the pointer (--x/--y set by one small script). */
+@utility spot {
+  @apply relative isolate overflow-hidden;
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(420px circle at var(--x, 50%) var(--y, 50%), rgb(37 99 235 / 0.12), transparent 60%);
+  }
+  &:hover::before {
+    opacity: 1;
+  }
+}
+/* Scroll-in reveal. JS marks only what starts below the fold with [data-pending] and clears it on intersect,
+   so without JS nothing is hidden. --d staggers siblings. */
+@utility reveal {
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms),
+    translate 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms);
+  &[data-pending] {
+    opacity: 0;
+    translate: 0 1.75rem;
+  }
 }
 
-/* Track */
-::-webkit-scrollbar-track {
-  background: #080808;
+/* Hero opening: everything lands in ~0.9s, then holds still. */
+@utility enter {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: enter 0.7s cubic-bezier(0.16, 1, 0.3, 1) var(--d, 0ms) both;
+  }
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    translate: 0 0.9rem;
+  }
 }
 
-/* Handle */
-::-webkit-scrollbar-thumb {
-  background: #484848;
+@utility float {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: float 7s ease-in-out infinite;
+  }
+}
+@keyframes float {
+  50% {
+    translate: 0 -12px;
+  }
 }
 
-/* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
-  background: #191919;
+/* Hero background photo: slow ken-burns drift, barely-there so it never competes with the phones in front. */
+@utility ken-burns {
+  @media (prefers-reduced-motion: no-preference) {
+    animation: ken-burns 24s ease-in-out infinite alternate;
+  }
+}
+@keyframes ken-burns {
+  from {
+    scale: 1;
+    translate: 0 0;
+  }
+  to {
+    scale: 1.12;
+    translate: -2% -1%;
+  }
+}
+
+/* Floating contact dock slides in once you scroll past the hero's own buttons. Unsupported: always visible. */
+@utility dock-in {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      animation: dock-in linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 500px;
+    }
+  }
+}
+@keyframes dock-in {
+  0%,
+  40% {
+    opacity: 0;
+    translate: 0 140%;
+  }
+}
+
+/* Scroll-linked marquee: the row slides while its band crosses the viewport. Native scroll-driven
+   animation; browsers without it (Firefox) show a still row, nothing breaks. --dir flips the direction. */
+@utility marquee {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: marquee linear both;
+      animation-timeline: view();
+      animation-range: cover;
+    }
+  }
+}
+@keyframes marquee {
+  /* Always within -5%..-35% of a 3x-repeated row, so neither edge ever shows a gap. */
+  from {
+    translate: calc(-20% + var(--dir, 1) * 15%) 0;
+  }
+  to {
+    translate: calc(-20% - var(--dir, 1) * 15%) 0;
+  }
+}
+
+/* Hero exit: the phone stage tips back and fades as the page scrolls away from it. */
+@utility hero-exit {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      animation: hero-exit linear both;
+      animation-timeline: scroll(root);
+      animation-range: 150px 1000px;
+    }
+  }
+}
+@keyframes hero-exit {
+  to {
+    opacity: 0.35;
+    scale: 0.94;
+    translate: 0 -3rem;
+  }
+}
+
+/* #how: the accent line draws down (phones) or across (desktop) while the steps cross the screen. */
+@utility draw {
+  --from: 1 0;
+  transform-origin: top left;
+  @variant md {
+    --from: 0 1;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: draw linear both;
+      animation-timeline: view();
+      animation-range: entry 60% cover 55%;
+    }
+  }
+}
+@keyframes draw {
+  from {
+    scale: var(--from);
+  }
+}
+
+/* Contact title: each word goes from faint to full as the heading scrolls in, staggered by --i. */
+@utility word-in {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      animation: word-in linear both;
+      animation-timeline: view();
+      animation-range: entry calc(var(--i) * 12%) entry calc(var(--i) * 12% + 40%);
+    }
+  }
+}
+@keyframes word-in {
+  from {
+    opacity: 0.12;
+  }
+}
+
+/* Tilted sticker stamp on a card corner; straightens on hover. */
+@utility sticker {
+  @apply absolute -top-3 -right-2 rotate-6 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-white shadow-lg shadow-accent/30 transition-transform duration-300;
+}
+
+/* Spins as the whole page scrolls (rail star). Unsupported: sits still. */
+@utility spin-scroll {
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: scroll()) {
+      animation: spin-scroll linear both;
+      animation-timeline: scroll(root);
+    }
+  }
+}
+@keyframes spin-scroll {
+  to {
+    rotate: 3turn;
+  }
+}
+
+/* Ring that fills with page progress (scroll badge). Unsupported: stays empty. */
+@utility progress-scroll {
+  stroke-dashoffset: 1;
+  @supports (animation-timeline: scroll()) {
+    animation: progress-scroll linear both;
+    animation-timeline: scroll(root);
+  }
+}
+@keyframes progress-scroll {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+/* Cookie (components/Cookie.astro). Faces swap on data-mood; motion only on .cookie-live, like Tuco's `animated`. */
+.cookie {
+  overflow: visible;
+}
+.cookie [data-face] {
+  display: none;
+}
+.cookie-live {
+  cursor: pointer;
+}
+/* The face leans toward the pointer (--lx/--ly from Cookie.astro's script). */
+.cookie-look {
+  translate: var(--lx, 0) var(--ly, 0);
+  transition: translate 0.2s ease-out;
+}
+.cookie[data-mood='hello'] [data-face='hello'],
+.cookie[data-mood='thinking'] [data-face='thinking'],
+.cookie[data-mood='done'] [data-face='done'],
+.cookie[data-mood='oops'] [data-face='oops'] {
+  display: inline;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .cookie-live .cookie-bob {
+    transform-box: fill-box;
+    transform-origin: 50% 100%;
+    animation: cookie-breathe 3.4s ease-in-out infinite;
+  }
+  .cookie-live[data-mood='done'] .cookie-bob {
+    animation: cookie-hop 1.1s cubic-bezier(0.3, 0, 0.3, 1) infinite;
+  }
+  .cookie-live .cookie-eyes {
+    transform-box: fill-box;
+    transform-origin: center;
+    animation: cookie-blink 4.2s infinite;
+  }
+  .cookie-live .cookie-crumbs circle {
+    animation: cookie-crumb 2.6s ease-in infinite;
+  }
+  .cookie-live .cookie-crumbs circle:nth-child(2) {
+    animation-delay: 0.9s;
+  }
+  .cookie-live .cookie-crumbs circle:nth-child(3) {
+    animation-delay: 1.7s;
+  }
+  .cookie-live .cookie-dot {
+    animation: cookie-dot 1.2s infinite;
+  }
+  .cookie-live .cookie-dot:nth-of-type(2) {
+    animation-delay: 0.2s;
+  }
+  .cookie-live .cookie-dot:nth-of-type(3) {
+    animation-delay: 0.4s;
+  }
+  .cookie-live .cookie-tear {
+    animation: cookie-tear 2s ease-in infinite;
+  }
+  /* Re-added on every face change: a little pop so you see it react. */
+  .cookie-pop {
+    animation: cookie-pop 320ms cubic-bezier(0.3, 1.6, 0.6, 1);
+  }
+  .cookie-chat[open] {
+    animation: cookie-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .bubble-in {
+    animation: bubble-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  /* FAQ: Cookie "types" for half a second, then the answer lands. */
+  details[open] .faq-answer {
+    animation: bubble-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+  }
+  details[open] .faq-typing {
+    animation: faq-typing 0.6s steps(1) forwards;
+  }
+  details[open] .faq-text {
+    animation: faq-text 0.3s ease-out 0.55s both;
+  }
+}
+.faq-typing {
+  opacity: 0;
+}
+@keyframes cookie-breathe {
+  50% {
+    scale: 1.03 0.97;
+  }
+}
+@keyframes cookie-hop {
+  0%,
+  100% {
+    translate: 0 0;
+  }
+  35% {
+    translate: 0 -8%;
+  }
+  55% {
+    translate: 0 0;
+    scale: 1.06 0.94;
+  }
+}
+@keyframes cookie-blink {
+  0%,
+  94%,
+  100% {
+    scale: 1 1;
+  }
+  97% {
+    scale: 1 0.1;
+  }
+}
+@keyframes cookie-crumb {
+  0% {
+    opacity: 0;
+    translate: 0 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: 6px 46px;
+  }
+}
+@keyframes cookie-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+@keyframes cookie-tear {
+  0% {
+    opacity: 0;
+    translate: 0 -4px;
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    translate: 0 14px;
+  }
+}
+@keyframes cookie-pop {
+  from {
+    scale: 0.85;
+  }
+}
+@keyframes cookie-in {
+  from {
+    translate: 100% 0;
+  }
+}
+@keyframes bubble-in {
+  from {
+    opacity: 0;
+    translate: 0 0.6rem;
+    scale: 0.96;
+  }
+}
+@keyframes faq-typing {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes faq-text {
+  from {
+    opacity: 0;
+  }
 }

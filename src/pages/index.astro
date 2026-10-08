@@ -1,123 +1,742 @@
 ---
 import { Image } from 'astro:assets'
-import Linkedin from '../assets/linkedin.svg'
-import Thomas from '../assets/thombeck.png'
-import SkillsSlider from '../components/SkillsSlider.astro'
-import BaseLayout from '../layouts/BaseLayout.astro'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Logo from '@/components/Logo.astro'
+import Icon from '@/components/Icon.astro'
+import Phone from '@/components/Phone.astro'
+import Cookie from '@/components/Cookie.astro'
+import CookieChat from '@/components/CookieChat.astro'
+import { site, services, faqs, foundingOffer, whatsapp as wa } from '@/site'
+import thomas from '@/assets/thombeck-pro.png'
+import arquerosya from '@/assets/work/arquerosya.png'
+import josefina from '@/assets/work/josefina.png'
+import soymenu from '@/assets/work/soymenu.png'
+import soyreserva from '@/assets/work/soyreserva.png'
+import soygestion from '@/assets/work/soygestion.png'
+import CV from '@/components/CV.astro'
+
+// Proof strip: real numbers already stated elsewhere on the page, just made bigger. No invented quotes.
+const stats = [
+  { count: null, text: site.years, label: 'Years shipping production code' },
+  { count: 100, suffix: '+', label: 'Restaurants using software I built, since 2019' },
+  { count: 10900, suffix: '+', label: 'People signed up to an app I built and run' },
+]
+
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Website quote')}`
+const whatsapp = wa("Hi Thomas, I'd like a website quote.")
+
+// Plain promises that remove the reasons people don't get in touch. All already true elsewhere on the page.
+const promises = ['See it before you pay', 'No deposit', 'Domain in your name']
+
+const steps = [
+  { n: '01', title: 'Send one message', text: 'WhatsApp or email. Tell me what you do and where. Two minutes, no forms, no calls unless you want one.' },
+  { n: '02', title: `See it in ${site.turnaround}`, text: 'I write the words, pick the photos and build it. You get a link to the real site on your phone.' },
+  { n: '03', title: 'Pay when you’re happy', text: 'Tell me what to change. Once you’re happy it goes live on your domain, and only then you pay. No deposit.' },
+]
+
+const brands = ['Five Iron Golf', 'Lane7', 'Sixes', 'Lévy Gorvy']
+
+const work = [
+  { name: 'Estancia La Josefina', sticker: 'Live', tag: 'Client website', url: 'https://www.estancialajosefina.com/en', img: josefina, text: 'A lodge in Patagonia. One page, two languages, photos front and centre and an enquiry button always in reach.' },
+  { name: 'ArquerosYa', sticker: 'From scratch', tag: 'My own business · Argentina', url: 'https://arquerosya.com.ar/', img: arquerosya, text: 'A marketplace for hiring goalkeepers, built from scratch: web app, iOS and Android apps, and the API behind them. 10,900+ goalkeepers signed up.' },
+  { name: 'SoyMenu', sticker: 'Since 2019', tag: 'My own business · Argentina', url: 'https://soymenu.com.ar/', img: soymenu, text: 'QR menus for 100+ restaurants, live since 2019. Owners change prices from their phone in seconds.' },
+  { name: 'SoyReserva', tag: 'My own business · Argentina', url: 'https://soyreserva.com.ar/', img: soyreserva, text: 'Online table bookings for restaurants: tables, guests and no-shows in one place.' },
+  { name: 'SoyGestión', tag: 'My own business · Argentina', url: 'https://soygestion.com.ar/', img: soygestion, text: 'Sales, costs and cash flow for restaurant owners, instead of spreadsheets.' },
+]
+
+// ponytail: row repeated 3x so the strip never runs out while it slides
+const tape = ['See it before you pay', 'No deposit', `Live in ${site.turnaround}`, 'Fixed price', 'Domain in your name']
+const marquee = ['Roofers', 'Electricians', 'Cafés', 'Salons', 'Plumbers', 'Gardeners', 'Builders', 'Restaurants']
+
+// Live preview: each trade gets its own design, not just a colour. `look` becomes CSS vars on the phone site.
+// Phone numbers sit in Ofcom's drama range (07700 900xxx), so they're never real.
+const sans = 'var(--font-sans)'
+const serif = 'ui-serif, Georgia, serif'
+const light = { on: '#fff', bar: '#fff', glow: '16%' }
+const dark = { on: '#fff', fg: '#fff', soft: 'rgb(255 255 255/.7)', panel: 'rgb(255 255 255/.06)', line: 'rgb(255 255 255/.14)', glow: '55%' }
+const trades = [
+  {
+    name: 'Plumber', quip: 'Mind the pipes.', demo: 'Dave’s Plumbing', head: 'Leak? Boiler down? We’re on our way.', lede: 'Emergency call-outs, boilers and bathrooms across {area}.', cta: 'Get a fixed price',
+    look: { ...light, c: '#0e7490', bg: '#f4f8fa', fg: '#0f172a', soft: 'rgb(15 23 42/.65)', panel: '#e3f1f4', line: 'rgb(14 116 144/.25)', r: '3cqw', font: sans, w: '800', case: 'none', align: 'left' },
+    points: ['Gas Safe registered', 'Price agreed before we start', 'Serving {area} and nearby'],
+    extra: { label: 'Emergency call-out', items: ['Day or night, seven days a week'] },
+  },
+  {
+    name: 'Roofer', quip: 'Heights? Not for biscuits.', demo: 'Kestrel Roofing', head: 'Roof leaking? Fixed properly, first time.', lede: 'Repairs, re-roofs and flat roofs across {area}, with a written guarantee.', cta: 'Book a free roof check',
+    look: { ...dark, c: '#dc2626', bg: '#111317', bar: '#16181d', r: '0.8cqw', font: sans, w: '800', case: 'uppercase', align: 'left' },
+    points: ['Free, no-obligation quotes', 'Fully insured', 'Serving {area} and nearby'],
+    extra: { label: 'Free roof check', items: ['Photos of your roof the same day'] },
+  },
+  {
+    name: 'Electrician', quip: 'Ooh, sparky.', demo: 'Bright Spark Electrical', head: 'Sparks you can trust.', lede: 'Rewires, fuse boards and EV chargers across {area}. Certified and insured.', cta: 'Get a quote',
+    look: { c: '#111', on: '#facc15', bg: '#facc15', bar: 'rgb(0 0 0/.07)', fg: '#111', soft: 'rgb(0 0 0/.72)', panel: 'rgb(0 0 0/.07)', line: 'rgb(0 0 0/.22)', glow: '0%', r: '0px', font: 'var(--font-mono)', w: '700', case: 'uppercase', align: 'left' },
+    points: ['Part P certified', 'All work guaranteed', 'Serving {area} and nearby'],
+    extra: { label: 'What we do', items: ['EV chargers', 'Fuse boards', 'Rewires', 'Lighting'], chips: true },
+  },
+  {
+    name: 'Café', quip: 'Do you do biscuits? Asking for me.', demo: 'The Corner Café', head: 'Proper coffee. Proper breakfast.', lede: 'Your local in {area}. Open from 7, seven days a week.', cta: 'See the full menu',
+    look: { ...light, c: '#9a3412', bg: '#f6efe4', bar: '#efe3d0', fg: '#2b1d14', soft: 'rgb(43 29 20/.65)', panel: '#fffaf2', line: 'rgb(43 29 20/.15)', r: '2cqw', font: serif, w: '600', case: 'none', align: 'center' },
+    points: ['Dogs welcome', 'Seats outside', 'Takeaway all day'],
+    extra: { label: 'On the menu', items: ['Flat white|£3.20', 'Full English|£9.50', 'Bacon roll|£4.50'] },
+  },
+  {
+    name: 'Salon', quip: 'I’m all crumbs. Can you help?', demo: 'Bloom & Co', head: 'Walk in. Walk out wow.', lede: 'Cuts, colour and nails in {area}. Book online in seconds.', cta: 'Book online',
+    look: { ...light, c: '#be185d', bg: '#fff6f9', fg: '#3b0a24', soft: 'rgb(59 10 36/.62)', panel: '#fde8f0', line: 'rgb(190 24 93/.2)', r: '99cqw', font: serif, w: '500', case: 'none', align: 'center' },
+    points: ['Walk-ins welcome', 'Bridal and events', 'Gift vouchers'],
+    extra: { label: 'Free today', items: ['10:30', '12:15', '15:45'], chips: true },
+  },
+  {
+    name: 'Gardener', quip: 'Lovely. I’ll bring the tea.', demo: 'Green Thumb Gardens', head: 'Gardens you’ll want to sit in.', lede: 'Lawns, hedges and full makeovers across {area}.', cta: 'Get a free quote',
+    look: { ...light, c: '#4d7c0f', bg: '#e8f0e0', bar: '#f4f8ef', fg: '#1a2e05', soft: 'rgb(26 46 5/.66)', panel: '#f6faf1', line: 'rgb(77 124 15/.25)', r: '6cqw', font: sans, w: '600', case: 'lowercase', align: 'left' },
+    points: ['Free quotes', 'Green waste taken away', 'Serving {area} and nearby'],
+    extra: { label: 'Opening hours', items: ['Mon to Sat, 8am to 5pm'] },
+  },
+]
+const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k, v]) => `--${k}:${v}`).join(';')
 ---
 
 <BaseLayout
-  title="Thomas Beckford - Senior Next.js React Developer"
-  description="Senior Next.js & React developer with 8+ years experience from Argentina, living in the UK. PayloadCMS specialist available for freelance and full-time opportunities."
-  className="flex flex-col items-center min-h-screen py-16 md:py-24"
+  schema={[{ '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }]}
+  title={`${site.name} | Websites for local businesses in London`}
+  description={`Websites for local businesses, built and looked after by ${site.name}, a London software engineer with ${site.years} years' experience. From £${site.priceFrom}, plus optional care plan and ads management.`}
 >
-  <div class="max-w-7xl mx-auto px-6 w-full">
-    <!-- Main Hero Content -->
-    <section class="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center py-12">
-      <!-- Text Content -->
-      <div class="order-2 lg:order-1 text-center lg:text-left space-y-8">
-        <!-- Main Headline -->
-        <div class="space-y-6">
-          <h1 class="text-5xl md:text-6xl xl:text-7xl font-bold leading-tight">
-            My name is
-            <span
-              class="block bg-gradient-to-r from-purple-400 via-blue-400 to-teal-400 bg-clip-text text-transparent animate-gradient-x"
-            >
-              Thomas
-            </span>
+  <!-- Full-width and transparent at the top; shrinks into a floating glass capsule once you scroll (same gesture as SoyMenu). -->
+  <header id="nav" class="group fixed inset-x-0 top-0 z-40 px-0 pt-0 transition-[padding] duration-300 ease-out data-scrolled:px-3 data-scrolled:pt-3">
+    <div class="mx-auto flex h-14 max-w-[120rem] items-center justify-between border border-transparent pr-2 pl-4 transition-[max-width,border-radius,background-color,border-color,box-shadow] duration-300 ease-out group-data-scrolled:max-w-5xl group-data-scrolled:rounded-full group-data-scrolled:border-line group-data-scrolled:bg-white/75 group-data-scrolled:shadow-xl group-data-scrolled:shadow-fg/5 group-data-scrolled:backdrop-blur-xl group-data-scrolled:backdrop-saturate-150 sm:h-16 sm:pl-6">
+      <a href="/" class="flex items-center gap-2.5 font-semibold tracking-tight">
+        <Logo class="size-8" />
+        <span class="whitespace-nowrap max-[380px]:group-data-scrolled:sr-only">Thomas Beckford</span>
+      </a>
+      <nav class="flex items-center gap-7 text-sm text-muted">
+        <a href="#services" class="hidden transition hover:text-fg md:inline">Services</a>
+        <a href="#work" class="hidden transition hover:text-fg md:inline">Work</a>
+        <a href="#about" class="hidden transition hover:text-fg md:inline">About</a>
+        <button type="button" data-cookie-open aria-label="Ask Cookie, the quote helper" class="flex h-11 items-center gap-2 rounded-xl bg-white p-1.5 text-sm font-semibold text-fg ring-1 ring-line transition hover:-rotate-2 hover:ring-fg/25 sm:pr-3.5">
+          <Cookie mood="mini" class="w-8" />
+          <span class="hidden sm:inline">Ask Cookie</span>
+        </button>
+        <a href="#contact" class="btn-primary -ml-4 min-h-11 px-4 text-xs">Get a quote</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Scroll badge: circular text spins as you scroll, the ring fills with page progress. Doubles as the quote button. -->
+  <a id="badge" href="#contact" aria-label="Get a quote" class="group dock-in hidden transition-[scale] duration-300 data-off:scale-0 fixed right-6 bottom-6 z-30 size-24 xl:size-32 place-items-center rounded-full bg-white/85 shadow-xl shadow-fg/15 ring-1 ring-line backdrop-blur-xl sm:grid">
+    <svg viewBox="0 0 100 100" aria-hidden="true" class="absolute inset-0 size-full -rotate-90">
+      <circle cx="50" cy="50" r="48" pathLength="1" class="fill-none stroke-fg/10 stroke-[1.5]" />
+      <circle cx="50" cy="50" r="48" pathLength="1" class="progress-scroll fill-none stroke-accent stroke-[1.5] [stroke-dasharray:1] [stroke-linecap:round]" />
+    </svg>
+    <svg viewBox="0 0 100 100" aria-hidden="true" class="spin-scroll absolute inset-0 size-full">
+      <path id="badge-circle" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0" fill="none" />
+      <text class="fill-fg font-mono text-[10px] font-extrabold uppercase"><textPath href="#badge-circle" textLength="230" lengthAdjust="spacing">Get a quote ✦ Get a quote ✦</textPath></text>
+    </svg>
+    <span class="grid size-10 place-items-center rounded-full bg-accent text-white shadow-md shadow-accent/30 transition duration-300 group-hover:scale-110 group-hover:rotate-45 sm:size-12">
+      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
+    </span>
+  </a>
+
+  <!-- Phones get a WhatsApp button instead of the desktop badge; hides with it once the contact section is on screen. -->
+  <a id="wa-fab" href={whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp Thomas" class="dock-in fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-fg shadow-xl shadow-fg/25 transition-[scale] duration-300 data-off:scale-0 sm:hidden">
+    <svg viewBox="0 0 24 24" class="size-7" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>
+  </a>
+
+  <main id="main" tabindex="-1" class="outline-none">
+    <!-- Split hero: the visitor types their business on the left, the phone on the right builds their site live. Stacks on phones. -->
+    <section id="hero" class="relative isolate overflow-x-clip pt-28 sm:pt-36 lg:pt-32">
+      <div aria-hidden="true" class="absolute top-0 right-0 -z-10 h-[760px] w-full bg-[radial-gradient(ellipse_55%_60%_at_80%_20%,rgb(37_99_235/0.2),transparent)]"></div>
+      <div class="mx-auto grid max-w-6xl items-center gap-14 px-4 pb-20 sm:px-6 sm:pb-28 lg:min-h-[calc(100dvh-8rem)] lg:grid-cols-[1.1fr_1fr] lg:gap-8 lg:px-8 lg:pb-16">
+        <form id="try-form" data-trades={JSON.stringify(trades)}>
+          <p class="enter inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-sm font-medium text-fg shadow-sm ring-1 ring-fg/10">
+            <span class="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-white">£{foundingOffer.price}</span>
+            Founding offer for the first {foundingOffer.slots} clients
+          </p>
+          <h1 class="display enter mt-7 text-[2.9rem] leading-[0.95] text-balance [--d:90ms] sm:text-7xl lg:text-[clamp(3.25rem,7.5vh,5.2rem)]">
+            Websites that make your <span class="mark">phone ring.</span>
           </h1>
-
-          <!-- Subtitle -->
-          <div class="space-y-2">
-            <p class="text-gray-300 text-2xl leading-relaxed">
-              I'm a <strong>software engineer</strong> from
-            </p>
-            <p class="text-gray-300 text-2xl leading-relaxed">
-              Argentina, currently living in the UK
-            </p>
+          <p class="enter mt-6 max-w-xl text-lg [--d:170ms] lg:mt-5 text-pretty text-muted">
+            I'm Thomas, a London developer with {site.years} years' experience. Type your business and watch the phone build it.
+          </p>
+          <div class="enter mt-7 grid gap-4 [--d:250ms] sm:grid-cols-2">
+            <label class="block text-sm font-semibold">Your business<input name="name" class="field mt-2" placeholder="Dave’s Plumbing" maxlength="28" autocomplete="organization" /></label>
+            <label class="block text-sm font-semibold">Where<input name="area" class="field mt-2" placeholder="Bromley" maxlength="40" autocomplete="address-level2" /></label>
           </div>
-        </div>
-
-        <!-- Tech Stack Preview -->
-        <div class="flex flex-wrap gap-3 justify-center lg:justify-start">
-          <span class="tech-tag react">React</span>
-          <span class="tech-tag nextjs">Next.js</span>
-          <span class="tech-tag nodejs">TailwindCSS</span>
-          <span class="tech-tag cms">PayloadCMS</span>
-          <span class="tech-tag experience">+8 years exp</span>
-        </div>
-
-        <!-- CTA Buttons -->
-        <div
-          class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start"
-        >
-          <!-- LinkedIn Button -->
-          <a
-            href="https://www.linkedin.com/in/thomas-beckford-07520775/"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="Connect with Thomas Beckford on LinkedIn"
-            class="btn-primary group"
-          >
-            <span>Let's connect</span>
-            <Image
-              src={Linkedin}
-              alt="LinkedIn icon"
-              width="24"
-              height="24"
-              class="ml-3 transition-transform duration-300 group-hover:scale-110"
-            />
-          </a>
-
-          <!-- Secondary CTA -->
-          <a href="/about" class="btn-secondary group">
-            <span>Learn more about me</span>
-            <svg
-              class="ml-2 w-5 h-5 transition-transform duration-300 group-hover:translate-x-1"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
-            </svg>
-          </a>
-        </div>
-      </div>
-
-      <!-- Profile Image -->
-      <div class="order-1 lg:order-2 flex justify-center lg:justify-end">
-        <div class="relative group">
-          <!-- Simple glowing border -->
-          <div
-            class="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition duration-500 animate-tilt"
-          >
+          <fieldset class="enter mt-4 [--d:290ms]">
+            <legend class="text-sm font-semibold">What you do</legend>
+            <div class="mt-2 flex flex-wrap gap-2">
+              {
+                trades.map((t, i) => (
+                  <label class="cursor-pointer rounded-xl px-3.5 py-2 text-sm ring-1 ring-fg/15 transition ring-inset hover:bg-fg/[0.06] has-checked:bg-fg has-checked:text-white has-checked:ring-fg has-focus-visible:outline-2 has-focus-visible:outline-accent">
+                    <input type="radio" name="trade" value={i} checked={i === 0} class="sr-only" />
+                    {t.name}
+                  </label>
+                ))
+              }
+            </div>
+          </fieldset>
+          <div class="enter mt-8 flex flex-wrap items-center gap-3 [--d:330ms] lg:mt-7">
+            <a id="try-cta" href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Get a free quote<Icon name="arrow" class="size-4" /></a>
+            <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
           </div>
+          <p class="enter mt-6 flex items-center gap-3 text-sm text-muted [--d:370ms]">
+            <Image src={thomas} alt="" width={64} class="size-9 rounded-xl object-cover ring-2 ring-white" />
+            <span><strong class="font-semibold text-fg">From £{site.priceFrom}, fixed price.</strong> Live in {site.turnaround}.</span>
+          </p>
+        </form>
 
-          <!-- Image wrapper -->
-          <div class="relative glass-card rounded-2xl p-2">
-            <Image
-              src={Thomas}
-              alt="Thomas Beckford - Senior Next.js React Developer"
-              class="rounded-xl w-80 xl:w-96 shadow-2xl transition-transform duration-300 group-hover:scale-[1.02]"
-              loading="eager"
-              style={{
-                maskImage:
-                  'linear-gradient(to bottom, rgba(0,0,0,1) 85%, rgba(0,0,0,0) 100%)',
-                viewTransitionName: 'thomas-1',
-              }}
-            />
+        <!-- The live phone. Tilts toward the pointer, Cookie chats beside it about what you type. -->
+        <div class="enter relative mx-auto [--d:420ms]">
+          <div class="hero-exit">
+            <div id="tilt" class="transition-transform duration-500 ease-out [transform:perspective(1600px)_rotateX(var(--rx,4deg))_rotateY(var(--ry,-8deg))]">
+              <Phone class="float w-[280px] sm:w-[320px] lg:w-[min(340px,calc((100dvh-9rem)*0.44))]">
+                <div id="try-site" aria-hidden="true" class="@container flex aspect-[9/19.5] flex-col bg-(--bg) font-(family-name:--font) text-(--fg) transition-colors duration-500 [text-align:var(--align)]" style={lookStyle(trades[0].look)}>
+                  <div class="flex items-center justify-between gap-[3cqw] bg-(--bar) px-[5cqw] py-[4cqw] text-left shadow-[0_1px_0_var(--line)] transition-colors duration-500">
+                    <div class="min-w-0">
+                      <p data-k="name" class="truncate text-[6.5cqw] tracking-tight [font-weight:var(--w)] [text-transform:var(--case)]">Dave’s Plumbing</p>
+                      <p class="truncate text-[3.4cqw] text-(--soft)"><span data-k="trade">Plumber</span> · <span data-k="area">Bromley</span></p>
+                    </div>
+                    <span class="grid size-[11cqw] shrink-0 place-items-center rounded-[min(var(--r),3cqw)] bg-(--c) text-(--on) transition-colors duration-500"><Icon name="phone" class="size-[5cqw]" /></span>
+                  </div>
+                  <div class="flex-1 bg-[radial-gradient(120%_70%_at_80%_0%,color-mix(in_oklab,var(--c)_var(--glow),transparent),transparent)] px-[5cqw] pt-[9cqw] transition-[background] duration-500">
+                    <span data-k="area" class="inline-block rounded-[min(var(--r),1.5cqw)] bg-(--c) px-[3cqw] py-[1.2cqw] text-[3.2cqw] font-bold tracking-[0.12em] text-(--on) uppercase transition-colors duration-500">Bromley</span>
+                    <p data-k="head" class="mt-[4cqw] text-[10cqw] leading-[0.95] tracking-tight text-balance [font-weight:var(--w)] [text-transform:var(--case)]">{trades[0].head}</p>
+                    <p data-k="lede" class="mt-[4cqw] text-[4cqw] leading-snug text-(--soft)">{trades[0].lede.replace('{area}', 'Bromley')}</p>
+                    <span class="mt-[6cqw] flex items-center justify-center gap-[2cqw] rounded-[var(--r)] bg-(--c) py-[3.5cqw] text-[4.4cqw] font-semibold text-(--on) transition-colors duration-500"><Icon name="phone" class="size-[4.4cqw]" />Call 07700 900412</span>
+                    <span class="mt-[2.5cqw] flex justify-center rounded-[var(--r)] py-[3.5cqw] text-[4.4cqw] font-semibold ring-1 ring-(--line) ring-inset"><span data-k="cta">{trades[0].cta}</span>&nbsp;→</span>
+                    <!-- Each trade's own extras, rendered up front; the script only flips which one shows. -->
+                    {
+                      trades.map((t, i) => (
+                        <div data-trade={i} hidden={i !== 0}>
+                          <ul class="mt-[6cqw] space-y-[1.5cqw] text-[3.8cqw] font-medium">
+                            {t.points.map((pt) => <li><span class="text-(--c)">✓</span> {pt.split('{area}').map((part, j) => (j ? [<span data-k="area">Bromley</span>, part] : part))}</li>)}
+                          </ul>
+                          <div class="mt-[6cqw] rounded-[min(var(--r),4cqw)] bg-(--panel) p-[4cqw] text-[3.6cqw] ring-1 ring-(--line)">
+                            <p class="text-(--soft)">{t.extra.label}</p>
+                            {t.extra.chips ? (
+                              <p class="mt-[2cqw] flex flex-wrap gap-[1.5cqw] [justify-content:var(--align)]">{t.extra.items.map((x) => <span class="rounded-[var(--r)] px-[2.5cqw] py-[1cqw] ring-1 ring-(--line)">{x}</span>)}</p>
+                            ) : (
+                              t.extra.items.map((x) => <p class="mt-[1.5cqw] flex gap-[2cqw] [justify-content:var(--align)] has-[span]:justify-between">{x.split('|').map((s, j) => (j ? <span class="font-semibold text-(--c)">{s}</span> : s))}</p>)
+                            )}
+                          </div>
+                        </div>
+                      ))
+                    }
+                  </div>
+                </div>
+              </Phone>
+            </div>
+          </div>
+          <div class="absolute -bottom-6 -left-6 z-10 flex items-end gap-1 sm:-left-24">
+            <Cookie live id="try-cookie" class="w-20 sm:w-24" />
+            <p id="try-quip" aria-live="polite" class="mb-16 max-w-40 rounded-[16px_16px_16px_4px] bg-fg px-3 py-2 text-sm font-semibold text-white shadow-lg sm:mb-20">Go on, type your business.</p>
           </div>
         </div>
       </div>
     </section>
-  </div>
 
-  <!-- Skills Section -->
-  <section class="max-w-6xl mx-auto">
-    <SkillsSlider />
-  </section>
+    <!-- Proof strip: numbers count up once in view. Real figures already said elsewhere on the page, just made bigger. -->
+    <section aria-label="Track record" class="border-y border-line bg-white">
+      <div class="mx-auto max-w-6xl lg:px-8"><div class="grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-[repeat(3,1fr)_1.2fr]">
+        {
+          stats.map((s, i) => (
+            <div class="reveal flex items-baseline gap-4 bg-white px-4 py-6 sm:block sm:px-6 sm:py-10" style={`--d:${i * 80}ms`}>
+              <p class="display shrink-0 text-4xl tabular-nums sm:text-5xl">
+                {s.count === null ? s.text : <span data-count={s.count} data-suffix={s.suffix}>{s.count.toLocaleString('en-GB') + s.suffix}</span>}
+              </p>
+              <p class="text-sm text-pretty text-muted sm:mt-2">{s.label}</p>
+            </div>
+          ))
+        }
+        <ul class="reveal flex flex-col justify-center gap-2 bg-white px-4 py-6 text-sm font-medium [--d:240ms] sm:px-6 sm:py-10">
+          {promises.map((p) => <li class="flex items-center gap-2.5"><span class="grid size-5 place-items-center rounded-full bg-accent/10 text-xs text-accent">✓</span>{p}</li>)}
+        </ul></div>
+      </div>
+    </section>
+
+    <!-- One tape at a slight angle. Wider than the screen so the tilt never shows an edge. -->
+    <section aria-hidden="true" class="overflow-clip pt-12 pb-20 sm:pt-20 sm:pb-32">
+      <div class="relative -mx-[5%] -rotate-2 bg-accent py-4 shadow-xl shadow-accent/25 sm:py-6">
+        <div class="marquee flex w-max gap-10 whitespace-nowrap">
+          {[...marquee, ...marquee, ...marquee].map((w) => (
+            <span class="display flex items-center gap-10 text-4xl text-white sm:text-6xl">
+              {w}
+              <span class="text-white/40">✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <section id="how" class="light py-24 sm:py-32">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <h2 class="h2 reveal max-w-3xl">Three steps. <span class="text-muted">You only do the first one.</span></h2>
+        <!-- A timeline, not three equal cards: step one (the visitor's only step) is the lit one. -->
+        <div class="relative mt-14">
+        <span aria-hidden="true" class="draw absolute top-0 left-0 h-full w-0.5 bg-accent md:h-0.5 md:w-full"></span>
+        <ol class="grid gap-10 border-l border-line pl-6 md:grid-cols-3 md:border-t md:border-l-0 md:pt-8 md:pl-0">
+          {
+            steps.map((s, i) => (
+              <li class="reveal relative" style={`--d:${i * 90}ms`}>
+                <span aria-hidden="true" class:list={['absolute top-1.5 -left-[1.95rem] size-3 rounded-full ring-4 ring-white md:top-[-2.4rem] md:left-0', i === 0 ? 'bg-accent' : 'bg-line']}></span>
+                <p class:list={['display text-7xl tabular-nums', i === 0 ? 'text-accent' : 'text-fg/15']}>{s.n}</p>
+                <h3 class="mt-4 text-xl font-semibold tracking-tight">{s.title}</h3>
+                <p class="mt-2 max-w-xs text-pretty text-muted">{s.text}</p>
+              </li>
+            ))
+          }
+        </ol>
+        </div>
+        <div class="reveal mt-10 flex flex-wrap items-center gap-3">
+          <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp">Send the first message</a>
+          <span class="text-sm text-muted">I reply within a day.</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" class="py-24 sm:py-32">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <p class="eyebrow reveal">Services</p>
+        <h2 class="h2 reveal mt-4 max-w-3xl">You send one message. <span class="text-muted">I do the rest.</span></h2>
+        <!-- Bento: the website is the product, so it gets the big loud tile; add-ons sit in a quiet list beside it. -->
+        <div class="mt-14 grid gap-4 lg:grid-cols-[1.15fr_1fr]">
+          {
+            services.slice(0, 1).map((x) => (
+              <div class="accent-band reveal relative isolate flex max-lg:[@media(min-height:50rem)]:sticky max-lg:top-24 flex-col overflow-hidden rounded-3xl p-7 shadow-2xl shadow-[#2563eb]/30 sm:p-10">
+                <div aria-hidden="true" class="absolute -top-24 -right-24 -z-10 size-72 rounded-full bg-white/10 blur-2xl"></div>
+                <h3 class="text-lg font-semibold">{x.name}</h3>
+                <p class="display mt-6 text-6xl sm:text-7xl">£{foundingOffer.price}</p>
+                <p class="mt-3 max-w-sm text-sm text-muted">Founding offer for the first {foundingOffer.slots} clients, {foundingOffer.note}. Normally £{site.priceFrom}.</p>
+                <ul class="mt-8 mb-10 grid content-start gap-3 border-t border-line pt-8 sm:grid-cols-2">
+                  {x.items.map((t) => <li class="flex gap-2.5"><span aria-hidden="true">✓</span>{t}</li>)}
+                </ul>
+                <a href={mailto} class="btn mt-auto w-fit bg-white text-[#1d4ed8] hover:bg-white/90">Get a free quote<Icon name="arrow" class="size-4" /></a>
+              </div>
+            ))
+          }
+          <div class="card reveal relative divide-y divide-line px-7 [--d:90ms] max-lg:shadow-[0_-24px_48px_-24px_rgb(31_39_55/0.35)] sm:px-9">
+            {
+              services.slice(1).map((x) => (
+                <div class="py-7 sm:py-8">
+                  <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                    <h3 class="text-lg font-semibold">{x.name}</h3>
+                    <p class="text-sm font-semibold text-accent">{x.price}</p>
+                  </div>
+                  <p class="mt-1 text-sm text-muted">{x.note}</p>
+                  <ul class="mt-4 space-y-1.5 text-muted">
+                    {x.items.map((t) => <li>{t}</li>)}
+                  </ul>
+                </div>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- The bit: this site tracks nobody, so the cookie that matters is Cookie. Styled as a giant consent banner. "Accept a biscuit" opens the quote chat (not "Accept all": that would look like the real banner); "Manage preferences" opens the real Usercentrics settings. -->
+    <section class="px-4 pb-8 sm:px-6 lg:px-8">
+      <div class="card reveal relative isolate mx-auto grid max-w-6xl items-center gap-8 overflow-hidden p-7 sm:grid-cols-[220px_1fr] sm:gap-14 sm:p-12">
+        <div aria-hidden="true" class="absolute top-1/2 left-[10%] -z-10 size-[380px] -translate-1/2 rounded-full bg-[#dda15a]/20 blur-[90px]"></div>
+        <Cookie live id="notice-cookie" class="mx-auto w-40 transition-transform duration-300 hover:-rotate-6 sm:w-full" />
+        <div>
+          <h2 class="h2">No tracking cookies. <span class="mark">Just me.</span></h2>
+          <p class="mt-5 max-w-lg text-pretty text-muted">No analytics, no ads following you round the internet. The site only remembers your privacy choice. And a biscuit who knows Thomas's prices.</p>
+          <div class="mt-8 flex flex-wrap gap-3">
+            <button type="button" data-cookie-open="Accept a biscuit" class="btn-primary">Accept a biscuit</button>
+            <button type="button" id="notice-prefs" data-privacy class="btn-ghost">Manage preferences</button>
+          </div>
+          <p id="notice-note" aria-live="polite" class="mt-4 min-h-5 text-sm text-muted"></p>
+        </div>
+      </div>
+    </section>
+
+    <section id="work" class="py-24 sm:py-32">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
+          <div>
+            <p class="eyebrow reveal">Work</p>
+            <h2 class="h2 reveal mt-4 max-w-3xl">Live and running. <span class="text-muted">A client site, and businesses I run myself.</span></h2>
+          </div>
+          <p class="reveal max-w-sm text-pretty text-muted">Everything here I designed and built from scratch. My own products serve customers in Argentina, which is why they're in Spanish.</p>
+        </div>
+        <!-- Featured client site wide, then my own products as a row of phones. -->
+        {
+          work.slice(0, 1).map((w) => (
+            <a href={w.url} target="_blank" rel="noopener" class="card spot reveal group relative mt-14 grid items-center gap-8 overflow-visible! p-6 hover:ring-accent/30 sm:grid-cols-[1fr_200px] sm:p-10 lg:grid-cols-[1fr_240px]">
+              <div>
+                <p class="text-sm text-muted">{w.tag}</p>
+                <h3 class="display mt-2 text-4xl sm:text-5xl">{w.name}</h3>
+                <p class="mt-4 max-w-md text-lg text-pretty text-muted">{w.text}</p>
+                <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent">Visit the site<Icon name="arrow" class="size-4 -rotate-45 transition group-hover:rotate-0" /></span>
+              </div>
+              <div class="relative mx-auto w-[180px] sm:w-full">
+                <Phone class="w-full rotate-3 transition duration-500 group-hover:rotate-0">
+                  <Image src={w.img} alt={`${w.name} website on a phone`} widths={[240, 480]} sizes="240px" />
+                </Phone>
+                {w.sticker && <span class="sticker group-hover:rotate-0">{w.sticker}</span>}
+              </div>
+            </a>
+          ))
+        }
+        <div class="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 lg:grid-cols-4 lg:gap-x-8">
+          {
+            work.slice(1).map((w, i) => (
+              <a href={w.url} target="_blank" rel="noopener" class="reveal group relative block" style={`--d:${i * 80}ms`}>
+                <!-- Phone rises out of the tile's bottom edge, cropped clean (overflow-hidden); the sticker sits outside so the crop never cuts it. -->
+                <div class="grid place-items-center overflow-hidden rounded-3xl bg-white px-6 pt-8 ring-1 ring-line ring-inset transition duration-300 group-hover:-translate-y-1 group-hover:ring-accent/30 sm:px-10">
+                  <Phone class="-mb-16 w-full max-w-[150px] transition duration-500 group-hover:-translate-y-2">
+                    <Image src={w.img} alt={`${w.name} website on a phone`} widths={[150, 300]} sizes="150px" />
+                  </Phone>
+                </div>
+                {w.sticker && <span class="sticker group-hover:rotate-0">{w.sticker}</span>}
+                <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold">{w.name}<Icon name="arrow" class="size-4 -rotate-45 text-muted transition group-hover:text-fg" /></h3>
+                <p class="mt-0.5 text-sm text-muted">{w.tag}</p>
+                <p class="mt-2 text-sm text-pretty text-muted">{w.text}</p>
+              </a>
+            ))
+          }
+        </div>
+      </div>
+    </section>
+
+    <section id="about" class="light py-24 sm:py-32">
+      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+        <div class="grid items-center gap-10 md:grid-cols-[1fr_320px] md:gap-20">
+          <div class="reveal relative isolate mx-auto w-56 md:order-last md:w-full">
+            <div aria-hidden="true" class="absolute -inset-4 -z-10 rounded-[2rem] bg-fg/10 opacity-60 blur-2xl"></div>
+            <Image src={thomas} alt="Thomas Beckford" width={640} class="w-full -rotate-2 rounded-3xl shadow-2xl shadow-fg/20 ring-1 ring-white/70" />
+            <span class="sticker">That's me</span>
+          </div>
+          <div>
+            <h2 class="h2 reveal">You deal with me. <span class="text-muted">Not an agency, not a call centre.</span></h2>
+            <p class="reveal mt-5 max-w-xl text-pretty text-muted">I'm Thomas, a software and AI engineer in London. For {site.years} years I've built booking systems for venue chains and apps with thousands of users. Your website gets that same care, at a local-business price.</p>
+            <p class="reveal mt-4 max-w-xl text-pretty text-muted">One person from your first message to a live site, and after. You message me, I answer.</p>
+            <div class="reveal mt-6 flex flex-wrap items-center gap-2 text-sm">
+              <span class="text-muted">Built for</span>
+              {brands.map((b) => <span class="rounded-full bg-fg/[0.04] px-3 py-1 font-medium ring-1 ring-fg/10">{b}</span>)}
+            </div>
+            <div class="reveal mt-8 flex flex-wrap gap-3">
+              <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp">WhatsApp me</a>
+              <a href={mailto} class="btn-ghost">Get a free quote</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- CV as a dark card: closed it previews the stack, open it's a timeline. -->
+        <details class="group reveal mt-20 overflow-hidden rounded-3xl bg-fg text-white">
+          <summary class="flex cursor-pointer list-none flex-wrap items-center justify-between gap-6 p-6 sm:p-10 [&::-webkit-details-marker]:hidden">
+            <span class="min-w-0">
+              <span class="font-mono text-xs tracking-[0.2em] text-white/50 uppercase">For recruiters &amp; tech leads</span>
+              <span class="display mt-2 block text-3xl sm:text-5xl">Full CV and stack</span>
+              <span class="mt-4 flex flex-wrap gap-2">
+                {['AI engineering', 'Next.js', 'React Native', 'Node', 'Stripe'].map((t) => <span class="rounded-full bg-white/10 px-3 py-1 font-mono text-xs text-white/80">{t}</span>)}
+              </span>
+            </span>
+            <span class="flex items-center gap-3 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-fg transition group-hover:bg-white/90" aria-hidden="true">
+              <span class="group-open:hidden">Open CV</span><span class="hidden group-open:inline">Close</span>
+              <span class="text-lg leading-none transition group-open:rotate-45">+</span>
+            </span>
+          </summary>
+          <div class="rounded-3xl bg-white p-6 text-fg sm:m-2 sm:p-10">
+          <CV />
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- Questions as a chat: you tap a question, Cookie types and answers. One open at a time (details name). -->
+    <section id="faq" class="py-24 sm:py-32">
+      <div class="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 md:grid-cols-[300px_1fr] md:gap-20 lg:px-8">
+        <div class="md:sticky md:top-28 md:self-start">
+          <h2 class="h2 reveal">Ask <span class="mark">Cookie.</span></h2>
+          <Cookie live id="faq-cookie" class="reveal mt-8 hidden w-40 md:block" />
+          <div class="reveal mt-8"><button type="button" data-cookie-open class="btn-ghost">Ask something else</button></div>
+        </div>
+        <!-- First five on show; the rest behind one tap (CSS only, the checkbox flips them). -->
+        <div class="group/faq space-y-4">
+          {
+            faqs.map(([q, a], i) => (
+              <details name="faq" class:list={['reveal group', i >= 5 && 'hidden group-has-checked/faq:block']} style={`--d:${(i % 5) * 70}ms`}>
+                <summary class="ml-auto flex w-fit max-w-[92%] cursor-pointer list-none items-center gap-3 rounded-[16px_4px_16px_16px] bg-white px-4 py-3 text-left font-semibold text-pretty shadow-[0_8px_24px_-14px_rgb(31_39_55/0.35)] ring-1 ring-line transition duration-200 hover:-translate-y-0.5 hover:ring-accent/40 group-open:bg-accent group-open:text-white group-open:ring-accent [&::-webkit-details-marker]:hidden">
+                  {q}
+                  <span aria-hidden="true" class="text-lg leading-none text-muted transition group-open:rotate-45 group-open:text-white">+</span>
+                </summary>
+                <div class="faq-answer mt-3 flex items-end gap-2">
+                  <Cookie mood="mini" class="w-8 shrink-0" />
+                  <div class="relative max-w-[85%] rounded-[4px_16px_16px_16px] bg-night px-4 py-3 text-pretty text-white/90">
+                    <span class="faq-typing absolute inset-0 flex items-center gap-1 px-4" aria-hidden="true">
+                      <span class="size-1.5 animate-bounce rounded-full bg-white/70"></span>
+                      <span class="size-1.5 animate-bounce rounded-full bg-white/70 [animation-delay:.15s]"></span>
+                      <span class="size-1.5 animate-bounce rounded-full bg-white/70 [animation-delay:.3s]"></span>
+                    </span>
+                    <p class="faq-text">{a}</p>
+                  </div>
+                </div>
+              </details>
+            ))
+          }
+          <label class="ml-auto flex min-h-11 w-fit cursor-pointer items-center gap-2 rounded-xl px-3 text-sm font-semibold text-accent-ink group-has-checked/faq:hidden has-focus-visible:outline-2 has-focus-visible:outline-accent">
+            <input id="faq-more" type="checkbox" class="sr-only" />{faqs.length - 5} more questions<Icon name="arrow" class="size-4 rotate-90" />
+          </label>
+        </div>
+      </div>
+    </section>
+
+    <!-- Second tape, the first one's mirror: opposite tilt and direction, ink instead of blue. Promises, all true elsewhere on the page. -->
+    <section aria-hidden="true" class="overflow-clip pt-8 pb-24 sm:pb-32">
+      <div class="relative -mx-[5%] rotate-2 bg-fg py-4 shadow-xl shadow-fg/25 sm:py-6">
+        <div class="marquee flex w-max gap-10 whitespace-nowrap [--dir:-1]">
+          {[...tape, ...tape, ...tape].map((w) => (
+            <span class="display flex items-center gap-10 text-4xl text-white sm:text-6xl">
+              {w}
+              <span class="text-accent">✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Closing CTA: big left-aligned line, one person behind it, two ways in. -->
+    <section id="contact" class="light relative isolate overflow-hidden border-t border-line py-24 sm:py-36">
+      <div aria-hidden="true" class="absolute right-0 bottom-0 -z-10 h-[520px] w-full bg-[radial-gradient(ellipse_50%_60%_at_85%_100%,rgb(37_99_235/0.16),transparent)]"></div>
+      <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1.4fr_1fr] lg:gap-20 lg:px-8">
+        <h2 class="display text-[3rem] leading-[0.95] text-balance sm:text-7xl lg:text-[5.5rem]">
+          {["Let's", 'get', 'your', 'phone'].map((w, i) => <><span class="word-in" style={`--i:${i}`}>{w}</span>{' '}</>)}<span class="word-in" style="--i:4"><span class="mark">ringing.</span></span>
+        </h2>
+        <!-- A note from one person, not a form: who you'll talk to, what happens next, two ways in. -->
+        <div class="card reveal p-6 [--d:90ms] sm:p-8">
+          <div class="flex items-center gap-4">
+            <Image src={thomas} alt="Thomas Beckford" width={160} class="size-14 shrink-0 rounded-2xl object-cover object-top" />
+            <div>
+              <p class="font-semibold">{site.name}</p>
+              <p class="text-sm text-muted">Usually replies within a day</p>
+            </div>
+          </div>
+          <p class="mt-6 text-pretty text-muted">Tell me what you do and where. I'll come back with a fixed price. No obligation, no deposit.</p>
+          <div class="mt-6 grid gap-3 sm:grid-cols-2">
+            <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14">WhatsApp me<Icon name="arrow" class="size-4" /></a>
+            <a href={mailto} class="btn-ghost min-h-14">Get a free quote</a>
+          </div>
+          <p class="mt-5 border-t border-line pt-5 text-sm text-muted">
+            Or call <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">{site.phone}</a> ·{' '}
+            <button type="button" data-cookie-open="Get me a price" class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">get a price from Cookie</button>
+          </p>
+          <p class="mt-4 inline-flex items-center gap-2 rounded-full bg-accent/10 px-3.5 py-1.5 text-sm font-semibold text-accent-ink">Founding offer · £{foundingOffer.price} for the first {foundingOffer.slots} clients</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Big name as the sign-off, then the paths people actually need: sections, contact, legal. -->
+  <footer class="overflow-clip border-t border-line bg-paper pt-16 text-sm text-muted">
+    <div class="mx-auto grid max-w-6xl grid-cols-2 gap-10 px-4 sm:grid-cols-[1fr_auto_auto] sm:gap-16 sm:px-6 lg:px-8">
+      <div class="col-span-2 sm:col-span-1">
+        <Logo class="size-10" />
+        <p class="mt-4 max-w-xs text-pretty">Websites for local businesses, built and looked after. London, UK.</p>
+        <a href={`mailto:${site.email}`} class="mt-4 inline-block py-2 font-semibold text-fg underline-offset-4 hover:underline">{site.email}</a>
+      </div>
+      <nav aria-label="Footer" class="flex flex-col items-start">
+        {[['#services', 'Services'], ['#work', 'Work'], ['#about', 'About'], ['#faq', 'Questions'], ['#contact', 'Contact']].map(([h, t]) => <a href={h} class="py-1.5 transition hover:text-fg">{t}</a>)}
+      </nav>
+      <div class="flex flex-col items-start">
+        <a href={site.linkedin} target="_blank" rel="noopener" class="py-1.5 transition hover:text-fg">LinkedIn</a>
+        <a href={site.github} target="_blank" rel="noopener" class="py-1.5 transition hover:text-fg">GitHub</a>
+        <a href="/privacy" class="py-1.5 transition hover:text-fg">Privacy</a>
+        <button type="button" data-privacy class="py-1.5 transition hover:text-fg">Privacy settings</button>
+      </div>
+    </div>
+    <p aria-hidden="true" class="display mt-14 text-center text-[clamp(2.25rem,11vw,10rem)] leading-[0.78] whitespace-nowrap text-fg/[0.07] select-none">Thomas Beckford</p>
+    <p class="border-t border-line py-5 text-center text-xs">© {new Date().getFullYear()} {site.name} · London, UK</p>
+  </footer>
+
+  <CookieChat trades={trades.map((t) => t.name)} />
 </BaseLayout>
+
+<script>
+  import { openPrivacySettings } from '@/consent'
+
+  // Nav turns into a floating capsule once the page scrolls.
+  const nav = document.getElementById('nav')!
+  // The quote badge bows out once the contact section, where it points, is on screen.
+  const badge = document.getElementById('badge')!
+  const fab = document.getElementById('wa-fab')!
+  const contact = document.getElementById('contact')!
+  const docks = CSS.supports('animation-timeline: scroll()') && !matchMedia('(prefers-reduced-motion: reduce)').matches
+  const onScroll = () => {
+    nav.toggleAttribute('data-scrolled', scrollY > 40)
+    const atContact = contact.getBoundingClientRect().top < innerHeight * 0.8
+    badge.toggleAttribute('data-off', atContact)
+    fab.toggleAttribute('data-off', atContact)
+    // Hidden (scaled away at contact, or still docked out near the top) = out of tab order and screen readers too.
+    badge.inert = fab.inert = atContact || (docks && scrollY < 200)
+  }
+  addEventListener('scroll', onScroll, { passive: true })
+  onScroll()
+
+  // Reveal in and out: hidden while off screen (only things that start below the fold, so nothing blinks on load and no-JS shows everything).
+  if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    const pending = [...document.querySelectorAll<HTMLElement>('.reveal')].filter((el) => el.getBoundingClientRect().top > innerHeight)
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) e.target.toggleAttribute('data-pending', !e.isIntersecting)
+      },
+      { rootMargin: '-6% 0px -10% 0px' },
+    )
+    for (const el of pending) {
+      el.setAttribute('data-pending', '')
+      io.observe(el)
+    }
+  }
+
+  // Cookie reacts: a short run of faces, then back to hello.
+  const react = (el: HTMLElement, steps: [string, number][]) => {
+    let t = 0
+    for (const [m, ms] of [...steps, ['hello', 0] as [string, number]]) {
+      setTimeout(() => {
+        el.dataset.mood = m
+        el.classList.remove('cookie-pop')
+        void el.getBoundingClientRect()
+        el.classList.add('cookie-pop')
+      }, t)
+      t += ms
+    }
+  }
+
+  // Try it: mirror the form into the phone site and the quote email.
+  const tryForm = document.getElementById('try-form') as HTMLFormElement
+  const trySite = document.getElementById('try-site')!
+  const tryCta = document.getElementById('try-cta') as HTMLAnchorElement
+  const trades = JSON.parse(tryForm.dataset.trades!) as { name: string; quip: string; demo: string; head: string; lede: string; cta: string; look: Record<string, string> }[]
+  const set = (k: string, v: string) => trySite.querySelectorAll(`[data-k="${k}"]`).forEach((el) => (el.textContent = v))
+  const render = () => {
+    const f = new FormData(tryForm)
+    const val = (k: string) => String(f.get(k) ?? '').trim() || (tryForm.elements.namedItem(k) as HTMLInputElement).placeholder
+    const t = trades[Number(f.get('trade'))]
+    const nameInput = tryForm.elements.namedItem('name') as HTMLInputElement
+    nameInput.placeholder = t.demo
+    const name = val('name')
+    const area = val('area')
+    for (const [k, v] of Object.entries(t.look)) trySite.style.setProperty(`--${k}`, v)
+    trySite.querySelectorAll<HTMLElement>('[data-trade]').forEach((el) => (el.hidden = el.dataset.trade !== f.get('trade')))
+    set('name', name)
+    set('area', area)
+    set('trade', t.name)
+    set('head', t.head)
+    set('cta', t.cta)
+    set('lede', t.lede.replace('{area}', area))
+    // The email carries only what the visitor typed, never the demo placeholders.
+    const typed = (k: string) => String(f.get(k) ?? '').trim()
+    const body = [`Hi Thomas, I'd like a website like the one I just made on your page.`, '', picked ? `Trade: ${t.name}` : null, typed('name') ? `Business: ${typed('name')}` : null, typed('area') ? `Area: ${typed('area')}` : null].filter((l) => l !== null).join('\n')
+    tryCta.href = `mailto:${tryCta.href.slice(7).split('?')[0]}?subject=${encodeURIComponent(typed('name') ? `Website for ${typed('name')}` : 'Website quote')}&body=${encodeURIComponent(body)}`
+  }
+  // Cookie's running commentary. ponytail: textContent only, the visitor's text never becomes HTML.
+  const tryCookie = document.getElementById('try-cookie')!
+  const quip = document.getElementById('try-quip')!
+  let quipTimer = 0
+  tryForm.addEventListener('input', (e) => {
+    const el = e.target as HTMLInputElement
+    clearTimeout(quipTimer)
+    quipTimer = window.setTimeout(() => {
+      const v = el.value.trim()
+      if (el.name === 'trade') quip.textContent = trades[Number(el.value)].quip
+      else if (!v) return
+      else quip.textContent = el.name === 'name' ? `${v}? I’d ring them.` : `${v}! Lovely round there.`
+      quip.classList.remove('bubble-in')
+      void quip.offsetWidth
+      quip.classList.add('bubble-in')
+      react(tryCookie, [['done', 1400]])
+    }, el.name === 'trade' ? 0 : 600)
+  })
+  // Only a trade the visitor chose goes in the email, not one the slideshow landed on. Programmatic .checked fires no input event.
+  // Registered before render so the click that picks a trade already counts.
+  let picked = false
+  tryForm.addEventListener('input', () => (picked = true))
+  tryForm.addEventListener('input', render)
+  // Browser may restore typed values on back/reload; only then resync (and keep their pick), so the default mailto stays generic.
+  const restored = !!((tryForm.elements.namedItem('name') as HTMLInputElement).value || (tryForm.elements.namedItem('area') as HTMLInputElement).value || !tryForm.querySelector<HTMLInputElement>('input[name=trade][value="0"]')!.checked)
+  if (restored) {
+    picked = true
+    render()
+  }
+  // Until the visitor touches the form, the phone cycles through the trades on its own. Pauses off screen and in background tabs.
+  if (!restored && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    let heroVisible = true
+    new IntersectionObserver(([e]) => (heroVisible = e.isIntersecting)).observe(trySite)
+    const radios = tryForm.querySelectorAll<HTMLInputElement>('input[name=trade]')
+    const cycle = setInterval(() => {
+      if (document.hidden || !heroVisible) return
+      const i = [...radios].findIndex((r) => r.checked)
+      radios[(i + 1) % radios.length].checked = true
+      render()
+    }, 2800)
+    for (const ev of ['pointerdown', 'focusin']) tryForm.addEventListener(ev, () => clearInterval(cycle), { once: true })
+  }
+  tryForm.addEventListener('submit', (e) => e.preventDefault())
+
+  // The questions Cookie, and "Manage preferences": the real Usercentrics settings, plus a word from Cookie.
+  const faqCookie = document.getElementById('faq-cookie')!
+  document.querySelectorAll('#faq details').forEach((d) =>
+    d.addEventListener('toggle', () => (d as HTMLDetailsElement).open && react(faqCookie, [['thinking', 550], ['done', 1600]])),
+  )
+  // The label hides once checked, taking focus with it: hand focus to the first question it revealed.
+  const faqMore = document.getElementById('faq-more') as HTMLInputElement
+  faqMore.addEventListener('change', () => faqMore.checked && document.querySelectorAll<HTMLElement>('#faq summary')[5]?.focus())
+  // If the panel can't open, Cookie says so; the footer button falls back to /privacy instead of doing nothing.
+  const noticeCookie = document.getElementById('notice-cookie')!
+  document.querySelectorAll<HTMLElement>('[data-privacy]').forEach((b) =>
+    b.addEventListener('click', async () => {
+      const opened = await openPrivacySettings()
+      if (b.id !== 'notice-prefs') {
+        if (!opened) location.href = '/privacy'
+        return
+      }
+      document.getElementById('notice-note')!.textContent = opened
+        ? 'Only one cookie in there: the one that remembers this choice.'
+        : 'The settings panel didn’t load, maybe blocked by your browser. Nothing else is stored anyway.'
+      react(noticeCookie, [['oops', 2200]])
+    }),
+  )
+
+  // Proof strip: count up from 0 once each number scrolls into view, once.
+  const counters = document.querySelectorAll<HTMLElement>('[data-count]')
+  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
+  const animateCount = (el: HTMLElement) => {
+    const target = Number(el.dataset.count)
+    const suffix = el.dataset.suffix ?? ''
+    if (reducedMotion) {
+      el.textContent = target.toLocaleString('en-GB') + suffix
+      return
+    }
+    const start = performance.now()
+    const dur = 1100
+    const tick = (now: number) => {
+      const p = Math.min(1, (now - start) / dur)
+      el.textContent = Math.round(target * (1 - (1 - p) ** 3)).toLocaleString('en-GB') + suffix
+      if (p < 1) requestAnimationFrame(tick)
+    }
+    requestAnimationFrame(tick)
+  }
+  const countIo = new IntersectionObserver((entries) => {
+    for (const e of entries) {
+      if (!e.isIntersecting) continue
+      animateCount(e.target as HTMLElement)
+      countIo.unobserve(e.target)
+    }
+  }, { threshold: 0.6 })
+  counters.forEach((el) => countIo.observe(el))
+
+  // Hero phone tilts toward the pointer; cards get a glow that follows it. Skipped for reduced motion and touch.
+  if (matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {
+    const tilt = document.getElementById('tilt')!
+    document.getElementById('hero')!.addEventListener('pointermove', (e) => {
+      tilt.style.setProperty('--ry', `${(e.clientX / innerWidth - 0.5) * 14 - 8}deg`)
+      tilt.style.setProperty('--rx', `${4 - (e.clientY / innerHeight - 0.5) * 8}deg`)
+    })
+    document.addEventListener('pointermove', (e) => {
+      const el = (e.target as Element).closest<HTMLElement>('.spot')
+      if (!el) return
+      const r = el.getBoundingClientRect()
+      el.style.setProperty('--x', `${e.clientX - r.left}px`)
+      el.style.setProperty('--y', `${e.clientY - r.top}px`)
+    })
+  }
+</script>

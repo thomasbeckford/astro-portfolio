@@ -1,0 +1,82 @@
+---
+import { site } from '@/site'
+
+// Shared by the home page CV card and /cv, so the two never drift.
+const experience = [
+  {
+    when: 'Now',
+    company: 'Pasimedia',
+    role: 'Software Engineer (part-time)',
+    text: 'Digital agency. Lead developer on fiveirongolf.com, the Next.js and Contentstack site for a US indoor-golf chain: bookings, venue pages, lead capture and CRM webhooks. Also built a Next.js and Payload rebuild for Lane7, a UK bowling and bar chain, and the booking platform for Sixes, a UK cricket-bar chain, integrating the SevenRooms reservations API and Stripe payments.',
+  },
+  {
+    when: '2023',
+    company: 'SalesAI',
+    role: 'Senior Frontend Developer',
+    text: 'Dashboards for an AI sales-automation platform: lead-flow metrics, real-time charts and the admin tooling behind them.',
+  },
+  {
+    when: '2022 – 2023',
+    company: 'FUEL',
+    role: 'Senior Frontend Developer',
+    text: 'Creator and fan-engagement apps in a Turborepo monorepo. Next.js, React Query and on-chain integrations.',
+  },
+  {
+    when: '2021 – 2022',
+    company: 'SpiritSwap',
+    role: 'Frontend Developer',
+    text: 'A decentralised exchange built from scratch, with the focus on performance for traders under load.',
+  },
+  {
+    when: '2018 – 2021',
+    company: 'Kubikware',
+    role: 'Full-Stack Developer',
+    text: 'Node, Express and PostgreSQL back ends with React front ends, including the CMS for the Lévy Gorvy gallery.',
+  },
+]
+
+const stack = [
+  ['AI engineering', ['Claude Code & Codex', 'Spec-driven agentic coding', 'LLM tool calling', 'Document extraction', 'Chatbots & agents'], true],
+  ['Front end', ['React', 'Next.js (App Router)', 'TypeScript', 'TanStack Query & Table', 'Tailwind CSS', 'Astro']],
+  ['Back end', ['Node.js', 'Fastify', 'Express', 'PostgreSQL', 'Prisma', 'Supabase']],
+  ['Mobile', ['React Native', 'Expo', 'Android (Java)', 'OTA updates', 'App Store & Play Store']],
+  ['Payments & booking', ['Stripe', 'MercadoPago', 'SevenRooms API']],
+  ['CMS & integrations', ['Sanity', 'Contentstack', 'Payload', 'WordPress', 'HubSpot']],
+  ['Compliance & maps', ['GDPR / cookie consent', 'Usercentrics', 'Google Maps & Places API', 'Geolocation']],
+  ['Infra', ['Vercel', 'Railway', 'Docker', 'CI/CD']],
+]
+---
+
+<p class="text-sm text-pretty text-muted">Contract and full-time roles too, London or remote.</p>
+<div class="mt-4 flex flex-wrap gap-3">
+  <a href={site.linkedin} target="_blank" rel="noopener" class="btn-ghost min-h-11">LinkedIn</a>
+  <a href={site.github} target="_blank" rel="noopener" class="btn-ghost min-h-11">GitHub</a>
+</div>
+<ol class="relative mt-10 ml-2 space-y-10 border-l-2 border-accent/20 pl-8">
+  {
+    experience.map((e, i) => (
+      <li class="relative">
+        <span aria-hidden="true" class:list={['absolute top-1.5 -left-[41px] size-4 rounded-full ring-4 ring-white', i === 0 ? 'bg-accent' : 'bg-white shadow-[inset_0_0_0_2px_var(--color-accent)]']}></span>
+        <p class="font-mono text-xs tracking-wider text-accent-ink uppercase tabular-nums">{e.when}</p>
+        <h3 class="display mt-1 text-2xl">
+          {e.company} <span class="font-sans text-base font-medium tracking-normal text-muted">· {e.role}</span>
+        </h3>
+        <p class="mt-2 max-w-2xl text-pretty text-muted">{e.text}</p>
+      </li>
+    ))
+  }
+</ol>
+<div class="mt-10 grid items-start gap-5 sm:grid-cols-2 lg:grid-cols-3">
+  {
+    stack.map(([k, items, hero], i) => (
+      <div class:list={['rounded-3xl p-5', hero ? 'accent-band shadow-xl shadow-[#2563eb]/25' : 'card']}>
+        <p class:list={['text-sm font-semibold', hero ? 'text-white' : '']}>{k}</p>
+        <div class="mt-3 flex flex-wrap gap-2">
+          {items.map((t) => (
+            <span class:list={['rounded-full px-3 py-1 text-sm', hero ? 'bg-[#1d4ed8] text-white' : 'bg-fg/[0.04] text-muted ring-1 ring-fg/10']}>{t}</span>
+          ))}
+        </div>
+      </div>
+    ))
+  }
+</div>
