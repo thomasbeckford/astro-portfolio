@@ -56,6 +56,12 @@ const light = { on: '#fff', bar: '#fff', glow: '16%' }
 const dark = { on: '#fff', fg: '#fff', soft: 'rgb(255 255 255/.7)', panel: 'rgb(255 255 255/.06)', line: 'rgb(255 255 255/.14)', glow: '55%' }
 const trades = [
   {
+    name: 'Electrician', quip: 'Ooh, sparky.', demo: 'Bright Spark Electrical', head: 'Sparks you can trust.', lede: 'Rewires, fuse boards and EV chargers across {area}. Certified and insured.', cta: 'Get a quote',
+    look: { c: '#111', on: '#facc15', bg: '#facc15', bar: 'rgb(0 0 0/.07)', fg: '#111', soft: 'rgb(0 0 0/.72)', panel: 'rgb(0 0 0/.07)', line: 'rgb(0 0 0/.22)', glow: '0%', r: '0px', font: 'var(--font-mono)', w: '700', case: 'uppercase', align: 'left' },
+    points: ['Part P certified', 'All work guaranteed', 'Serving {area} and nearby'],
+    extra: { label: 'What we do', items: ['EV chargers', 'Fuse boards', 'Rewires', 'Lighting'], chips: true },
+  },
+  {
     name: 'Plumber', quip: 'Mind the pipes.', demo: 'Dave’s Plumbing', head: 'Leak? Boiler down? We’re on our way.', lede: 'Emergency call-outs, boilers and bathrooms across {area}.', cta: 'Get a fixed price',
     look: { ...light, c: '#0e7490', bg: '#f4f8fa', fg: '#0f172a', soft: 'rgb(15 23 42/.65)', panel: '#e3f1f4', line: 'rgb(14 116 144/.25)', r: '3cqw', font: sans, w: '800', case: 'none', align: 'left' },
     points: ['Gas Safe registered', 'Price agreed before we start', 'Serving {area} and nearby'],
@@ -66,12 +72,6 @@ const trades = [
     look: { ...dark, c: '#dc2626', bg: '#111317', bar: '#16181d', r: '0.8cqw', font: sans, w: '800', case: 'uppercase', align: 'left' },
     points: ['Free, no-obligation quotes', 'Fully insured', 'Serving {area} and nearby'],
     extra: { label: 'Free roof check', items: ['Photos of your roof the same day'] },
-  },
-  {
-    name: 'Electrician', quip: 'Ooh, sparky.', demo: 'Bright Spark Electrical', head: 'Sparks you can trust.', lede: 'Rewires, fuse boards and EV chargers across {area}. Certified and insured.', cta: 'Get a quote',
-    look: { c: '#111', on: '#facc15', bg: '#facc15', bar: 'rgb(0 0 0/.07)', fg: '#111', soft: 'rgb(0 0 0/.72)', panel: 'rgb(0 0 0/.07)', line: 'rgb(0 0 0/.22)', glow: '0%', r: '0px', font: 'var(--font-mono)', w: '700', case: 'uppercase', align: 'left' },
-    points: ['Part P certified', 'All work guaranteed', 'Serving {area} and nearby'],
-    extra: { label: 'What we do', items: ['EV chargers', 'Fuse boards', 'Rewires', 'Lighting'], chips: true },
   },
   {
     name: 'Café', quip: 'Do you do biscuits? Asking for me.', demo: 'The Corner Café', head: 'Proper coffee. Proper breakfast.', lede: 'Your local in {area}. Open from 7, seven days a week.', cta: 'See the full menu',
@@ -157,7 +157,7 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
             I'm Thomas, a London developer with {site.years} years' experience. Type your business and watch the phone build it.
           </p>
           <div class="enter mt-7 grid gap-4 [--d:250ms] sm:grid-cols-2">
-            <label class="block text-sm font-semibold">Your business<input name="name" class="field mt-2" placeholder="Dave’s Plumbing" maxlength="28" autocomplete="organization" /></label>
+            <label class="block text-sm font-semibold">Your business<input name="name" class="field mt-2" placeholder={trades[0].demo} maxlength="28" autocomplete="organization" /></label>
             <label class="block text-sm font-semibold">Where<input name="area" class="field mt-2" placeholder="Bromley" maxlength="40" autocomplete="address-level2" /></label>
           </div>
           <fieldset class="enter mt-4 [--d:290ms]">
@@ -178,7 +178,7 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
             <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
           </div>
           <p class="enter mt-6 flex items-center gap-3 text-sm text-muted [--d:370ms]">
-            <Image src={thomas} alt="" width={64} class="size-9 rounded-xl object-cover ring-2 ring-white" />
+            <Image src={thomas} alt="" width={64} class="size-9 rounded-xl bg-accent/10 object-cover object-top pt-0.5 ring-2 ring-white" />
             <span><strong class="font-semibold text-fg">From £{site.priceFrom}, fixed price.</strong> Live in {site.turnaround}.</span>
           </p>
         </form>
@@ -191,8 +191,8 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
                 <div id="try-site" aria-hidden="true" class="@container flex aspect-[9/19.5] flex-col bg-(--bg) font-(family-name:--font) text-(--fg) transition-colors duration-500 [text-align:var(--align)]" style={lookStyle(trades[0].look)}>
                   <div class="flex items-center justify-between gap-[3cqw] bg-(--bar) px-[5cqw] py-[4cqw] text-left shadow-[0_1px_0_var(--line)] transition-colors duration-500">
                     <div class="min-w-0">
-                      <p data-k="name" class="truncate text-[6.5cqw] tracking-tight [font-weight:var(--w)] [text-transform:var(--case)]">Dave’s Plumbing</p>
-                      <p class="truncate text-[3.4cqw] text-(--soft)"><span data-k="trade">Plumber</span> · <span data-k="area">Bromley</span></p>
+                      <p data-k="name" class="truncate text-[6.5cqw] tracking-tight [font-weight:var(--w)] [text-transform:var(--case)]">{trades[0].demo}</p>
+                      <p class="truncate text-[3.4cqw] text-(--soft)"><span data-k="trade">{trades[0].name}</span> · <span data-k="area">Bromley</span></p>
                     </div>
                     <span class="grid size-[11cqw] shrink-0 place-items-center rounded-[min(var(--r),3cqw)] bg-(--c) text-(--on) transition-colors duration-500"><Icon name="phone" class="size-[5cqw]" /></span>
                   </div>
@@ -504,7 +504,7 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
         <!-- A note from one person, not a form: who you'll talk to, what happens next, two ways in. -->
         <div class="card reveal p-6 [--d:90ms] sm:p-8">
           <div class="flex items-center gap-4">
-            <Image src={thomas} alt="Thomas Beckford" width={160} class="size-14 shrink-0 rounded-2xl object-cover object-top" />
+            <Image src={thomas} alt="Thomas Beckford" width={160} class="size-14 shrink-0 rounded-2xl bg-accent/10 object-cover object-top pt-1" />
             <div>
               <p class="font-semibold">{site.name}</p>
               <p class="text-sm text-muted">Usually replies within a day</p>
