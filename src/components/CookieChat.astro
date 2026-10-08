@@ -34,7 +34,7 @@ const starters = ['Get me a price', 'What’s the founding offer?', 'How long do
       </div>
     </div>
 
-    <form id="cookie-form" class="flex gap-2 border-t border-line p-3">
+    <form id="chat-form" class="flex gap-2 border-t border-line p-3">
       <input name="q" autofocus class="field" placeholder="Type a message" autocomplete="off" maxlength="80" aria-label="Message" />
       <button class="btn-primary min-h-11 shrink-0 px-3.5" aria-label="Send">
         <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
@@ -47,7 +47,7 @@ const starters = ['Get me a price', 'What’s the founding offer?', 'How long do
 <script>
   const dlg = document.getElementById('cookie-chat') as HTMLDialogElement
   const log = document.getElementById('cookie-log')!
-  const form = document.getElementById('cookie-form') as HTMLFormElement
+  const form = document.getElementById('chat-form') as HTMLFormElement
   const face = document.getElementById('cookie-face')!
   const avatar = document.getElementById('cookie-avatar') as HTMLTemplateElement
   const { price, turnaround, email, phone, offer, slots, note } = dlg.dataset
@@ -58,9 +58,9 @@ const starters = ['Get me a price', 'What’s the founding offer?', 'How long do
   const mood = (m: string, back = 0) => {
     clearTimeout(moodTimer)
     face.dataset.mood = m
-    face.classList.remove('cookie-pop')
+    face.classList.remove('mascot-pop')
     void face.getBoundingClientRect()
-    face.classList.add('cookie-pop')
+    face.classList.add('mascot-pop')
     if (back) moodTimer = window.setTimeout(() => mood('hello'), back)
   }
 

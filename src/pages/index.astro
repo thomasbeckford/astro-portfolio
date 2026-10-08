@@ -295,7 +295,7 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
     <section id="services" class="py-24 sm:py-32">
       <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         <p class="eyebrow reveal">Services</p>
-        <h2 class="h2 reveal mt-4 max-w-3xl">You send one message. <span class="text-muted">I do the rest.</span></h2>
+        <h2 class="h2 reveal mt-4 max-w-3xl">You send one message. <span class="text-muted">I&nbsp;do the rest.</span></h2>
         <!-- Bento: the website is the product, so it gets the big loud tile; add-ons sit in a quiet list beside it. -->
         <div class="mt-14 grid gap-4 lg:grid-cols-[1.15fr_1fr]">
           {
@@ -305,7 +305,7 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
                 <h3 class="text-lg font-semibold">{x.name}</h3>
                 <p class="display mt-6 text-6xl sm:text-7xl">£{foundingOffer.price}</p>
                 <p class="mt-3 max-w-sm text-sm text-muted">Founding offer for the first {foundingOffer.slots} clients, {foundingOffer.note}. Normally £{site.priceFrom}.</p>
-                <ul class="mt-8 mb-10 grid content-start gap-3 border-t border-line pt-8 sm:grid-cols-2">
+                <ul class="mt-8 mb-10 grid content-start gap-3 border-t border-line pt-8 sm:max-lg:grid-cols-2 lg:gap-4 lg:text-lg">
                   {x.items.map((t) => <li class="flex gap-2.5"><span aria-hidden="true">✓</span>{t}</li>)}
                 </ul>
                 <a href={mailto} class="btn mt-auto w-fit bg-white text-[#1d4ed8] hover:bg-white/90">Get a free quote<Icon name="arrow" class="size-4" /></a>
@@ -336,7 +336,7 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
     <section class="px-4 pb-8 sm:px-6 lg:px-8">
       <div class="card reveal relative isolate mx-auto grid max-w-6xl items-center gap-8 overflow-hidden p-7 sm:grid-cols-[220px_1fr] sm:gap-14 sm:p-12">
         <div aria-hidden="true" class="absolute top-1/2 left-[10%] -z-10 size-[380px] -translate-1/2 rounded-full bg-[#dda15a]/20 blur-[90px]"></div>
-        <Cookie live id="notice-cookie" class="mx-auto w-40 transition-transform duration-300 hover:-rotate-6 sm:w-full" />
+        <Cookie live class="mx-auto w-40 transition-transform duration-300 hover:-rotate-6 sm:w-full" />
         <div>
           <h2 class="h2">No tracking cookies. <span class="mark">Just me.</span></h2>
           <p class="mt-5 max-w-lg text-pretty text-muted">No analytics, no ads following you round the internet, no cookie banner, because there's nothing to ask about. Just a biscuit who knows Thomas's prices.</p>
@@ -516,7 +516,7 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
             <a href={mailto} class="btn-ghost min-h-14">Get a free quote</a>
           </div>
           <p class="mt-5 border-t border-line pt-5 text-sm text-muted">
-            Or call <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">{site.phone}</a> ·{' '}
+            Or call <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">{site.phone}</a> or{' '}
             <button type="button" data-cookie-open="Get me a price" class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">get a price from Cookie</button>
           </p>
           <p class="mt-4 inline-flex items-center gap-2 rounded-full bg-accent/10 px-3.5 py-1.5 text-sm font-semibold text-accent-ink">Founding offer · £{foundingOffer.price} for the first {foundingOffer.slots} clients</p>
@@ -589,9 +589,9 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
     for (const [m, ms] of [...steps, ['hello', 0] as [string, number]]) {
       setTimeout(() => {
         el.dataset.mood = m
-        el.classList.remove('cookie-pop')
+        el.classList.remove('mascot-pop')
         void el.getBoundingClientRect()
-        el.classList.add('cookie-pop')
+        el.classList.add('mascot-pop')
       }, t)
       t += ms
     }

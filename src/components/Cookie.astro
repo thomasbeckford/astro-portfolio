@@ -116,9 +116,9 @@ const C = '#2a1b14'
     c.dataset.bites = String(n)
     c.querySelectorAll('.cookie-bite').forEach((b, i) => b.setAttribute('r', i < n ? '12' : '0'))
     c.dataset.mood = n < 3 ? 'done' : 'oops'
-    c.classList.remove('cookie-pop')
+    c.classList.remove('mascot-pop')
     void c.getBoundingClientRect()
-    c.classList.add('cookie-pop')
+    c.classList.add('mascot-pop')
     const r = c.getBoundingClientRect()
     const tip = Object.assign(document.createElement('p'), { textContent: lines[n - 1], className: 'bubble-in pointer-events-none absolute z-50 -translate-x-1/2 -translate-y-full rounded-[16px_16px_16px_4px] bg-fg px-3 py-1.5 text-sm font-semibold whitespace-nowrap text-white shadow-lg' })
     tip.style.left = `${r.left + scrollX + r.width / 2}px`
