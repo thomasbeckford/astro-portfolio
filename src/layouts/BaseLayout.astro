@@ -57,8 +57,8 @@ const jsonLd = {
 <html lang="en-GB">
   <head>
     <meta charset="utf-8" />
-    <!-- Usercentrics consent banner (UK GDPR). First in <head> so it loads before any third-party script. -->
-    <script is:inline id="usercentrics-cmp" src="https://web.cmp.usercentrics.eu/ui/loader.js" data-settings-id="aLoACL3d4m8GTH" async></script>
+    <!-- No consent banner on purpose: no cookies, storage or third-party scripts, so PECR has nothing to ask about.
+         Adding analytics, ads or embeds means bringing a consent banner back first. -->
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />

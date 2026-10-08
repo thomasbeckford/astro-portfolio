@@ -332,19 +332,18 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
       </div>
     </section>
 
-    <!-- The bit: this site tracks nobody, so the cookie that matters is Cookie. Styled as a giant consent banner. "Accept a biscuit" opens the quote chat (not "Accept all": that would look like the real banner); "Manage preferences" opens the real Usercentrics settings. -->
+    <!-- The bit: this site tracks nobody, so the cookie that matters is Cookie. Styled as a giant consent banner. "Accept a biscuit" opens the quote chat (not "Accept all": that would look like the real banner); there's no real banner, so the second button goes to the privacy notice. -->
     <section class="px-4 pb-8 sm:px-6 lg:px-8">
       <div class="card reveal relative isolate mx-auto grid max-w-6xl items-center gap-8 overflow-hidden p-7 sm:grid-cols-[220px_1fr] sm:gap-14 sm:p-12">
         <div aria-hidden="true" class="absolute top-1/2 left-[10%] -z-10 size-[380px] -translate-1/2 rounded-full bg-[#dda15a]/20 blur-[90px]"></div>
         <Cookie live id="notice-cookie" class="mx-auto w-40 transition-transform duration-300 hover:-rotate-6 sm:w-full" />
         <div>
           <h2 class="h2">No tracking cookies. <span class="mark">Just me.</span></h2>
-          <p class="mt-5 max-w-lg text-pretty text-muted">No analytics, no ads following you round the internet. The site only remembers your privacy choice. And a biscuit who knows Thomas's prices.</p>
+          <p class="mt-5 max-w-lg text-pretty text-muted">No analytics, no ads following you round the internet, no cookie banner, because there's nothing to ask about. Just a biscuit who knows Thomas's prices.</p>
           <div class="mt-8 flex flex-wrap gap-3">
             <button type="button" data-cookie-open="Accept a biscuit" class="btn-primary">Accept a biscuit</button>
-            <button type="button" id="notice-prefs" data-privacy class="btn-ghost">Manage preferences</button>
+            <a href="/privacy" class="btn-ghost">Privacy notice</a>
           </div>
-          <p id="notice-note" aria-live="polite" class="mt-4 min-h-5 text-sm text-muted"></p>
         </div>
       </div>
     </section>
@@ -541,7 +540,6 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
         <a href={site.linkedin} target="_blank" rel="noopener" class="py-1.5 transition hover:text-fg">LinkedIn</a>
         <a href={site.github} target="_blank" rel="noopener" class="py-1.5 transition hover:text-fg">GitHub</a>
         <a href="/privacy" class="py-1.5 transition hover:text-fg">Privacy</a>
-        <button type="button" data-privacy class="py-1.5 transition hover:text-fg">Privacy settings</button>
       </div>
     </div>
     <p aria-hidden="true" class="display mt-14 text-center text-[clamp(2.25rem,11vw,10rem)] leading-[0.78] whitespace-nowrap text-fg/[0.07] select-none">Thomas Beckford</p>
@@ -552,8 +550,6 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
 </BaseLayout>
 
 <script>
-  import { openPrivacySettings } from '@/consent'
-
   // Nav turns into a floating capsule once the page scrolls.
   const nav = document.getElementById('nav')!
   // The quote badge bows out once the contact section, where it points, is on screen.
@@ -672,7 +668,7 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
   }
   tryForm.addEventListener('submit', (e) => e.preventDefault())
 
-  // The questions Cookie, and "Manage preferences": the real Usercentrics settings, plus a word from Cookie.
+  // The questions Cookie.
   const faqCookie = document.getElementById('faq-cookie')!
   document.querySelectorAll('#faq details').forEach((d) =>
     d.addEventListener('toggle', () => (d as HTMLDetailsElement).open && react(faqCookie, [['thinking', 550], ['done', 1600]])),
@@ -680,21 +676,6 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
   // The label hides once checked, taking focus with it: hand focus to the first question it revealed.
   const faqMore = document.getElementById('faq-more') as HTMLInputElement
   faqMore.addEventListener('change', () => faqMore.checked && document.querySelectorAll<HTMLElement>('#faq summary')[5]?.focus())
-  // If the panel can't open, Cookie says so; the footer button falls back to /privacy instead of doing nothing.
-  const noticeCookie = document.getElementById('notice-cookie')!
-  document.querySelectorAll<HTMLElement>('[data-privacy]').forEach((b) =>
-    b.addEventListener('click', async () => {
-      const opened = await openPrivacySettings()
-      if (b.id !== 'notice-prefs') {
-        if (!opened) location.href = '/privacy'
-        return
-      }
-      document.getElementById('notice-note')!.textContent = opened
-        ? 'Only one cookie in there: the one that remembers this choice.'
-        : 'The settings panel didn’t load, maybe blocked by your browser. Nothing else is stored anyway.'
-      react(noticeCookie, [['oops', 2200]])
-    }),
-  )
 
   // Proof strip: count up from 0 once each number scrolls into view, once.
   const counters = document.querySelectorAll<HTMLElement>('[data-count]')
