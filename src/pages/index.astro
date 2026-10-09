@@ -8,6 +8,7 @@ import Cookie from '@/components/Cookie.astro'
 import CookieChat from '@/components/CookieChat.astro'
 import { site, services, faqs, foundingOffer, whatsapp as wa } from '@/site'
 import thomas from '@/assets/thombeck-pro.png'
+import thomasFull from '@/assets/thombeck.png'
 import arquerosya from '@/assets/work/arquerosya.png'
 import josefina from '@/assets/work/josefina.png'
 import soymenu from '@/assets/work/soymenu.png'
@@ -178,7 +179,7 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
             <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
           </div>
           <p class="enter mt-6 flex items-center gap-3 text-sm text-muted [--d:370ms]">
-            <Image src={thomas} alt="" width={64} class="size-9 rounded-xl bg-accent/10 object-cover object-top pt-0.5 ring-2 ring-white" />
+            <span class="size-9 overflow-hidden rounded-xl bg-accent/10 ring-2 ring-white"><Image src={thomasFull} alt="" width={128} class="w-[180%] max-w-none -ml-[33%]" /></span>
             <span><strong class="font-semibold text-fg">From £{site.priceFrom}, fixed price.</strong> Live in {site.turnaround}.</span>
           </p>
         </form>
@@ -504,7 +505,8 @@ const lookStyle = (look: Record<string, string>) => Object.entries(look).map(([k
         <!-- A note from one person, not a form: who you'll talk to, what happens next, two ways in. -->
         <div class="card reveal p-6 [--d:90ms] sm:p-8">
           <div class="flex items-center gap-4">
-            <Image src={thomas} alt="Thomas Beckford" width={160} class="size-14 shrink-0 rounded-2xl bg-accent/10 object-cover object-top pt-1" />
+            <!-- Head and shoulders: the shirt anchors the bottom edge, so it no longer reads as a floating head. -->
+            <span class="size-14 shrink-0 overflow-hidden rounded-2xl bg-accent/10"><Image src={thomasFull} alt="Thomas Beckford" width={240} class="w-[180%] max-w-none -ml-[33%]" /></span>
             <div>
               <p class="font-semibold">{site.name}</p>
               <p class="text-sm text-muted">Usually replies within a day</p>
