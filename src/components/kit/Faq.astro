@@ -1,0 +1,34 @@
+---
+// Questions on the left (native <details>, one open at a time, .faq in global.css), photos 5..7 stacked and tilted
+// on the right like prints pinned to a board.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const pics = photos(d.slug).slice(4, 7)
+const tilt = ['-rotate-6 left-0 top-0', 'rotate-3 right-0 top-[18%]', '-rotate-2 left-[12%] bottom-0']
+---
+<section id="faq" class="mx-auto grid max-w-7xl gap-16 px-4 py-28 sm:px-8 sm:py-36 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
+  <div>
+    <h2 data-split class="font-(family-name:--display) text-6xl leading-[0.9] font-semibold tracking-[-0.045em] sm:text-8xl">Got questions?</h2>
+    <div class="mt-12 divide-y divide-(--fg)/15 border-y border-(--fg)/15">
+      {(d.faq ?? []).map(({ q, a }) => (
+        <details name="kit-faq" class="faq group">
+          <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-xl font-semibold text-pretty [&::-webkit-details-marker]:hidden">
+            {q}<span aria-hidden="true" class="grid size-9 shrink-0 place-items-center rounded-full bg-(--accent) text-2xl leading-none text-(--on-accent) transition duration-300 group-open:rotate-45">+</span>
+          </summary>
+          <p class="max-w-xl pb-6 text-lg text-pretty text-(--muted)">{a}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+  {pics.length > 0 && (
+    <div aria-hidden="true" class="relative mx-auto aspect-square w-full max-w-lg">
+      {pics.map((p, i) => (
+        <div data-rise class:list={['absolute w-[62%] overflow-hidden rounded-xl border-8 border-(--panel) shadow-[0_24px_50px_-20px_rgb(0_0_0/0.4)]', tilt[i]]}>
+          <Image src={p} alt="" widths={[400, 700]} sizes="(min-width: 1024px) 26vw, 60vw" class="aspect-[4/3] w-full object-cover" />
+        </div>
+      ))}
+    </div>
+  )}
+</section>

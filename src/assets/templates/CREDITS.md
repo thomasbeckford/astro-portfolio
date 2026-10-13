@@ -51,3 +51,28 @@ Video files are in `public/templates/<slug>/` and photos in `src/assets/template
 | 6.jpg (cropped to 3:2) | https://www.pexels.com/photo/charming-english-garden-with-brick-house-37303817/ | Neville Hawkins | Pexels License |
 | 7.jpg | https://www.pexels.com/photo/grass-covered-pathway-on-a-garden-13465670/ | Silviu Muresan | Pexels License |
 | 8.jpg | https://www.pexels.com/photo/charming-english-garden-in-spring-bloom-37176822/ | Jan Wright | Pexels License |
+
+## Decorator
+
+| File | Source | Author | Licence |
+|---|---|---|---|
+| hero.mp4 / hero.webm / hero.jpg / card.* | https://www.pexels.com/video/a-woman-painting-the-wall-while-drinking-glass-of-water-5799478/ | Ivan S | Pexels License |
+| band.mp4 / band.webm / band.jpg | https://www.pexels.com/video/person-painting-with-a-paint-roller-5799465/ | Ivan S | Pexels License |
+| 1.jpg | https://www.pexels.com/photo/woman-painting-the-wall-with-a-roller-brush-7218683/ | Blue Bird | Pexels License |
+| 2.jpg | https://www.pexels.com/photo/back-view-of-a-woman-putting-up-a-wallpaper-on-the-wall-5641761/ | Nataliya Vaitkevich | Pexels License |
+| 3.jpg | https://www.pexels.com/photo/crop-photo-of-person-putting-tape-on-wall-7217961/ | Blue Bird | Pexels License |
+| 4.jpg | https://www.pexels.com/photo/person-holding-color-palettes-5292188/ | Antoni Shkraba | Pexels License |
+| 5.jpg | https://www.pexels.com/photo/man-arm-with-paintbrush-over-bucket-of-paint-26222133/ | Airam Dato-on | Pexels License |
+| 6.jpg | https://www.pexels.com/photo/home-hallway-interior-design-7546558/ | Max Vakhtbovych | Pexels License |
+| 7.jpg | https://www.pexels.com/photo/a-person-holding-colors-samples-6474450/ | Tima Miroshnichenko | Pexels License |
+
+## Joiner
+
+| File | Source | Author | Licence |
+|---|---|---|---|
+| hero.mp4 / hero.webm / hero.jpg / card.* | https://www.pexels.com/video/a-man-using-a-sanding-machine-on-a-wood-plank-5973225/ | Ono Kosuki | Pexels License |
+| band.mp4 / band.webm / band.jpg | https://www.pexels.com/video/planing-wood-by-hand-20663034/ | Everett Bumstead | Pexels License |
+| 1.jpg | https://www.pexels.com/photo/craftsman-working-with-traditional-wood-joinery-30907896/ | Đậu Photograph | Pexels License |
+| 2.jpg | https://www.pexels.com/photo/wooden-furniture-and-table-in-contemporary-kitchen-with-dining-zone-6284235/ | Max Vakhtbovych | Pexels License |
+| 3.jpg | https://www.pexels.com/photo/warm-wooden-staircase-in-soft-light-31565465/ | consumedbyjpgs | Pexels License |
+| 4.jpg | https://www.pexels.com/photo/wooden-furniture-in-room-17181947/ | hi room | Pexels License |

@@ -23,7 +23,7 @@ ${faqs.map(([q, a]) => `- ${q} ${a}`).join('\n')}
 ## Pages
 
 - [Services and prices](${site.url}/#services): what each plan includes
-- [Work](${site.url}/#work): live client sites and Thomas's own products
+- [Example sites](${site.url}/templates): full example websites for tradespeople, one look each, plus a live client site on the home page
 - [FAQ](${site.url}/#faq): ownership, hosting, editing it yourself, tech, AI, redoing an existing site
 ${landings.map((l) => `- [${l.title}](${site.url}/${l.path}): what the site includes for ${l.plural}`).join('\n')}
 - [CV](${site.url}/cv): experience, stack and how Thomas works with AI agents, for recruiters and tech leads

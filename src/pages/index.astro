@@ -1,51 +1,23 @@
 ---
+// The home, in the /templates look: giant condensed type on near-black. The robot says hello, the example sites do
+// the selling (a grid of scroll-through previews), then price, questions and the ask. Motion comes from scripts/motion.ts.
+import '@fontsource-variable/big-shoulders-display'
 import { Image } from 'astro:assets'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Logo from '@/components/Logo.astro'
 import Icon from '@/components/Icon.astro'
-import Phone from '@/components/Phone.astro'
 import Boti from '@/components/Boti.astro'
 import BotiChat from '@/components/BotiChat.astro'
+import Vid from '@/components/kit/Vid.astro'
 import { site, services, faqs, christmasOffer, steps, whatsapp as wa } from '@/site'
-import thomas from '@/assets/thombeck-pro.png'
-import thomasFull from '@/assets/thombeck.png'
-import arquerosya from '@/assets/work/arquerosya.png'
-import josefina from '@/assets/work/josefina.png'
-import soymenu from '@/assets/work/soymenu.png'
-import soyreserva from '@/assets/work/soyreserva.png'
-import soygestion from '@/assets/work/soygestion.png'
-import CV from '@/components/CV.astro'
-import TradeSite from '@/components/TradeSite.astro'
+import { demos } from '@/templates'
 import { trades } from '@/trades'
-import '@fontsource-variable/unbounded'
-
-// Proof strip: real numbers already stated elsewhere on the page, just made bigger. No invented quotes.
-const stats = [
-  { count: null, text: site.years, label: 'Years shipping production code' },
-  { count: 100, suffix: '+', label: 'Restaurants using software I built, since 2019' },
-  { count: 10900, suffix: '+', label: 'People signed up to an app I built and run' },
-]
+import thomasFull from '@/assets/thombeck.png'
 
 const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Website quote')}`
 const whatsapp = wa("Hi Thomas, I'd like a website quote.")
-
-// Plain promises that remove the reasons people don't get in touch. All already true elsewhere on the page.
-const promises = ['See it before you pay', 'No deposit', 'Domain in your name']
-
-
-const brands = ['Five Iron Golf', 'Lane7', 'Sixes', 'Lévy Gorvy']
-
-const work = [
-  { name: 'Estancia La Josefina', sticker: 'Live', tag: 'Client website', url: 'https://www.estancialajosefina.com/en', img: josefina, text: 'A lodge in Patagonia. One page, two languages, photos front and centre and an enquiry button always in reach.' },
-  { name: 'ArquerosYa', sticker: 'From scratch', tag: 'My own business · Argentina', url: 'https://arquerosya.com.ar/', img: arquerosya, text: 'A marketplace for hiring goalkeepers, built from scratch: web app, iOS and Android apps, and the API behind them. 10,900+ goalkeepers signed up.' },
-  { name: 'SoyMenu', sticker: 'Since 2019', tag: 'My own business · Argentina', url: 'https://soymenu.com.ar/', img: soymenu, text: 'QR menus for 100+ restaurants, live since 2019. Owners change prices from their phone in seconds.' },
-  { name: 'SoyReserva', tag: 'My own business · Argentina', url: 'https://soyreserva.com.ar/', img: soyreserva, text: 'Online table bookings for restaurants: tables, guests and no-shows in one place.' },
-  { name: 'SoyGestión', tag: 'My own business · Argentina', url: 'https://soygestion.com.ar/', img: soygestion, text: 'Sales, costs and cash flow for restaurant owners, instead of spreadsheets.' },
-]
-
-// One scroll-linked strip of who it's for. The page's only marquee.
-const marquee = ['Roofers', 'Electricians', 'Cafés', 'Salons', 'Plumbers', 'Gardeners', 'Builders', 'Restaurants']
-
+const [website, ...extras] = services
+const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppercase'
 ---
 
 <BaseLayout
@@ -54,772 +26,242 @@ const marquee = ['Roofers', 'Electricians', 'Cafés', 'Salons', 'Plumbers', 'Gar
   title={`Websites for UK tradespeople, from £${site.priceFrom} | ${site.name}`}
   description={`Websites for tradespeople and small businesses across the UK, built by ${site.name}, a London developer. From £${site.priceFrom}, free hosting, no deposit: you pay once you're happy. Edit it yourself or let me look after it.`}
 >
-  <!-- Desktop with motion: hold the headline back until SplitText has cut it, so it never flashes whole first.
-       The <style> below unhides it after 2.5s no matter what, so a failed script can't leave it blank. -->
+  <!-- With motion, hold the headline back until SplitText has cut it, so it never flashes whole first.
+       The style below unhides it after 2.5s no matter what, so a failed script can't leave it blank. -->
   <script is:inline>
-    if (matchMedia('(min-width: 1024px) and (prefers-reduced-motion: no-preference)').matches) document.documentElement.setAttribute('data-split', '')
+    if (matchMedia('(prefers-reduced-motion: no-preference)').matches) document.documentElement.setAttribute('data-hold', '')
   </script>
+  <style is:inline>
+    html[data-hold] #hero h1 { visibility: hidden; animation: unhide 0s 2.5s forwards }
+    @keyframes unhide { to { visibility: visible } }
+  </style>
 
-  <!-- Full-width and transparent at the top; shrinks into a floating glass capsule once you scroll (same gesture as SoyMenu). -->
-  <header id="nav" class="group fixed inset-x-0 top-0 z-40 px-0 pt-0 transition-[padding] duration-300 ease-out data-scrolled:px-3 data-scrolled:pt-3">
-    <div class="mx-auto flex h-16 max-w-[120rem] items-center justify-between border border-transparent pr-2 pl-4 transition-[max-width,border-radius,background-color,border-color,box-shadow] duration-300 ease-out group-data-scrolled:max-w-6xl group-data-scrolled:rounded-full group-data-scrolled:border-line group-data-scrolled:bg-paper/70 group-data-scrolled:shadow-xl group-data-scrolled:shadow-black/40 group-data-scrolled:backdrop-blur-xl group-data-scrolled:backdrop-saturate-150 sm:h-20 sm:pr-2.5 sm:pl-7">
-      <a href="/" class="flex items-center gap-3">
-        <Logo class="size-9 sm:size-11" />
-        <span class="display text-[15px] whitespace-nowrap sm:text-lg max-[420px]:sr-only">Thomas Beckford</span>
-      </a>
-      <nav class="flex items-center gap-2 font-mono sm:gap-3 md:gap-8 text-[13px] tracking-[0.12em] text-muted uppercase">
-        <a href="#services" class="hidden transition hover:text-fg md:inline"><span class="text-accent">01</span> Services</a>
-        <a href="#work" class="hidden transition hover:text-fg md:inline"><span class="text-accent">02</span> Work</a>
-        <a href="#about" class="hidden transition hover:text-fg md:inline"><span class="text-accent">03</span> About</a>
-        <button type="button" data-boti-open aria-label="Ask Boti, the quote helper" class="flex h-12 items-center gap-2.5 rounded-xl bg-white/[0.05] p-1.5 font-sans text-[15px] font-semibold tracking-normal text-fg normal-case ring-1 ring-line transition hover:-rotate-2 hover:ring-fg/25 sm:pr-3.5">
-          <Boti mood="mini" class="w-9" />
-          <span class="hidden pr-1 sm:inline">Ask Boti</span>
+  <div class="overflow-x-clip [--display:'Big_Shoulders_Display_Variable',system-ui,sans-serif]">
+    <header class="fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 bg-linear-to-b from-paper/90 to-transparent px-4 py-3 sm:px-8">
+      <a href="/" class="flex items-center gap-2.5 font-semibold"><Logo class="size-9" /><span class="max-[420px]:sr-only">{site.name}</span></a>
+      <nav aria-label="Main" class="flex items-center gap-2 text-sm font-semibold sm:gap-6">
+        <a href="#sites" class="hidden transition hover:text-accent md:inline">Work</a>
+        <a href="#services" class="hidden transition hover:text-accent md:inline">Price</a>
+        <a href="#faq" class="hidden transition hover:text-accent md:inline">Questions</a>
+        <button type="button" data-boti-open aria-label="Ask Boti, the quote helper" class="flex h-11 items-center gap-2 rounded-full bg-white/[0.06] p-1 ring-1 ring-line transition hover:ring-fg/30 sm:pr-4">
+          <Boti mood="mini" class="w-9" /><span class="hidden sm:inline">Ask Boti</span>
         </button>
-        <a href="#contact" class="btn-primary min-h-12 md:-ml-5 px-5 font-sans text-[15px] tracking-normal normal-case max-sm:px-4 max-sm:text-sm">Get a quote</a>
+        <a href="#contact" class="btn-primary min-h-11 px-5">Get a quote</a>
       </nav>
-    </div>
-  </header>
+    </header>
 
-  <!-- Scroll badge: circular text spins as you scroll, the ring fills with page progress. Doubles as the quote button. -->
-  <a id="badge" href="#contact" aria-label="Get a quote" class="group dock-in hidden transition-[scale] duration-300 data-off:scale-0 fixed right-6 bottom-6 z-30 size-24 xl:size-32 place-items-center rounded-full bg-paper/80 shadow-xl shadow-black/50 ring-1 ring-line backdrop-blur-xl sm:grid">
-    <svg viewBox="0 0 100 100" aria-hidden="true" class="absolute inset-0 size-full -rotate-90">
-      <circle cx="50" cy="50" r="48" pathLength="1" class="fill-none stroke-fg/10 stroke-[1.5]" />
-      <circle cx="50" cy="50" r="48" pathLength="1" class="progress-scroll fill-none stroke-accent stroke-[1.5] [stroke-dasharray:1] [stroke-linecap:round]" />
-    </svg>
-    <svg viewBox="0 0 100 100" aria-hidden="true" class="spin-scroll absolute inset-0 size-full">
-      <path id="badge-circle" d="M50,50 m-37,0 a37,37 0 1,1 74,0 a37,37 0 1,1 -74,0" fill="none" />
-      <text class="fill-fg font-mono text-[10px] font-extrabold uppercase"><textPath href="#badge-circle" textLength="230" lengthAdjust="spacing">Get a quote ✦ Get a quote ✦</textPath></text>
-    </svg>
-    <span class="grid size-10 place-items-center rounded-full bg-accent text-on-accent shadow-md shadow-accent/30 transition duration-300 group-hover:scale-110 group-hover:rotate-45 sm:size-12">
-      <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9" /></svg>
-    </span>
-  </a>
+    <!-- Phones get a WhatsApp button; it bows out at the contact section. -->
+    <a id="wa-fab" href={whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp Thomas" class="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-[#1f2737] shadow-xl shadow-black/50 transition-[scale] duration-300 data-off:scale-0 sm:hidden">
+      <svg viewBox="0 0 24 24" class="size-7" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>
+    </a>
 
-  <!-- Phones get a WhatsApp button instead of the desktop badge; hides with it once the contact section is on screen. -->
-  <a id="wa-fab" href={whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp Thomas" class="dock-in fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-[#1f2737] shadow-xl shadow-black/50 transition-[scale] duration-300 data-off:scale-0 sm:hidden">
-    <svg viewBox="0 0 24 24" class="size-7" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>
-  </a>
-
-  <!-- Grid: faint squares fixed behind the whole page, like drawing paper, so the glass cards have something to blur. CSS only. -->
-  <div id="grid-bg" aria-hidden="true" class="pointer-events-none fixed inset-0"></div>
-
-  <main id="main" tabindex="-1" class="relative outline-none">
-    <!-- Hero: who and what on the left; on the right a 3D robot, raymarched in one shader (src/scripts/robot.ts, no 3D
-         library), follows the pointer: the animation work, shown rather than claimed. Reduced motion: one still frame. -->
-    <section id="hero" class="relative isolate overflow-x-clip">
-      <div class="mx-auto grid min-h-[100dvh] max-w-7xl items-center gap-8 px-4 pt-28 pb-16 sm:px-6 sm:pt-36 sm:pb-24 lg:grid-cols-[1.1fr_1fr] lg:gap-8 lg:px-8 lg:pt-24 lg:pb-12">
-        <div>
-          <p class="enter inline-flex items-center gap-2 rounded-full bg-white/[0.04] px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
-            <span class="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">£{christmasOffer.price}</span>
-            Christmas offer <span class="text-muted">· normally £{site.priceFrom}</span>
-          </p>
-          <h1 id="hero-title" class="display mt-7 text-[2.9rem] leading-[0.95] text-balance max-lg:enter [--d:90ms] sm:text-7xl lg:text-[clamp(3.25rem,7.5vh,5.2rem)]">
-            Websites that make your <span class="mark">phone ring.</span>
-          </h1>
-          <!-- Says what this is in one line, before anything clever: who it's for, what you get, how you pay. -->
-          <p class="enter mt-6 max-w-xl text-lg text-pretty [--d:130ms] sm:text-xl">I build websites for UK small businesses, new or rebuilt. Fixed price, live in {site.turnaround}, and you pay once you’re happy.</p>
-          <!-- A face and a name up top: the visitor is hiring a person, not a template. -->
-          <div class="enter mt-6 flex max-w-xl items-center gap-4 [--d:170ms]">
-            <span class="size-16 shrink-0 overflow-hidden rounded-2xl bg-accent/10 ring-2 ring-accent shadow-lg shadow-accent/20 sm:size-[4.5rem]"><Image src={thomasFull} alt="" width={192} class="w-[180%] max-w-none -ml-[33%]" /></span>
-            <p class="text-lg text-pretty text-muted"><strong class="display block text-2xl text-fg sm:text-[1.7rem]">I'm Thomas.</strong> London developer, {site.years} years' experience.</p>
-          </div>
-          <div class="enter mt-8 flex flex-wrap items-center gap-3 [--d:330ms] lg:mt-7">
-            <a href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Get a free quote<Icon name="arrow" class="size-4" /></a>
-            <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
-          </div>
-        </div>
-        <div id="robot-stage" class="enter relative h-80 [--d:420ms] sm:h-[30rem] lg:h-[min(38rem,72dvh)]">
-          <p aria-hidden="true" class="pointer-events-none absolute right-0 bottom-3 left-0 z-10 text-center font-mono text-[11px] tracking-[0.2em] text-muted uppercase motion-reduce:hidden"><span class="pointer-coarse:hidden">Move your mouse. Click the robot</span><span class="hidden pointer-coarse:inline">Tap anywhere, then tap the robot</span></p>
-          <canvas class="absolute inset-0 size-full touch-pan-y" role="img" aria-label="A small 3D robot hovering beside the headline"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <!-- Try it: type your business on the left, the phone on the right builds the site live.
-         Desktop: the section pins and scrolling turns the phone through the trades, recolouring the page. Phones: it cycles on its own. -->
-    <section id="try" class="relative isolate overflow-x-clip border-t border-line">
-      <div class="mx-auto grid min-h-[100dvh] max-w-7xl items-center gap-14 px-4 py-24 sm:px-6 sm:py-28 lg:grid-cols-[1.1fr_1fr] lg:gap-8 lg:px-8 lg:py-12">
-        <form id="try-form" data-trades={JSON.stringify(trades)}>
-          <p class="eyebrow reveal">Try it</p>
-          <h2 class="h2 reveal mt-4 max-w-xl">Type your business. <span class="text-muted">Watch the phone build it.</span></h2>
-          <div class="reveal mt-8 grid gap-4 sm:grid-cols-2">
-            <label class="block text-sm font-semibold">Your business<input name="name" class="field mt-2" placeholder={trades[0].demo} maxlength="28" autocomplete="organization" /></label>
-            <label class="block text-sm font-semibold">Where<input name="area" class="field mt-2" placeholder="Bromley" maxlength="40" autocomplete="address-level2" /></label>
-          </div>
-          <fieldset class="reveal mt-4">
-            <legend class="text-sm font-semibold">What you do</legend>
-            <div class="mt-2 flex flex-wrap gap-2">
-              {
-                trades.map((t, i) => (
-                  <label class="cursor-pointer rounded-xl px-3.5 py-2 text-sm ring-1 ring-fg/15 transition ring-inset hover:bg-fg/[0.06] has-checked:bg-accent has-checked:font-semibold has-checked:text-on-accent has-checked:ring-accent has-focus-visible:outline-2 has-focus-visible:outline-accent">
-                    <input type="radio" name="trade" value={i} checked={i === 0} class="sr-only" />
-                    {t.pick ?? t.name}
-                  </label>
-                ))
-              }
-            </div>
-          </fieldset>
-          <div class="reveal mt-8 flex flex-wrap items-center gap-3 lg:mt-7">
-            <a id="try-cta" href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Get a free quote<Icon name="arrow" class="size-4" /></a>
-            <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
-          </div>
-          <!-- Boti (a still of the hero's 3D robot) cheers at what's typed, so he sits right under the fields. Quip to his right, tail pointing at him. -->
-          <div class="reveal mt-8 flex items-center gap-4">
-            <Boti id="try-bot" class="w-24 shrink-0" />
-            <p id="try-quip" aria-live="polite" class="quip max-w-56 rounded-[16px_16px_16px_4px] bg-night/90 px-3.5 py-2.5 font-mono text-[13px] leading-snug text-fg ring-1 ring-accent/60 shadow-[0_10px_40px_-10px_color-mix(in_oklab,var(--color-accent)_50%,transparent)] backdrop-blur-md">Go on, type your business.</p>
-          </div>
-        </form>
-
-        <!-- The live phone in a 3D stage: #spin turns with scroll (GSAP), #tilt leans toward the pointer. -->
-        <div class="reveal relative mx-auto [perspective:1600px]">
-          <div aria-hidden="true" class="glow absolute top-1/2 left-1/2 -z-10 size-[160%] -translate-1/2"></div>
-          <p aria-hidden="true" class="mb-5 text-center font-mono text-[11px] tracking-[0.2em] text-muted uppercase">Live preview · example</p>
-          <div id="spin" class="[transform-style:preserve-3d]">
-            <div id="tilt" class="transition-transform duration-500 ease-out [transform:rotateX(var(--rx,4deg))_rotateY(var(--ry,-8deg))]">
-              <Phone class="float w-[280px] shadow-[0_40px_120px_-30px_color-mix(in_oklab,var(--color-accent)_45%,transparent)] sm:w-[320px] lg:w-[min(350px,calc((100dvh-15rem)*0.46))] rounded-[13%/6.5%]">
-                <TradeSite trades={trades} />
-              </Phone>
-            </div>
-          </div>
-          <div aria-hidden="true" class="mt-6 flex justify-center gap-1.5">
-            {trades.map((_, i) => <span data-tick={i} data-on={i === 0 ? '' : undefined} class="h-1 w-6 rounded-full bg-fg/15 transition-colors duration-500 data-on:bg-accent"></span>)}
-          </div>
-        </div>
-      </div>
-      <p aria-hidden="true" class="absolute bottom-6 left-1/2 hidden -translate-x-1/2 font-mono text-[11px] tracking-[0.2em] text-muted uppercase lg:block motion-reduce:hidden">Scroll to switch trades</p>
-    </section>
-
-    <!-- Proof strip: numbers count up once in view (real figures, said elsewhere on the page), then one scroll-linked line of who it's for. -->
-    <section aria-label="Track record" class="border-y border-line">
-      <div class="mx-auto max-w-6xl lg:px-8"><div class="grid gap-px bg-line sm:grid-cols-2 lg:grid-cols-[repeat(3,1fr)_1.2fr]">
-        {
-          stats.map((s, i) => (
-            <div class="reveal flex items-baseline gap-4 bg-paper px-4 py-6 sm:block sm:px-6 sm:py-10" style={`--d:${i * 80}ms`}>
-              <p class="display shrink-0 text-4xl tabular-nums sm:text-5xl">
-                {s.count === null ? s.text : <span data-count={s.count} data-suffix={s.suffix}>{s.count.toLocaleString('en-GB') + s.suffix}</span>}
+    <main id="main" tabindex="-1" class="outline-none">
+      <!-- Hero: the giant line on the left, the 3D robot (scripts/robot.ts) on the right following the pointer. -->
+      <section id="hero" class="relative isolate">
+        <div class="grid min-h-[100dvh] grid-rows-[1fr_auto] px-4 pt-24 pb-8 sm:px-8">
+          <div class="relative grid content-center gap-4">
+            <div class="relative z-10 lg:pointer-events-none">
+              <p class="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-white/[0.05] px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
+                <span class="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">£{christmasOffer.price}</span>
+                Christmas offer <span class="text-muted">· normally £{site.priceFrom}</span>
               </p>
-              <p class="font-mono text-xs tracking-wide text-pretty text-muted uppercase sm:mt-3">{s.label}</p>
+              <h1 data-letters class:list={[display, 'mt-6 text-[14.5vw] leading-[0.9] sm:text-[13vw] lg:text-[10vw]']}>
+                <span class="block">Websites that</span> <span class="block">make your</span> <span class="block text-accent">phone ring.</span>
+              </h1>
             </div>
-          ))
-        }
-        <ul class="reveal flex flex-col justify-center gap-2 bg-paper px-4 py-6 text-sm font-medium [--d:240ms] sm:px-6 sm:py-10">
-          {promises.map((p) => <li class="flex items-center gap-2.5"><span class="grid size-5 place-items-center rounded-full bg-accent/15 text-xs text-accent">✓</span>{p}</li>)}
-        </ul></div>
-      </div>
-      <div aria-hidden="true" class="overflow-clip border-t border-line py-5">
-        <div class="marquee flex w-max gap-8 font-mono text-sm tracking-[0.2em] whitespace-nowrap text-muted uppercase">
-          {[...marquee, ...marquee, ...marquee].map((w) => <span class="flex items-center gap-8">{w}<span class="text-accent">✦</span></span>)}
-        </div>
-      </div>
-    </section>
-
-    <!-- Three steps, all on one screen: side by side on desktop, a list on phones. No pin, so scrolling never stalls. -->
-    <section id="how" class="py-24 sm:py-32">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 class="h2 reveal max-w-3xl">Three steps. <span class="text-muted">You only do the first one.</span></h2>
-        <ol id="how-steps" class="mt-12 grid gap-12 lg:mt-16 lg:grid-cols-3 lg:gap-10">
-          {
-            steps.map((s) => (
-              <li class="reveal grid content-start items-end gap-4 sm:grid-cols-[auto_1fr] sm:gap-10 lg:grid-cols-1 lg:gap-6">
-                <p class="display text-7xl leading-[0.8] text-accent tabular-nums lg:text-[7rem]">{s.n}</p>
-                <div>
-                  <h3 class="text-2xl font-semibold tracking-tight lg:text-3xl">{s.title}</h3>
-                  <p class="mt-3 max-w-md text-pretty text-muted lg:text-lg">{s.text}</p>
-                </div>
-              </li>
-            ))
-          }
-        </ol>
-        <!-- The guarantee, said once and plainly: it restates step 3, no new promise. -->
-        <p class="reveal mt-14 max-w-2xl text-2xl font-semibold tracking-tight text-balance">My guarantee fits in one line: <span class="mark">don’t like it, don’t pay.</span> <span class="text-muted">No deposit, no small print.</span></p>
-        <div class="reveal mt-8 flex flex-wrap items-center gap-3">
-          <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp">Send the first message</a>
-          <span class="text-sm text-muted">I reply within a day.</span>
-        </div>
-      </div>
-    </section>
-
-    <section id="services" class="py-24 sm:py-32">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <p class="eyebrow reveal">Services</p>
-        <h2 class="h2 reveal mt-4 max-w-3xl">You send one message. <span class="text-muted">I&nbsp;do the rest.</span></h2>
-        <!-- Bento: the website is the product, so it gets the lit tile; add-ons sit in a quiet list beside it. -->
-        <div class="mt-14 grid gap-4 lg:grid-cols-[1.15fr_1fr]">
-          {
-            services.slice(0, 1).map((x) => (
-              <div class="glass reveal relative isolate flex flex-col overflow-hidden rounded-3xl p-7 ring-1 ring-accent/40 sm:p-10">
-                <div aria-hidden="true" class="glow absolute -top-40 -right-40 -z-10 size-[28rem]"></div>
-                <h3 class="font-mono text-xs tracking-[0.2em] text-accent uppercase">{x.name}</h3>
-                <p class="display mt-6 text-6xl sm:text-8xl">£{christmasOffer.price}</p>
-                <p class="mt-3 max-w-sm text-sm text-muted">Christmas offer, {christmasOffer.note}. Normally £{site.priceFrom}.</p>
-                <ul class="mt-8 mb-10 grid content-start gap-3 border-t border-line pt-8 sm:max-lg:grid-cols-2 lg:gap-4 lg:text-lg">
-                  {x.items.map((t) => <li class="flex gap-2.5"><span aria-hidden="true" class="text-accent">✓</span>{t}</li>)}
-                </ul>
-                <a href={mailto} class="btn-primary mt-auto w-fit">Get a free quote<Icon name="arrow" class="size-4" /></a>
-              </div>
-            ))
-          }
-          <div class="card reveal relative divide-y divide-line px-7 [--d:90ms] sm:px-9">
-            {
-              services.slice(1).map((x) => (
-                <div class="py-7 sm:py-8">
-                  <div class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-                    <h3 class="text-lg font-semibold">{x.name}</h3>
-                    <p class="font-mono text-sm font-semibold text-accent">{x.price}</p>
-                  </div>
-                  <p class="mt-1 text-sm text-muted">{x.note}</p>
-                  <ul class="mt-4 space-y-1.5 text-muted">
-                    {x.items.map((t) => <li>{t}</li>)}
-                  </ul>
-                </div>
-              ))
-            }
+            <div id="robot-stage" class="relative h-72 sm:h-[26rem] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[40%]">
+              <p aria-hidden="true" class="pointer-events-none absolute right-0 bottom-2 left-0 z-10 text-center font-mono text-[11px] tracking-[0.2em] text-muted uppercase motion-reduce:hidden"><span class="pointer-coarse:hidden">Move your mouse. Click the robot</span><span class="hidden pointer-coarse:inline">Tap anywhere, then tap the robot</span></p>
+              <canvas class="absolute inset-0 size-full touch-pan-y" role="img" aria-label="A small 3D robot hovering beside the headline"></canvas>
+            </div>
+          </div>
+          <div class="mt-8 grid gap-6 border-t border-line pt-6 md:grid-cols-[1fr_auto] md:items-center">
+            <p class="max-w-lg text-lg text-pretty text-muted">Websites for UK small businesses. Fixed price, live in {site.turnaround}, and you pay once you’re happy.</p>
+            <div class="flex flex-wrap gap-3">
+              <a href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Get a free quote<Icon name="arrow" class="size-4" /></a>
+              <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
+            </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
 
-    <section id="work" class="py-24 sm:py-32">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
-          <h2 class="h2 reveal max-w-3xl">Live and running. <span class="text-muted">A client site, and businesses I run myself.</span></h2>
-          <p class="reveal max-w-sm text-pretty text-muted">Everything here I designed and built from scratch. My own products serve customers in Argentina, which is why they're in Spanish.</p>
-        </div>
-        <!-- Featured client site wide, then my own products as a row of phones. -->
-        {
-          work.slice(0, 1).map((w) => (
-            <a href={w.url} target="_blank" rel="noopener" class="card spot reveal group relative mt-14 grid items-center gap-8 overflow-visible! p-6 hover:ring-accent/40 sm:grid-cols-[1fr_200px] sm:p-10 lg:grid-cols-[1fr_240px]">
-              <div>
-                <p class="font-mono text-xs tracking-wide text-muted uppercase">{w.tag}</p>
-                <h3 class="display mt-3 text-4xl sm:text-5xl">{w.name}</h3>
-                <p class="mt-4 max-w-md text-lg text-pretty text-muted">{w.text}</p>
-                <span class="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent">Visit the site<Icon name="arrow" class="size-4 -rotate-45 transition group-hover:rotate-0" /></span>
-              </div>
-              <div class="relative mx-auto w-[180px] sm:w-full">
-                <Phone class="work-phone w-full rotate-3 transition duration-500 group-hover:rotate-0">
-                  <Image src={w.img} alt={`${w.name} website on a phone`} widths={[240, 480]} sizes="240px" />
-                </Phone>
-                {w.sticker && <span class="sticker group-hover:rotate-0">{w.sticker}</span>}
-              </div>
-            </a>
-          ))
-        }
-        <div class="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 lg:grid-cols-4 lg:gap-x-8">
-          {
-            work.slice(1).map((w, i) => (
-              <a href={w.url} target="_blank" rel="noopener" class="reveal group relative block" style={`--d:${i * 80}ms`}>
-                <!-- Phone rises out of the tile's bottom edge, cropped clean (overflow-hidden); the sticker sits outside so the crop never cuts it. -->
-                <div class="grid place-items-center overflow-hidden rounded-3xl bg-white/[0.03] px-6 pt-8 ring-1 ring-line ring-inset transition duration-300 group-hover:-translate-y-1 group-hover:ring-accent/40 sm:px-10">
-                  <Phone class="work-phone -mb-16 w-full max-w-[150px] transition duration-500 group-hover:-translate-y-2">
-                    <Image src={w.img} alt={`${w.name} website on a phone`} widths={[150, 300]} sizes="150px" />
-                  </Phone>
+      <!-- The template sites, then live ones: a grid of looping scroll-throughs (recorded from each site). -->
+      <section id="sites" aria-labelledby="sites-title" class="scroll-mt-20 px-4 pt-32 sm:px-8">
+        <h2 id="sites-title" data-split class:list={[display, 'text-[15vw] leading-[0.9] sm:text-[9.5vw]']}><span class="block">Pick a look.</span> <span class="block text-accent">Make it yours.</span></h2>
+        <p class="mt-6 max-w-md text-lg text-muted">Full websites, each with its own look. Open one and have a look around.</p>
+        <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {[
+            ...demos.map((d) => ({ href: `/templates/${d.slug}`, name: d.name, sub: d.look.join(' · '), src: `/templates/${d.slug}/scroll`, external: false })),
+            { href: 'https://www.estancialajosefina.com/en', name: 'Estancia La Josefina', sub: 'Live client site · A lodge in Patagonia', src: '/work/josefina-scroll', external: true },
+        { href: 'https://arquerosya.com.ar/', name: 'ArquerosYa', sub: 'My own business · Hire a goalkeeper, Argentina', src: '/work/arquerosya-scroll', external: true },
+          ].map((c) => (
+            <li data-rise>
+              <a href={c.href} data-preview={c.name} {...(c.external && { target: '_blank', rel: 'noopener' })} class="group block">
+                <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-panel ring-1 ring-fg/10">
+                  <Vid src={c.src} poster={`${c.src}.jpg`} class="size-full" />
+                  <span aria-hidden="true" class="absolute right-4 bottom-4 grid size-12 scale-75 place-items-center rounded-full bg-accent text-on-accent opacity-0 shadow-lg transition duration-300 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100"><Icon name="arrow" class="size-5 -rotate-45" /></span>
                 </div>
-                {w.sticker && <span class="sticker group-hover:rotate-0">{w.sticker}</span>}
-                <h3 class="mt-8 flex items-center gap-2 text-lg font-semibold">{w.name}<Icon name="arrow" class="size-4 -rotate-45 text-muted transition group-hover:text-fg" /></h3>
-                <p class="mt-0.5 font-mono text-xs tracking-wide text-muted uppercase">{w.tag}</p>
-                <p class="mt-2 text-sm text-pretty text-muted">{w.text}</p>
+                <p class="mt-5 text-2xl font-medium transition-colors group-hover:text-accent">{c.name}</p>
+                <p class="mt-1 text-lg text-muted">{c.sub}</p>
               </a>
-            ))
-          }
-        </div>
-      </div>
-    </section>
+            </li>
+          ))}
+        </ul>
+      </section>
 
-    <section id="about" class="border-t border-line py-24 sm:py-32">
-      <div class="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div class="grid items-center gap-10 md:grid-cols-[1fr_320px] md:gap-20">
-          <div class="reveal relative isolate mx-auto w-56 md:order-last md:w-full">
-            <div aria-hidden="true" class="glow absolute -inset-16 -z-10 opacity-70"></div>
-            <Image src={thomas} alt="Thomas Beckford" width={640} class="w-full -rotate-2 rounded-3xl shadow-2xl shadow-black/60 ring-1 ring-line" />
-            <span class="sticker">That's me</span>
+      <!-- Price and the three steps on one screen; the add-ons as a quiet list. -->
+      <section id="services" class="scroll-mt-20 px-4 py-24 sm:px-8 sm:py-32">
+        <div class="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
+          <div>
+            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">{website.name}</p>
+            <p class:list={[display, 'mt-4 text-[32vw] leading-[0.85] sm:text-[21vw] lg:text-[15vw]']}>£{christmasOffer.price}</p>
+            <p class="mt-4 max-w-sm text-muted">Christmas offer, {christmasOffer.note}. Normally £{site.priceFrom}.</p>
+            <ul class="mt-8 grid gap-3 border-t border-line pt-8 text-lg">
+              {website.items.map((t) => <li class="flex gap-2.5"><span aria-hidden="true" class="text-accent">✓</span>{t}</li>)}
+            </ul>
           </div>
           <div>
-            <h2 class="h2 reveal">You deal with me. <span class="text-muted">Not an agency, not a call centre.</span></h2>
-            <p class="reveal mt-5 max-w-xl text-pretty text-muted">I'm Thomas, a software and AI engineer in London. For {site.years} years I've built booking systems for venue chains and apps with thousands of users. Your website gets that same care, at a local-business price.</p>
-            <p class="reveal mt-4 max-w-xl text-pretty text-muted">One person from your first message to a live site, and after. You message me, I answer.</p>
-            <div class="reveal mt-6 flex flex-wrap items-center gap-2 text-sm">
-              <span class="text-muted">Built for</span>
-              {brands.map((b) => <span class="rounded-full bg-fg/[0.04] px-3 py-1 font-medium ring-1 ring-fg/10">{b}</span>)}
-            </div>
-            <div class="reveal mt-8 flex flex-wrap gap-3">
-              <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp">WhatsApp me</a>
-              <a href={mailto} class="btn-ghost">Get a free quote</a>
-            </div>
+            <h2 data-split class:list={[display, 'text-6xl leading-[0.9] sm:text-8xl']}>Three steps. <span class="text-muted">You only do the first one.</span></h2>
+            <ol class="mt-10 divide-y divide-line border-y border-line">
+              {steps.map((s) => (
+                <li class="grid grid-cols-[auto_1fr] gap-6 py-6">
+                  <span class:list={[display, 'text-6xl leading-none text-accent']}>{s.n}</span>
+                  <div><h3 class="text-xl font-semibold">{s.title}</h3><p class="mt-1 text-pretty text-muted">{s.text}</p></div>
+                </li>
+              ))}
+            </ol>
+            <ul class="mt-10 grid gap-x-8 gap-y-4 sm:grid-cols-2">
+              {extras.map((x) => (
+                <li class="flex flex-wrap items-baseline justify-between gap-x-3 border-b border-line pb-3"><span class="font-semibold">{x.name}</span><span class="font-mono text-sm text-accent">{x.price}</span></li>
+              ))}
+            </ul>
           </div>
         </div>
+      </section>
 
-        <!-- CV as a terminal-ish card: closed it previews the stack, open it's a timeline. -->
-        <details class="glass group reveal mt-20 overflow-hidden rounded-3xl ring-1 ring-line">
-          <summary class="flex cursor-pointer list-none flex-wrap items-center justify-between gap-6 p-6 sm:p-10 [&::-webkit-details-marker]:hidden">
-            <span class="min-w-0">
-              <span class="font-mono text-xs tracking-[0.2em] text-muted uppercase">For recruiters &amp; tech leads</span>
-              <span class="display mt-2 block text-3xl sm:text-5xl">Full CV and stack</span>
-              <span class="mt-4 flex flex-wrap gap-2">
-                {['AI engineering', 'Next.js', 'React Native', 'Node', 'Stripe'].map((t) => <span class="rounded-full bg-white/[0.06] px-3 py-1 font-mono text-xs text-fg/80">{t}</span>)}
-              </span>
-            </span>
-            <span class="flex items-center gap-3 rounded-xl bg-fg px-5 py-3 text-sm font-semibold text-paper transition group-hover:bg-fg/90" aria-hidden="true">
-              <span class="group-open:hidden">Open CV</span><span class="hidden group-open:inline">Close</span>
-              <span class="text-lg leading-none transition group-open:rotate-45">+</span>
-            </span>
-          </summary>
-          <div class="border-t border-line p-6 sm:p-10">
-            <CV />
+      <!-- Questions: all collapsed, one open at a time. Anything else goes to Boti. -->
+      <section id="faq" class="scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
+        <div class="grid gap-12 lg:grid-cols-[1fr_1.6fr]">
+          <div class="lg:sticky lg:top-24 lg:self-start">
+            <h2 data-split class:list={[display, 'text-6xl leading-[0.9] sm:text-8xl']}>Ask <span class="text-accent">Boti.</span></h2>
+            <Boti class="mt-8 hidden w-36 lg:block" />
+            <button type="button" data-boti-open class="btn-ghost mt-8">Ask something else</button>
           </div>
-        </details>
-      </div>
-    </section>
-
-    <!-- Questions as a chat: you tap a question, Boti types and answers. One open at a time (details name). -->
-    <section id="faq" class="border-t border-line py-24 sm:py-32">
-      <div class="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 md:grid-cols-[300px_1fr] md:gap-20 lg:px-8">
-        <div class="md:sticky md:top-28 md:self-start">
-          <h2 class="h2 reveal">Ask <span class="mark">Boti.</span></h2>
-          <Boti id="faq-bot" class="mascot-glow reveal mt-8 hidden w-40 md:block" />
-          <div class="reveal mt-8"><button type="button" data-boti-open class="btn-ghost">Ask something else</button></div>
-        </div>
-        <!-- First five on show; the rest behind one tap (CSS only, the checkbox flips them). -->
-        <div class="group/faq space-y-4">
-          {
-            faqs.map(([q, a], i) => (
-              <details name="faq" class:list={['reveal group', i >= 5 && 'hidden group-has-checked/faq:block']} style={`--d:${(i % 5) * 70}ms`}>
-                <summary class="ml-auto flex w-fit max-w-[92%] cursor-pointer list-none items-center gap-3 rounded-[16px_4px_16px_16px] bg-white/[0.04] px-4 py-3 text-left font-semibold text-pretty ring-1 ring-line transition duration-200 hover:-translate-y-0.5 hover:ring-accent/50 group-open:bg-accent group-open:text-on-accent group-open:ring-accent [&::-webkit-details-marker]:hidden">
-                  {q}
-                  <span aria-hidden="true" class="text-lg leading-none text-muted transition group-open:rotate-45 group-open:text-on-accent">+</span>
+          <div class="divide-y divide-line border-y border-line">
+            {faqs.map(([q, a]) => (
+              <details name="faq" class="faq group">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-lg font-semibold text-pretty transition-colors hover:text-accent group-open:text-accent [&::-webkit-details-marker]:hidden">
+                  <span class="transition-transform duration-300 group-hover:translate-x-1.5 group-open:translate-x-1.5">{q}</span><span aria-hidden="true" class="grid size-8 shrink-0 place-items-center rounded-full text-2xl leading-none text-muted ring-1 ring-line transition duration-300 group-hover:ring-accent group-open:rotate-45 group-open:bg-accent group-open:text-on-accent group-open:ring-accent">+</span>
                 </summary>
-                <div class="faq-answer mt-3 flex items-end gap-2">
-                  <Boti mood="mini" class="w-8 shrink-0" />
-                  <div class="relative max-w-[85%] rounded-[4px_16px_16px_16px] bg-night px-4 py-3 text-pretty text-fg/90 ring-1 ring-line">
-                    <span class="faq-typing absolute inset-0 flex items-center gap-1 px-4" aria-hidden="true">
-                      <span class="size-1.5 animate-bounce rounded-full bg-fg/70"></span>
-                      <span class="size-1.5 animate-bounce rounded-full bg-fg/70 [animation-delay:.15s]"></span>
-                      <span class="size-1.5 animate-bounce rounded-full bg-fg/70 [animation-delay:.3s]"></span>
-                    </span>
-                    <p class="faq-text">{a}</p>
-                  </div>
-                </div>
+                <p class="max-w-2xl pb-6 text-pretty text-muted">{a}</p>
               </details>
-            ))
-          }
-          <label class="ml-auto flex min-h-11 w-fit cursor-pointer items-center gap-2 rounded-xl px-3 text-sm font-semibold text-accent-ink group-has-checked/faq:hidden has-focus-visible:outline-2 has-focus-visible:outline-accent">
-            <input id="faq-more" type="checkbox" class="sr-only" />{faqs.length - 5} more questions<Icon name="arrow" class="size-4 rotate-90" />
-          </label>
+            ))}
+          </div>
         </div>
-      </div>
-      <!-- The bit, now a footnote to the questions: this site sets no cookies, so there's no banner, just Boti.
-           "Ask Boti" opens the quote chat. -->
-      <div class="reveal mx-auto mt-20 flex max-w-6xl flex-wrap items-center justify-between gap-6 px-4 sm:px-6 lg:px-8">
-        <div>
-          <p class="text-xl font-semibold tracking-tight">No tracking cookies. <span class="mark">Just a robot.</span></p>
-          <p class="mt-2 max-w-lg text-sm text-pretty text-muted">Visits are counted without cookies, no ads follow you round the internet, and there's no cookie banner because there's nothing to ask about. Just a robot who knows Thomas's prices.</p>
-        </div>
-        <div class="flex flex-wrap gap-3">
-          <button type="button" data-boti-open class="btn-primary">Ask Boti</button>
-          <a href="/privacy" class="btn-ghost">Privacy notice</a>
-        </div>
-      </div>
-    </section>
+      </section>
 
-    <!-- Closing CTA: big left-aligned line, one person behind it, two ways in. -->
-    <section id="contact" class="relative isolate overflow-hidden border-t border-line py-24 sm:py-36">
-      <div aria-hidden="true" class="glow absolute -right-40 -bottom-60 -z-10 size-[44rem]"></div>
-      <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1.4fr_1fr] lg:gap-20 lg:px-8">
-        <h2 class="display text-[3rem] leading-[0.95] text-balance sm:text-7xl lg:text-[5.5rem]">
-          {["Let's", 'get', 'your', 'phone'].map((w, i) => <><span class="word-in" style={`--i:${i}`}>{w}</span>{' '}</>)}<span class="word-in" style="--i:4"><span class="mark">ringing.</span></span>
-        </h2>
-        <!-- A note from one person, not a form: who you'll talk to, what happens next, two ways in. -->
-        <div class="card reveal p-6 backdrop-blur-xl [--d:90ms] sm:p-8">
+      <!-- The ask: one giant line, one person behind it, three ways in. -->
+      <section id="contact" class="scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
+        <h2 data-split class:list={[display, 'text-[19vw] leading-[0.85] sm:text-[16vw]']}>Yours <span class="text-accent">next.</span></h2>
+        <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div class="flex items-center gap-4">
-            <!-- Head and shoulders: the shirt anchors the bottom edge, so it no longer reads as a floating head. -->
             <span class="size-14 shrink-0 overflow-hidden rounded-2xl bg-accent/10"><Image src={thomasFull} alt="" width={240} class="w-[180%] max-w-none -ml-[33%]" /></span>
-            <div>
-              <p class="font-semibold">{site.name}</p>
-              <p class="text-sm text-muted">Usually replies within a day</p>
-            </div>
+            <p class="max-w-md text-lg text-pretty text-muted">Tell me what you do and where. I'll come back with a fixed price. No obligation, no deposit. <span class="text-fg">Usually replies within a day.</span></p>
           </div>
-          <p class="mt-6 text-pretty text-muted">Tell me what you do and where. I'll come back with a fixed price. No obligation, no deposit.</p>
-          <div class="mt-6 grid gap-3 sm:grid-cols-2">
-            <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14">WhatsApp me<Icon name="arrow" class="size-4" /></a>
-            <a href={mailto} class="btn-ghost min-h-14">Get a free quote</a>
+          <div class="flex flex-wrap gap-3">
+            <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 max-sm:w-full">WhatsApp me</a>
+            <a href={mailto} class="btn-primary min-h-14 px-7 max-sm:w-full">Get a free quote<Icon name="arrow" class="size-4" /></a>
           </div>
-          <p class="mt-5 border-t border-line pt-5 text-sm text-muted">
-            Or call <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">{site.phone}</a> or{' '}
-            <button type="button" data-boti-open="Get me a price" class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">get a price from Boti</button>
-          </p>
-          <p class="mt-4 inline-flex items-center gap-2 rounded-full bg-accent/10 px-3.5 py-1.5 text-sm font-semibold text-accent-ink">Christmas offer · £{christmasOffer.price}</p>
+        </div>
+        <p class="mt-8 text-muted">
+          Or call <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">{site.phone}</a> or{' '}
+          <button type="button" data-boti-open="Get me a price" class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">get a price from Boti</button>
+        </p>
+      </section>
+    </main>
+
+    <footer class="border-t border-line px-4 pt-14 text-sm text-muted sm:px-8">
+      <div class="flex flex-wrap justify-between gap-10">
+        <div>
+          <Logo class="size-10" />
+          <p class="mt-4 max-w-xs text-pretty">Websites for local businesses, built and looked after. London, UK.</p>
+          <a href={`mailto:${site.email}`} class="mt-4 inline-block py-2 font-semibold text-fg underline-offset-4 hover:underline">{site.email}</a>
+        </div>
+        <nav aria-label="Footer" class="flex gap-12">
+          <div class="flex flex-col items-start">
+            {[['/templates', 'Templates'], ['#services', 'Price'], ['#faq', 'Questions'], ['#contact', 'Contact']].map(([h, t]) => <a href={h} class="py-1.5 transition hover:text-fg">{t}</a>)}
+          </div>
+          <div class="flex flex-col items-start">
+            <a href="/cv" class="py-1.5 transition hover:text-fg">CV</a>
+            <a href={site.linkedin} target="_blank" rel="noopener" class="py-1.5 transition hover:text-fg">LinkedIn</a>
+            <a href={site.github} target="_blank" rel="noopener" class="py-1.5 transition hover:text-fg">GitHub</a>
+            <a href="/privacy" class="py-1.5 transition hover:text-fg">Privacy</a>
+          </div>
+        </nav>
+      </div>
+      <p aria-hidden="true" class:list={[display, 'mt-14 text-center text-[clamp(2.5rem,13vw,13rem)] leading-[0.85] whitespace-nowrap text-fg/[0.06] select-none']}>Thomas Beckford</p>
+      <p class="border-t border-line py-5 text-center text-xs">© {new Date().getFullYear()} {site.name} · London, UK</p>
+    </footer>
+  </div>
+
+  <!-- Site preview: the example opens over the page instead of leaving it. -->
+  <dialog id="preview" data-lenis-prevent aria-labelledby="preview-title" class="m-auto size-full max-h-none max-w-none bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm sm:h-[min(78dvh,760px)] sm:w-[min(1100px,calc(100vw-4rem))]">
+    <div class="flex size-full flex-col overflow-hidden bg-accent text-on-accent sm:rounded-[1.75rem] sm:p-2 sm:pt-0 sm:shadow-[0_0_90px_-20px] sm:shadow-accent/50">
+      <div class="flex items-center justify-between gap-3 py-2 pr-1 pl-4 text-sm sm:pl-3">
+        <p id="preview-title" data-preview-title class="min-w-0 font-semibold text-ellipsis whitespace-nowrap overflow-hidden"></p>
+        <div class="flex shrink-0 items-center gap-1">
+          <a data-preview-open target="_blank" rel="noopener" class="rounded-full px-3 py-2 font-semibold opacity-70 transition hover:opacity-100">New tab ↗</a>
+          <button type="button" data-preview-close autofocus aria-label="Close preview" class="grid size-10 place-items-center rounded-full bg-on-accent text-2xl leading-none text-accent transition hover:scale-105">×</button>
         </div>
       </div>
-    </section>
-  </main>
-
-  <!-- Big name as the sign-off, then the paths people actually need: sections, contact, legal. -->
-  <footer class="relative overflow-clip border-t border-line pt-16 text-sm text-muted">
-    <div class="mx-auto grid max-w-6xl grid-cols-2 gap-10 px-4 sm:grid-cols-[1fr_auto_auto] sm:gap-16 sm:px-6 lg:px-8">
-      <div class="col-span-2 sm:col-span-1">
-        <Logo class="size-10" />
-        <p class="mt-4 max-w-xs text-pretty">Websites for local businesses, built and looked after. London, UK.</p>
-        <a href={`mailto:${site.email}`} class="mt-4 inline-block py-2 font-semibold text-fg underline-offset-4 hover:underline">{site.email}</a>
-      </div>
-      <nav aria-label="Footer" class="flex flex-col items-start">
-        {[['#services', 'Services'], ['#work', 'Work'], ['#about', 'About'], ['#faq', 'Questions'], ['#contact', 'Contact']].map(([h, t]) => <a href={h} class="py-1.5 transition hover:text-fg">{t}</a>)}
-      </nav>
-      <div class="flex flex-col items-start">
-        <a href={site.linkedin} target="_blank" rel="noopener" class="py-1.5 transition hover:text-fg">LinkedIn</a>
-        <a href={site.github} target="_blank" rel="noopener" class="py-1.5 transition hover:text-fg">GitHub</a>
-        <a href="/privacy" class="py-1.5 transition hover:text-fg">Privacy</a>
-      </div>
+      <iframe data-preview-frame title="Site preview" class="min-h-0 flex-1 bg-white sm:rounded-[1.25rem]"></iframe>
     </div>
-    <p aria-hidden="true" class="display mt-14 text-center text-[clamp(2.25rem,11vw,10rem)] leading-[0.78] whitespace-nowrap text-fg/[0.06] select-none">Thomas Beckford</p>
-    <p class="border-t border-line py-5 text-center text-xs">© {new Date().getFullYear()} {site.name} · London, UK</p>
-  </footer>
+  </dialog>
 
   <BotiChat trades={trades.filter((t) => !t.pick).map((t) => t.name)} />
 </BaseLayout>
 
-<style>
-  #grid-bg {
-    --line: color-mix(in oklab, var(--color-fg) 6%, transparent);
-    background: linear-gradient(var(--line) 1px, transparent 1px) 0 0 / 48px 48px, linear-gradient(90deg, var(--line) 1px, transparent 1px) 0 0 / 48px 48px;
-    mask-image: radial-gradient(ellipse 90% 70% at 50% 0%, #000 20%, transparent 100%);
-  }
-  :global([data-split]) #hero-title {
-    visibility: hidden;
-    animation: unhide 0s 2.5s forwards;
-  }
-  @keyframes unhide {
-    to {
-      visibility: visible;
-    }
-  }
-  :global(.cursor-ring) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 70;
-    pointer-events: none;
-    border-radius: 9999px;
-    transition: opacity 0.2s, scale 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.3s;
-    width: 36px;
-    height: 36px;
-    margin: -18px 0 0 -18px;
-    border: 1.5px solid var(--color-accent);
-    box-shadow: 0 0 18px color-mix(in oklab, var(--color-accent) 40%, transparent);
-  }
-  :global(.cursor-ring[data-hot]) {
-    scale: 1.8;
-    background: color-mix(in oklab, var(--color-accent) 14%, transparent);
-  }
-  :global(html[data-cursor-out] .cursor-ring),
-  :global(html:has(dialog[open]) .cursor-ring) {
-    opacity: 0;
-  }
-  /* A terminal caret after Boti's line. */
-  .quip::after {
-    content: '';
-    display: inline-block;
-    width: 0.5em;
-    height: 1em;
-    margin-left: 0.25em;
-    vertical-align: -0.15em;
-    background: var(--color-accent);
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    .quip::after {
-      animation: caret 1s steps(1) infinite;
-    }
-  }
-  @keyframes caret {
-    50% {
-      opacity: 0;
-    }
-  }
-</style>
-
 <script>
-  import { gsap } from 'gsap'
-  import { ScrollTrigger } from 'gsap/ScrollTrigger'
-  import { SplitText } from 'gsap/SplitText'
-  gsap.registerPlugin(ScrollTrigger, SplitText)
+  import '@/scripts/motion'
 
-  const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches
-
-  // Reveal in and out: hidden while off screen (only things that start below the fold, so nothing blinks on load and no-JS shows everything).
-  if (!reducedMotion) {
-    const pending = [...document.querySelectorAll<HTMLElement>('.reveal')].filter((el) => el.getBoundingClientRect().top > innerHeight)
-    const io = new IntersectionObserver(
-      (entries) => {
-        for (const e of entries) e.target.toggleAttribute('data-pending', !e.isIntersecting)
-      },
-      { rootMargin: '-6% 0px -10% 0px' },
-    )
-    for (const el of pending) {
-      el.setAttribute('data-pending', '')
-      io.observe(el)
-    }
-  }
-
-  // Boti reacts: a short run of faces, then back to hello.
-  const reacting = new WeakMap<HTMLElement, number[]>()
-  const react = (el: HTMLElement, steps: [string, number][]) => {
-    reacting.get(el)?.forEach(clearTimeout) // a new reaction replaces one still running
-    const timers: number[] = []
-    reacting.set(el, timers)
-    let t = 0
-    for (const [m, ms] of [...steps, ['hello', 0] as [string, number]]) {
-      timers.push(window.setTimeout(() => {
-        el.dataset.mood = m
-        el.classList.remove('mascot-pop')
-        void el.getBoundingClientRect()
-        el.classList.add('mascot-pop')
-      }, t))
-      t += ms
-    }
-  }
-
-  // Try it: mirror the form into the phone site, the page accent and the quote email.
-  const tryForm = document.getElementById('try-form') as HTMLFormElement
-  const trySite = document.getElementById('try-site')!
-  const tryCta = document.getElementById('try-cta') as HTMLAnchorElement
-  const ticks = document.querySelectorAll<HTMLElement>('[data-tick]')
-  const trades = JSON.parse(tryForm.dataset.trades!) as { name: string; style: string; neon: string; quip: string; demo: string; head: string; lede: string; cta: string }[]
-  const set = (k: string, v: string) => trySite.querySelectorAll(`[data-k="${k}"]`).forEach((el) => (el.textContent = v))
-  const render = () => {
-    const f = new FormData(tryForm)
-    const val = (k: string) => String(f.get(k) ?? '').trim() || (tryForm.elements.namedItem(k) as HTMLInputElement).placeholder
-    const i = Number(f.get('trade'))
-    const t = trades[i]
-    const nameInput = tryForm.elements.namedItem('name') as HTMLInputElement
-    nameInput.placeholder = t.demo
-    const name = val('name')
-    const area = val('area')
-    trySite.querySelectorAll<HTMLElement>('[data-trade]').forEach((el) => (el.hidden = el.dataset.trade !== f.get('trade')))
-    set('name', name)
-    set('area', area)
-    set('trade', t.name)
-    set('head', t.head)
-    set('cta', t.cta)
-    set('lede', t.lede.replace('{area}', area))
-    // The whole page takes the trade's colour.
-    document.documentElement.style.setProperty('--color-accent', t.neon)
-    ticks.forEach((el, n) => el.toggleAttribute('data-on', n === i))
-    // The email carries only what the visitor typed, never the demo placeholders.
-    const typed = (k: string) => String(f.get(k) ?? '').trim()
-    const redo = picked && t.style === 'redo'
-    const body = [redo ? `Hi Thomas, my website's old and I'd like it rebuilt.` : `Hi Thomas, I'd like a website like the one I just made on your page.`, '', picked && !redo ? `Trade: ${t.name}` : null, typed('name') ? `Business: ${typed('name')}` : null, typed('area') ? `Area: ${typed('area')}` : null].filter((l) => l !== null).join('\n')
-    tryCta.href = `mailto:${tryCta.href.slice(7).split('?')[0]}?subject=${encodeURIComponent(`${redo ? 'Website redesign' : 'Website'}${typed('name') ? ` for ${typed('name')}` : ' quote'}`)}&body=${encodeURIComponent(body)}`
-  }
-  // Boti's running commentary. ponytail: textContent only, the visitor's text never becomes HTML.
-  const tryBot = document.getElementById('try-bot')!
-  const tryCheer = () => react(tryBot, [['done', 1400]])
-  const quip = document.getElementById('try-quip')!
-  let quipTimer = 0
-  tryForm.addEventListener('input', (e) => {
-    const el = e.target as HTMLInputElement
-    clearTimeout(quipTimer)
-    quipTimer = window.setTimeout(() => {
-      const v = el.value.trim()
-      if (el.name === 'trade') quip.textContent = trades[Number(el.value)].quip
-      else if (!v) return
-      else quip.textContent = el.name === 'name' ? `${v}? I’d ring them.` : `${v}! Lovely round there.`
-      quip.classList.remove('bubble-in')
-      void quip.offsetWidth
-      quip.classList.add('bubble-in')
-      tryCheer()
-    }, el.name === 'trade' ? 0 : 600)
-  })
-  // Only a trade the visitor chose goes in the email, not one the slideshow or the scroll landed on. Programmatic .checked fires no input event.
-  // Registered before render so the click that picks a trade already counts.
-  let picked = false
-  tryForm.addEventListener('input', (e) => {
-    if ((e.target as HTMLInputElement).name === 'trade') picked = true
-  })
-  tryForm.addEventListener('input', render)
-  const radios = [...tryForm.querySelectorAll<HTMLInputElement>('input[name=trade]')]
-  const show = (i: number) => {
-    if (radios[i].checked) return
-    radios[i].checked = true
-    render()
-  }
-  // Browser may restore typed values on back/reload; only then resync, so the default mailto stays generic.
-  // A restored radio may be one the slideshow landed on, so it never counts as picked.
-  const restored = !!((tryForm.elements.namedItem('name') as HTMLInputElement).value || (tryForm.elements.namedItem('area') as HTMLInputElement).value)
-  if (restored || !radios[0].checked) render()
-  // Until the visitor picks a trade, the page cycles through the trades' colours on its own while the try-it section is on screen
-  // (moving content off-screen with no pause control fails WCAG 2.2.2). It hands over to the scroll while the desktop hero
-  // is pinned, rests in background tabs, and stops for good once they touch the form or open Boti's chat.
-  let cycle = 0
-  let scrubbing = false
-  let heroOn = true
-  if (!restored && !reducedMotion) {
-    new IntersectionObserver(([e]) => (heroOn = e.isIntersecting)).observe(document.getElementById('try')!)
-    cycle = window.setInterval(() => {
-      if (document.hidden || scrubbing || !heroOn) return
-      show((radios.findIndex((r) => r.checked) + 1) % radios.length)
-    }, 3200)
-    const stop = () => clearInterval(cycle)
-    for (const ev of ['pointerdown', 'focusin']) tryForm.addEventListener(ev, stop, { once: true })
-    for (const b of document.querySelectorAll('[data-boti-open]')) b.addEventListener('click', stop)
-  }
-  tryForm.addEventListener('submit', (e) => e.preventDefault())
-
-  // Motion, desktop: the headline rises in by line, the try-it section pins while the phone turns through the trades.
-  // gsap.matchMedia reverts all of it when the query stops matching. Reduced motion gets none of it.
-  const mm = gsap.matchMedia()
-  mm.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
-    const title = document.getElementById('hero-title')!
-    let played = false
-    SplitText.create(title, {
-      type: 'lines,words',
-      mask: 'lines',
-      autoSplit: true,
-      onSplit: (self) => {
-        gsap.set(title, { visibility: 'visible' })
-        if (played) return
-        played = true
-        return gsap.from(self.words, { yPercent: 110, duration: 1, ease: 'expo.out', stagger: 0.05, delay: 0.1 })
-      },
-    })
-
-    gsap.fromTo('#spin', { rotateY: -14, rotateX: 4 }, {
-      rotateY: 18,
-      rotateX: -6,
-      scale: 1.06,
-      ease: 'none',
-      scrollTrigger: {
-        trigger: '#try',
-        start: 'top top',
-        end: '+=180%',
-        pin: true,
-        scrub: 0.6,
-        onToggle: (s) => (scrubbing = s.isActive),
-        onUpdate: (s) => {
-          if (picked || s.progress < 0.02) return
-          show(Math.min(radios.length - 1, Math.floor(s.progress * radios.length)))
-        },
-      },
-    })
-
-    // The giant trade word slides across behind the phone as the hero scrolls.
-
-    // Section titles rise in word by word as they reach the viewport.
-    const heads = gsap.utils.toArray<HTMLElement>('main section:not(#hero) .h2')
-    const splits = heads.map((h) =>
-      SplitText.create(h, {
-        type: 'words',
-        mask: 'words',
-        onSplit: (self) => gsap.from(self.words, { yPercent: 105, duration: 0.9, ease: 'expo.out', stagger: 0.04, scrollTrigger: { trigger: h, start: 'top 85%', once: true } }),
-      }),
-    )
-    // Work phones rise up and straighten out as they scroll in.
-    gsap.utils.toArray<HTMLElement>('.work-phone').forEach((ph, i) => {
-      gsap.fromTo(ph, { yPercent: 35, rotateZ: i % 2 ? 8 : -8 }, { yPercent: 0, rotateZ: 0, ease: 'none', scrollTrigger: { trigger: ph.closest('a'), start: 'top bottom', end: 'top 40%', scrub: 0.8 } })
-    })
-
-    return () => {
-      splits.forEach((x) => x.revert())
-    }
-  })
-  // Phones: no scroll-jacking, just one turn of the phone as it lands.
-  mm.add('(max-width: 1023px) and (prefers-reduced-motion: no-preference)', () => {
-    gsap.from('#spin', { rotateY: -40, duration: 1.6, ease: 'expo.out', scrollTrigger: { trigger: '#spin', start: 'top 80%', once: true } })
-  })
-
-  // Nav turns into a floating capsule once the page scrolls. Created after the pins so positions account for them.
-  const nav = document.getElementById('nav')!
-  ScrollTrigger.create({ start: 40, end: 'max', onToggle: (s) => nav.toggleAttribute('data-scrolled', s.isActive) })
-  // The quote badge bows out once the contact section, where it points, is on screen.
-  // Hidden (scaled away at contact, or still docked out near the top) = out of tab order and screen readers too.
-  const badge = document.getElementById('badge')!
+  // The WhatsApp button bows out from the contact section, where it points, to the end of the page.
   const fab = document.getElementById('wa-fab')!
-  const docks = CSS.supports('animation-timeline: scroll()') && !reducedMotion
-  let atContact = false
-  let docked = !docks
-  const syncDock = () => {
-    badge.toggleAttribute('data-off', atContact)
-    fab.toggleAttribute('data-off', atContact)
-    badge.inert = fab.inert = atContact || !docked
-  }
-  ScrollTrigger.create({ trigger: '#contact', start: 'top 80%', end: 'max', onToggle: (s) => ((atContact = s.isActive), syncDock()) })
-  if (docks) ScrollTrigger.create({ start: 200, end: 'max', onToggle: (s) => ((docked = s.isActive), syncDock()) })
-  syncDock()
+  new IntersectionObserver(([e]) => {
+    const off = e.isIntersecting || e.boundingClientRect.top < 0
+    fab.toggleAttribute('data-off', off)
+    fab.inert = off
+  }).observe(document.getElementById('contact')!)
 
-  // Boti answers the questions.
-  const faqBot = document.getElementById('faq-bot')!
-  document.querySelectorAll('#faq details').forEach((d) =>
-    d.addEventListener('toggle', () => (d as HTMLDetailsElement).open && react(faqBot, [['thinking', 550], ['done', 1600]])),
+  // Example sites open in the preview modal; modified clicks (new tab, etc.) still go straight there.
+  const preview = document.getElementById('preview') as HTMLDialogElement
+  const frame = preview.querySelector<HTMLIFrameElement>('[data-preview-frame]')!
+  let opener: HTMLElement | null = null
+  document.querySelectorAll<HTMLAnchorElement>('a[data-preview]').forEach((a) =>
+    a.addEventListener('click', (e) => {
+      if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button) return
+      e.preventDefault()
+      opener = a
+      frame.src = a.href
+      frame.title = a.dataset.preview!
+      preview.querySelector('[data-preview-title]')!.textContent = a.dataset.preview!
+      preview.querySelector<HTMLAnchorElement>('[data-preview-open]')!.href = a.href
+      preview.showModal()
+    }),
   )
-  // The label hides once checked, taking focus with it: hand focus to the first question it revealed.
-  const faqMore = document.getElementById('faq-more') as HTMLInputElement
-  faqMore.addEventListener('change', () => faqMore.checked && document.querySelectorAll<HTMLElement>('#faq summary')[5]?.focus())
+  preview.querySelector('[data-preview-close]')!.addEventListener('click', () => preview.close())
+  preview.addEventListener('click', (e) => e.target === preview && preview.close())
+  preview.addEventListener('close', () => {
+    frame.src = 'about:blank'
+    opener?.focus({ preventScroll: true })
+  })
+  // Esc inside a same-origin example still closes (a cross-origin page keeps its keys to itself).
+  frame.addEventListener('load', () => {
+    try { frame.contentWindow!.addEventListener('keydown', (e) => e.key === 'Escape' && preview.close()) } catch {}
+  })
+  // An example's "Get one like this" jumps this page to #contact: close the preview on the way.
+  addEventListener('hashchange', () => preview.close())
 
-  // Proof strip: count up from 0 once each number scrolls into view, once.
-  const counters = document.querySelectorAll<HTMLElement>('[data-count]')
-  const animateCount = (el: HTMLElement) => {
-    const target = Number(el.dataset.count)
-    const suffix = el.dataset.suffix ?? ''
-    if (reducedMotion) {
-      el.textContent = target.toLocaleString('en-GB') + suffix
-      return
-    }
-    const start = performance.now()
-    const dur = 1100
-    const tick = (now: number) => {
-      const p = Math.min(1, (now - start) / dur)
-      el.textContent = Math.round(target * (1 - (1 - p) ** 3)).toLocaleString('en-GB') + suffix
-      if (p < 1) requestAnimationFrame(tick)
-    }
-    requestAnimationFrame(tick)
-  }
-  const countIo = new IntersectionObserver((entries) => {
-    for (const e of entries) {
-      if (!e.isIntersecting) continue
-      animateCount(e.target as HTMLElement)
-      countIo.unobserve(e.target)
-    }
-  }, { threshold: 0.6 })
-  counters.forEach((el) => countIo.observe(el))
-
-  // Hero phone tilts toward the pointer; cards get a glow that follows it. Skipped for reduced motion and touch.
-  if (matchMedia('(pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {
-    const tilt = document.getElementById('tilt')!
-    document.getElementById('try')!.addEventListener('pointermove', (e) => {
-      tilt.style.setProperty('--ry', `${(e.clientX / innerWidth - 0.5) * 14 - 8}deg`)
-      tilt.style.setProperty('--rx', `${4 - (e.clientY / innerHeight - 0.5) * 8}deg`)
-    })
-    // Cursor: the native pointer stays (a drawn one always runs a frame behind the hardware one, which feels sluggish);
-    // a ring in the accent follows it closely and swells over anything clickable. Hidden while Boti's chat is open.
-    const ring = Object.assign(document.createElement('div'), { className: 'cursor-ring' })
-    document.body.append(ring)
-    document.documentElement.toggleAttribute('data-cursor-out', true)
-    const ringX = gsap.quickTo(ring, 'x', { duration: 0.15, ease: 'power2' })
-    const ringY = gsap.quickTo(ring, 'y', { duration: 0.15, ease: 'power2' })
-    addEventListener('pointermove', (e) => {
-      ringX(e.clientX)
-      ringY(e.clientY)
-      ring.toggleAttribute('data-hot', !!(e.target as Element).closest('a, button, label, summary'))
-      document.documentElement.toggleAttribute('data-cursor-out', false)
-    }, { passive: true })
-    document.addEventListener('mouseout', (e) => !e.relatedTarget && document.documentElement.toggleAttribute('data-cursor-out', true))
-    // Main buttons lean toward the pointer, then spring back.
-    document.querySelectorAll<HTMLElement>('main .btn-primary, main .btn-whatsapp').forEach((btn) => {
-      const x = gsap.quickTo(btn, 'x', { duration: 0.5, ease: 'power3' })
-      const y = gsap.quickTo(btn, 'y', { duration: 0.5, ease: 'power3' })
-      btn.addEventListener('pointermove', (e) => {
-        const r = btn.getBoundingClientRect()
-        x((e.clientX - r.left - r.width / 2) * 0.3)
-        y((e.clientY - r.top - r.height / 2) * 0.4)
-      })
-      btn.addEventListener('pointerleave', () => (x(0), y(0)))
-    })
-    document.addEventListener('pointermove', (e) => {
-      const el = (e.target as Element).closest<HTMLElement>('.spot')
-      if (!el) return
-      const r = el.getBoundingClientRect()
-      el.style.setProperty('--x', `${e.clientX - r.left}px`)
-      el.style.setProperty('--y', `${e.clientY - r.top}px`)
-    })
-  }
-  // The hero robot: its own small chunk, loaded after the page. It watches the pointer across the whole hero. No WebGL: the stage stays empty.
+  // The hero robot: its own small chunk, loaded after the page. No WebGL: the stage stays empty.
   const robot = document.getElementById('robot-stage')!
-  import('@/scripts/robot').then((m) => m.mount(robot, reducedMotion, document.getElementById('hero')!)).catch(() => robot.replaceChildren())
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+  import('@/scripts/robot').then((m) => m.mount(robot, reduced, document.getElementById('hero')!)).catch(() => robot.replaceChildren())
 </script>

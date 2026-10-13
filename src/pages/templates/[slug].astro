@@ -14,6 +14,7 @@ import Collage from '@/components/kit/Collage.astro'
 import Projects from '@/components/kit/Projects.astro'
 import Curtain from '@/components/kit/Curtain.astro'
 import Steps from '@/components/kit/Steps.astro'
+import Faq from '@/components/kit/Faq.astro'
 import Areas from '@/components/kit/Areas.astro'
 import Contact from '@/components/kit/Contact.astro'
 import DemoPill from '@/components/kit/DemoPill.astro'
@@ -38,6 +39,7 @@ const vars = `--bg:${c.bg};--fg:${c.fg};--muted:${c.muted};--accent:${c.accent};
       s === 'gallery' ? <Gallery d={d} /> :
       s === 'collage' ? <Collage d={d} /> :
       s === 'projects' ? <Projects d={d} /> :
+      s === 'faq' ? <Faq d={d} /> :
       s === 'steps' ? <Steps d={d} /> :
       s === 'areas' ? <Areas d={d} /> :
       s === 'contact' ? <Contact d={d} /> : null

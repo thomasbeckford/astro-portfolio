@@ -11,7 +11,7 @@ const { trades } = Astro.props as { trades: string[] }
 const starters = ['Get me a price', 'What’s the Christmas offer?', 'How long does it take?']
 ---
 
-<dialog id="boti-chat" aria-labelledby="boti-title" data-trades={JSON.stringify(trades)} data-price={site.priceFrom} data-turnaround={site.turnaround} data-email={site.email} data-phone={site.phone.replace(/\D/g, '')} data-offer={christmasOffer.price} data-note={christmasOffer.note} data-faqs={JSON.stringify(faqs)} class="boti-chat fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-[440px] bg-transparent p-2 backdrop:bg-black/50 backdrop:backdrop-blur-sm">
+<dialog id="boti-chat" data-lenis-prevent aria-labelledby="boti-title" data-trades={JSON.stringify(trades)} data-price={site.priceFrom} data-turnaround={site.turnaround} data-email={site.email} data-phone={site.phone.replace(/\D/g, '')} data-offer={christmasOffer.price} data-note={christmasOffer.note} data-faqs={JSON.stringify(faqs)} class="boti-chat fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-[440px] bg-transparent p-2 backdrop:bg-black/50 backdrop:backdrop-blur-sm">
   <div class="flex h-full flex-col overflow-hidden rounded-3xl bg-night text-fg shadow-2xl shadow-black/60 ring-1 ring-line ring-inset">
     <header class="flex items-center gap-3.5 border-b border-line px-4 py-3">
       <Boti mood="mini" id="boti-face" class="w-[60px] shrink-0" />

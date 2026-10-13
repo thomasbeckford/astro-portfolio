@@ -61,7 +61,10 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
   })
   // Hero name: letters rise in one by one.
   all('[data-letters]').forEach((el) => {
-    SplitText.create(el, { type: 'words,chars', mask: 'chars', onSplit: (s) => gsap.from(s.chars, { yPercent: 110, rotate: 6, duration: 1.1, ease: 'expo.out', stagger: 0.05, delay: parseFloat(el.dataset.delay ?? '0.15') }) })
+    SplitText.create(el, { type: 'words,chars', mask: 'chars', onSplit: (s) => {
+      el.style.visibility = 'visible' // a page may hold it hidden until now, so it never flashes whole
+      return gsap.from(s.chars, { yPercent: 110, rotate: 6, duration: 1.1, ease: 'expo.out', stagger: 0.05, delay: parseFloat(el.dataset.delay ?? '0.15') })
+    } })
   })
   // Headings: words slide up out of a mask when they come into view.
   all('[data-split]').forEach((el) => {

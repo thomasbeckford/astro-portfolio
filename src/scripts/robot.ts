@@ -153,19 +153,18 @@ void main(){
       t+=h.x; if(t>s.y) break;
     }
   }
-  // Ground: a lit pool under the robot over the transparent page, the soft shadow cut out of it.
+  // Ground: a lit pool under the robot over the transparent page, darkened right underneath it.
   if(c.a==0.&&rd.y<0.){
     float t=-ro.y/rd.y; vec3 p=ro+rd*t;
     vec2 d=p.xz-uRoot.xz;
-    float pool=exp(-(d.x*d.x*.25+d.y*d.y*.5));
-    float sh=shadow(p+vec3(0.,.002,0.),SUN);
+    float pool=exp(-(d.x*d.x*.9+d.y*d.y*1.8));
     float lift=uRoot.y-.15;
     float contact=1.-.55*exp(-dot(d,d)*(6./(1.+lift*2.)))/(1.+lift);
     float g=exp(-dot(d,d)*(3./(1.+lift)))*uThrust/(1.+lift*1.5);
     // Fade out before the canvas edges, so the pool never shows the canvas as a box.
     vec2 f=gl_FragCoord.xy/uRes;
     float edge=smoothstep(0.,.22,f.x)*smoothstep(0.,.22,1.-f.x)*smoothstep(0.,.35,f.y);
-    c=vec4(vec3(.085)*pool*sh*contact+uEyeCol*g*.12,.5*pool)*edge;
+    c=vec4(vec3(.06)*pool*contact+uEyeCol*g*.12,.4*pool)*edge;
   }
   vec3 th=uRoot+vec3(0.,.08,0.);
   float gl=glow(ro,rd,th,tHit,.004)*uThrust;
@@ -234,7 +233,7 @@ export function mount(stage: HTMLElement, reduced: boolean, area: HTMLElement = 
   let halfW = 4, range = 3
   const resize = () => {
     // ponytail: fixed DPR caps, adaptive resolution from frame time if phones still struggle.
-    const dpr = Math.min(devicePixelRatio, coarse ? 1 : 1.5)
+    const dpr = Math.min(devicePixelRatio, coarse ? 2 : 1.5) // the phone stage is small: 2x there costs less than desktop's 1.5x
     const w = Math.round(stage.clientWidth * dpr), h = Math.round(stage.clientHeight * dpr)
     if (!w || !h) return // hidden: a 0 height would put NaN in every spring for good
     canvas.width = w

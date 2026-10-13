@@ -1,5 +1,5 @@
 ---
-// Closing call to action and a footer wordmark cropped by the page edge. The number is text, not a tel: link: it's made up.
+// Closing call to action and a footer wordmark cropped by the page edge. The number is text, not a tel: link: it's a drama-range number.
 import type { Demo } from '@/templates'
 import { fit } from './media'
 const { d } = Astro.props as { d: Demo }
@@ -10,7 +10,6 @@ const { d } = Astro.props as { d: Demo }
     <div class="md:justify-self-end md:text-right">
       <p class="text-lg">Call or WhatsApp</p>
       <p class="font-(family-name:--display) text-4xl font-bold tracking-tight sm:text-5xl">{d.tel}</p>
-      <p class="mt-2 text-sm opacity-70">Example number. This business is made up.</p>
     </div>
   </div>
   <p aria-hidden="true" class="mt-16 translate-y-[18%] text-center font-(family-name:--display) leading-[0.8] font-black whitespace-nowrap uppercase opacity-90" style={`font-size:${fit(d.mark, d.font)}${d.font === 'archivo' ? ';font-stretch:125%' : ''}`}>{d.mark}</p>
