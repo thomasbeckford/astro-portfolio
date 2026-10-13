@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config'
 import tailwindcss from '@tailwindcss/vite'
 
 export default defineConfig({
-  site: 'https://tebeck.vercel.app',
+  site: 'https://tebeck.dev',
   // old portfolio pages — keep shared links working
   redirects: {
     '/about': '/#about',

@@ -3,7 +3,7 @@
 export const site = {
   name: 'Thomas Beckford',
   role: 'Senior Full-Stack Engineer & AI Engineer',
-  url: 'https://tebeck.vercel.app', // TODO: swap for a real domain when bought
+  url: 'https://tebeck.dev',
   email: 'tebeckford@gmail.com',
   linkedin: 'https://www.linkedin.com/in/thomas-beckford-07520775/',
   github: 'https://github.com/thomasbeckford',
