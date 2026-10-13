@@ -1,0 +1,19 @@
+---
+// Pinned sideways scroll through the photos on wide screens (motion.ts); a plain stack on phones.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const pics = photos(d.slug)
+---
+<section data-hscroll aria-label="Our work" class="overflow-x-auto py-16 md:flex md:h-dvh md:items-center md:py-0">
+  <div data-track class="flex flex-col gap-6 px-4 sm:px-8 md:w-max md:flex-row md:items-center md:gap-10">
+    <h2 class="shrink-0 font-(family-name:--display) text-7xl leading-[0.85] uppercase md:w-[38vw] md:text-[9vw]">Recent<br /><span class="text-(--accent)">work</span></h2>
+    {(d.gallery ?? []).map((cap, i) => pics[i] && (
+      <figure class="shrink-0 md:w-[42vw]">
+        <div class="aspect-[4/3] overflow-hidden rounded-2xl"><Image src={pics[i]} alt="" widths={[600, 1000, 1400]} sizes="(min-width: 768px) 42vw, 100vw" class="size-full object-cover" /></div>
+        <figcaption class="mt-4 flex justify-between font-(family-name:--display) text-2xl uppercase"><span>{cap}</span><span class="text-(--muted)">{String(i + 1).padStart(2, '0')}</span></figcaption>
+      </figure>
+    ))}
+  </div>
+</section>

@@ -1,0 +1,26 @@
+---
+// Headline among photos that drift at different speeds (data-speed in motion.ts). Photos 1..5.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const pics = photos(d.slug).slice(0, 5)
+// Spots for up to five photos: corners plus one big one behind the words.
+const spots = [
+  { cls: 'left-[3%] top-[4%] w-[38vw] md:w-[20vw]', speed: 1.2 },
+  { cls: 'right-[4%] top-[10%] w-[30vw] md:w-[16vw]', speed: 0.6 },
+  { cls: 'left-1/2 top-1/2 w-[70vw] -translate-x-1/2 -translate-y-1/2 md:w-[36vw]', speed: 0.2 },
+  { cls: 'left-[8%] bottom-[6%] w-[30vw] md:w-[15vw]', speed: 0.9 },
+  { cls: 'right-[6%] bottom-[2%] w-[40vw] md:w-[22vw]', speed: 1.5 },
+]
+---
+<section class="relative isolate flex min-h-[150vh] items-center justify-center overflow-hidden px-4 py-[20vh]">
+  {pics.map((p, i) => (
+    <div class:list={['absolute -z-10', spots[i].cls]}>
+      <div data-speed={spots[i].speed}>
+        <Image src={p} alt="" widths={[400, 800, 1200]} sizes={i === 2 ? '(min-width: 768px) 36vw, 70vw' : '(min-width: 768px) 22vw, 40vw'} class="h-auto w-full object-cover" />
+      </div>
+    </div>
+  ))}
+  <h2 data-split class="max-w-[14ch] text-center font-(family-name:--display) text-6xl leading-[0.95] font-bold tracking-[-0.05em] text-white text-shadow-lg sm:text-8xl lg:text-[8.5vw]">{d.collage}</h2>
+</section>

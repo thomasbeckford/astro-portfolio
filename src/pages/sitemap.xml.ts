@@ -1,8 +1,9 @@
 import { site } from '@/site'
+import { landings } from '@/landings'
 
-// ponytail: three indexable pages, so no sitemap integration. Add @astrojs/sitemap when there are more.
+// ponytail: a handful of indexable pages, so no sitemap integration. Add @astrojs/sitemap when there are more.
 // No lastmod: a build date changes every deploy and Google learns to ignore it.
-const pages = ['/', '/cv', '/privacy']
+const pages = ['/', ...landings.map((l) => `/${l.path}`), '/cv', '/privacy']
 
 export const GET = () =>
   new Response(

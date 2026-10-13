@@ -1,0 +1,12 @@
+---
+// Two slogan rows running opposite ways. Pure CSS (.kit-marquee in global.css); still under reduced motion.
+const { items } = Astro.props as { items: string[] }
+const row = [...items, ...items]
+---
+<section aria-label="What we do" class="-rotate-1 overflow-hidden bg-(--alt) py-3 text-white">
+  {[0, 1].map((r) => (
+    <div class:list={['kit-marquee flex w-max gap-10 pr-10 py-1 font-(family-name:--display) text-3xl font-black uppercase sm:text-5xl', r && 'kit-marquee-rev text-(--on-accent) opacity-90']} style="font-stretch:125%" aria-hidden={r ? 'true' : undefined}>
+      {row.map((t, i) => <span class="flex items-center gap-10" aria-hidden={i >= items.length ? 'true' : undefined}>{t}<span class="text-(--accent)">✦</span></span>)}
+    </div>
+  ))}
+</section>

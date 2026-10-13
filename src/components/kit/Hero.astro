@@ -1,0 +1,86 @@
+---
+// Four openings: 'wordmark' (name across the full width over video), 'scale' (headline, then video that shrinks
+// into a card as you scroll), 'letters' (giant name rising letter by letter over a dark video), 'poster' (video
+// behind a giant name; scrolling shrinks the video to a card and sends the name up into the header).
+import type { Demo } from '@/templates'
+import Nav from './Nav.astro'
+import Vid from './Vid.astro'
+import { clip, fit } from './media'
+const { d } = Astro.props as { d: Demo }
+const v = clip(d.slug, 'hero')
+const h = d.hero
+---
+{h.variant === 'wordmark' && (
+  <section id="top" class="relative isolate flex min-h-[100dvh] flex-col overflow-hidden">
+    <Nav d={d} />
+    <Vid {...v} class="absolute inset-0 -z-20 size-full" />
+    <div class="absolute inset-0 -z-10 bg-linear-to-b from-black/70 via-black/25 to-black/80"></div>
+    <h1 data-letters class="mt-20 px-3 text-center whitespace-nowrap font-(family-name:--display) leading-[0.82] font-black tracking-tight text-(--accent) uppercase sm:mt-24" style={`font-size:${fit(d.mark, d.font)};font-stretch:125%`}>
+      {d.mark}
+    </h1>
+    <div class="mt-auto grid gap-6 px-4 pb-24 sm:grid-cols-[1fr_auto] sm:pb-10 sm:items-end sm:px-8">
+      <div class="max-w-xl">
+        <p class="text-sm tracking-widest text-(--accent) uppercase">{h.kicker}</p>
+        <p class="mt-3 text-2xl leading-tight font-semibold text-balance sm:text-3xl">{h.lede}</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="#contact" class="rounded-md bg-(--alt) px-6 py-3.5 font-semibold text-(--on-accent)">{h.cta}</a>
+          <a href="#services" class="rounded-md border border-current/40 px-6 py-3.5 font-semibold">Our services</a>
+        </div>
+      </div>
+      <p class="text-sm text-(--muted) sm:text-right">Call {d.tel}<br />{d.areas.slice(0, 3).join(' · ')}</p>
+    </div>
+  </section>
+)}
+{h.variant === 'scale' && (
+  <section id="top" class="relative">
+    <Nav d={d} />
+    <div class="mx-auto max-w-6xl px-4 pt-32 pb-12 sm:px-8 sm:pt-40">
+      <p class="text-sm font-medium text-(--accent)">{h.kicker}</p>
+      <h1 data-split class="mt-4 max-w-4xl font-(family-name:--display) text-5xl leading-[0.95] font-semibold tracking-[-0.045em] text-balance sm:text-7xl lg:text-8xl">{h.head}</h1>
+      <div class="mt-8 flex flex-wrap items-end justify-between gap-6">
+        <p class="max-w-md text-lg text-(--muted)">{h.lede}</p>
+        <a href="#contact" class="rounded-full bg-(--accent) px-7 py-4 font-semibold text-(--on-accent)">{h.cta}</a>
+      </div>
+    </div>
+    <div data-shrink class="h-[85dvh] overflow-hidden">
+      <Vid {...v} class="size-full" />
+    </div>
+  </section>
+)}
+{h.variant === 'letters' && (
+  <section id="top" class="relative isolate flex min-h-[100dvh] flex-col justify-end overflow-hidden pb-24 sm:pb-8">
+    <Nav d={d} />
+    <Vid {...v} class="absolute inset-0 -z-20 size-full opacity-60 grayscale" />
+    <div class="absolute inset-0 -z-10 bg-linear-to-t from-(--bg) via-(--bg)/30 to-(--bg)/60"></div>
+    <div class="grid gap-6 px-4 sm:grid-cols-2 sm:px-8">
+      <p class="text-sm tracking-[0.2em] text-(--accent) uppercase">{h.kicker}</p>
+      <p class="max-w-md text-lg sm:justify-self-end sm:text-right">{h.lede}</p>
+    </div>
+    <h1 data-letters class="mt-4 px-3 font-(family-name:--display) leading-[0.8] tracking-tight uppercase" style={`font-size:${fit(d.mark, d.font, 34)}`}>{d.mark}</h1>
+  </section>
+)}
+{h.variant === 'poster' && (
+  <section id="top" data-poster class="relative h-[100dvh] motion-safe:h-[200dvh]">
+    <Nav d={d} />
+    <div class="sticky top-0 isolate h-[100dvh] overflow-hidden">
+      <div data-poster-media class="absolute inset-0 -z-10">
+        <Vid {...v} class="size-full" />
+        <div class="absolute inset-0 bg-linear-to-b from-black/45 via-black/5 to-black/35"></div>
+      </div>
+      <!-- Registration marks over the photo. -->
+      <div aria-hidden="true" class="pointer-events-none absolute inset-x-[4%] inset-y-[14%] grid grid-cols-4 grid-rows-3 text-xl font-light text-white/70">
+        {Array.from({ length: 12 }, () => <span class="place-self-start -translate-x-1/2 -translate-y-1/2 leading-none">+</span>)}
+      </div>
+      <div data-poster-copy class="relative grid gap-6 px-4 pt-24 text-white sm:px-8 md:grid-cols-[1fr_auto] md:pt-28">
+        <div class="max-w-xl">
+          <p class="text-sm text-(--accent)">{h.kicker}</p>
+          <p class="mt-3 text-3xl leading-[1.05] font-semibold tracking-[-0.04em] text-balance sm:text-5xl">{h.lede}</p>
+        </div>
+        {h.head && <p class="max-w-[16ch] text-xl leading-tight font-medium tracking-[-0.03em] md:text-right md:text-3xl">{h.head}</p>}
+      </div>
+      <h1 data-poster-mark data-letters data-delay="0.7" class="absolute inset-x-0 bottom-20 text-center md:bottom-[2vh] font-(family-name:--display) leading-[0.8] font-bold tracking-[-0.06em] whitespace-nowrap text-(--accent)" style={`font-size:${fit(d.mark, d.font, 32)}`}>
+        <span>{d.mark}</span>
+      </h1>
+    </div>
+  </section>
+)}

@@ -1,0 +1,37 @@
+---
+// 'stack': sticky cards that pile up like a filing drawer (motion.ts dims the ones underneath). 'rows': big numbered rows.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const pics = photos(d.slug)
+const s = d.services
+---
+<section id="services" class="px-4 py-24 sm:px-8">
+  <h2 data-split class="mx-auto max-w-7xl font-(family-name:--display) text-5xl leading-none tracking-tight uppercase sm:text-8xl">{s.label}</h2>
+  {s.variant === 'stack' ? (
+    <div data-stack class="mx-auto mt-16 grid max-w-6xl gap-6 pb-[10vh]">
+      {s.items.map((it, i) => (
+        <article class="sticky grid min-h-[70vh] origin-top gap-6 overflow-hidden rounded-3xl bg-(--panel) p-6 shadow-[0_-20px_60px_-20px_rgb(0_0_0/0.35)] sm:p-10 md:grid-cols-2" style={`top:calc(5rem + ${i} * 1.75rem)`}>
+          <div class="flex flex-col">
+            <span class="font-(family-name:--display) text-sm tracking-[0.2em] text-(--accent)">{String(i + 1).padStart(2, '0')} / {String(s.items.length).padStart(2, '0')}</span>
+            <h3 class="mt-auto font-(family-name:--display) text-4xl leading-none font-bold tracking-tight uppercase sm:text-6xl" style={d.font === 'archivo' ? 'font-stretch:125%' : undefined}>{it.title}</h3>
+            <p class="mt-4 max-w-sm text-lg text-(--muted)">{it.text}</p>
+          </div>
+          <div data-dim class="pointer-events-none absolute inset-0 bg-black opacity-0"></div>
+          {pics[i] && <Image src={pics[i]} alt="" widths={[480, 800, 1200]} sizes="(min-width: 768px) 45vw, 100vw" class="h-64 w-full rounded-2xl object-cover md:h-full" />}
+        </article>
+      ))}
+    </div>
+  ) : (
+    <ol class="mx-auto mt-16 max-w-7xl divide-y divide-(--fg)/15 border-y border-(--fg)/15">
+      {s.items.map((it, i) => (
+        <li data-rise class="group grid items-baseline gap-2 py-8 sm:grid-cols-[6rem_1fr_1fr] sm:py-10">
+          <span class="font-(family-name:--display) text-2xl text-(--accent)">{String(i + 1).padStart(2, '0')}</span>
+          <h3 class="font-(family-name:--display) text-5xl leading-none uppercase transition-transform duration-500 group-hover:translate-x-4 sm:text-7xl">{it.title}</h3>
+          <p class="max-w-sm text-lg text-(--muted) sm:justify-self-end">{it.text}</p>
+        </li>
+      ))}
+    </ol>
+  )}
+</section>

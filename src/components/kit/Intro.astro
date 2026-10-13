@@ -1,0 +1,18 @@
+---
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const pic = photos(d.slug)[0]
+---
+<section class="mx-auto grid max-w-7xl gap-12 px-4 py-28 sm:px-8 sm:py-40 lg:grid-cols-[1fr_0.8fr] lg:items-center">
+  <div>
+    <p class="text-sm tracking-[0.2em] text-(--accent) uppercase">{d.intro.label}</p>
+    <p data-scrub class="mt-6 font-(family-name:--display) text-4xl leading-[1.05] tracking-tight text-balance sm:text-6xl">{d.intro.text}</p>
+  </div>
+  {pic && (
+    <div data-rise class="aspect-[4/5] overflow-hidden rounded-3xl">
+      <Image data-parallax src={pic} alt="" widths={[480, 800, 1200]} sizes="(min-width: 1024px) 40vw, 100vw" class="h-[124%] w-full object-cover" />
+    </div>
+  )}
+</section>

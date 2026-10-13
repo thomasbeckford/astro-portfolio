@@ -10,12 +10,16 @@
   /* Accent for small text: #2563eb is 4.46:1 on paper, under AA. */
   --color-accent-ink: #1d4ed8;
   --color-whatsapp: #25d366;
+  /* Text on an accent fill. White on the blue; flips to near-black on the showcase neons. */
+  --color-on-accent: #ffffff;
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+  /* Headlines. The showcase swaps in Unbounded; everywhere else it is Geist. */
+  --font-display: var(--font-sans);
 }
 
 @layer base {
-  /* Cookie chat is a modal: the page behind it stays put. */
+  /* Boti's chat is a modal: the page behind it stays put. */
   html:has(dialog[open]) {
     overflow: hidden;
   }
@@ -43,7 +47,7 @@
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
   ::selection {
-    @apply bg-accent text-white;
+    @apply bg-accent text-on-accent;
   }
   @media (prefers-reduced-motion: reduce) {
     html {
@@ -67,6 +71,72 @@
   @apply bg-[#2563eb] text-fg;
 }
 
+/* Home only (BaseLayout `dark`): near-black showcase. Same token names, so every utility follows. The accent is the
+   current trade's neon: the hero script sets --color-accent on <html> and the registered property fades between them. */
+@property --color-accent {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #2563eb;
+}
+@utility showcase {
+  --color-paper: #07080b;
+  --color-night: #10131a;
+  --color-fg: #e9ecf2;
+  --color-muted: #8d95a7;
+  --color-line: rgb(255 255 255 / 0.09);
+  --color-accent: #facc15;
+  --color-accent-ink: var(--color-accent);
+  --color-on-accent: #07080b;
+  /* Wide, engineered display face for the showcase only (loaded by the home page). */
+  --font-display: 'Unbounded Variable', var(--font-sans);
+  --display-track: -0.035em;
+  color-scheme: dark;
+  @media (prefers-reduced-motion: no-preference) {
+    transition: --color-accent 0.6s ease;
+  }
+  /* Highlighter becomes lit text in the accent. */
+  & .mark {
+    background-image: none;
+    color: var(--color-accent);
+    text-shadow: 0 0 0.6em color-mix(in oklab, var(--color-accent) 45%, transparent);
+  }
+  /* Glass: frosted over the grid and glows, a lit top edge, a faint accent tint. Solid fallback where blur isn't wanted. */
+  & main :is(.card, .glass) {
+    background: linear-gradient(160deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.015) 45%, color-mix(in oklab, var(--color-accent) 5%, transparent));
+    backdrop-filter: blur(18px) saturate(1.4);
+    box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.1), 0 24px 60px -30px rgb(0 0 0 / 0.8);
+    @media (prefers-reduced-transparency: reduce) {
+      background: var(--color-night);
+      backdrop-filter: none;
+    }
+  }
+  & main .btn-ghost:hover {
+    background-color: rgb(255 255 255 / 0.06);
+    box-shadow: none;
+  }
+}
+/* Light tokens back, for pieces that stay paper inside the showcase (Boti's chat panel). */
+@utility paper {
+  --color-paper: #eceef4;
+  --color-fg: #1f2737;
+  --color-muted: #5d6577;
+  --color-line: rgb(31 39 55 / 0.12);
+  --color-accent: #2563eb;
+  --color-accent-ink: #1d4ed8;
+  --color-on-accent: #ffffff;
+  color-scheme: light;
+  @apply text-fg;
+}
+/* Soft light in the current accent, behind the phone and the big moments. */
+@utility glow {
+  background: radial-gradient(closest-side, color-mix(in oklab, var(--color-accent) 38%, transparent), transparent);
+}
+
+/* Boti, neon: a soft halo in the current accent. Never name things cookie-*: EasyList's cookie filters hide those. */
+@utility mascot-glow {
+  filter: drop-shadow(0 0 14px color-mix(in oklab, var(--color-accent) 45%, transparent)) drop-shadow(0 8px 24px rgb(0 0 0 / 0.5));
+}
+
 @utility night-band {
   --color-fg: #eef0f6;
   --color-muted: #9aa1b2;
@@ -77,12 +147,12 @@
 
 /* Display type: Geist 800, sentence case, tight tracking. Mono is kept for small numbers and labels only. */
 @utility display {
-  @apply font-sans font-extrabold tracking-[-0.045em];
+  @apply font-display font-extrabold tracking-[var(--display-track,-0.045em)];
 }
 
 /* Highlighter behind the low half of the letters, drawn in on load. `clone` repeats it on every wrapped line. */
 @utility mark {
-  background-image: linear-gradient(to top, transparent 0.12em, rgb(37 99 235 / 0.26) 0.12em, rgb(37 99 235 / 0.26) 0.7em, transparent 0.7em);
+  background-image: linear-gradient(to top, transparent 0.12em, color-mix(in srgb, var(--color-accent) 26%, transparent) 0.12em, color-mix(in srgb, var(--color-accent) 26%, transparent) 0.7em, transparent 0.7em);
   background-repeat: no-repeat;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
@@ -111,10 +181,10 @@
   }
 }
 @utility btn-primary {
-  @apply btn bg-accent text-white hover:bg-[#1d4ed8];
+  @apply btn bg-accent text-on-accent hover:bg-accent-ink;
 }
 @utility btn-whatsapp {
-  @apply btn bg-whatsapp text-fg hover:bg-[#1ebe59];
+  @apply btn bg-whatsapp text-[#1f2737] hover:bg-[#1ebe59];
 }
 @utility btn-ghost {
   @apply btn text-fg ring-1 ring-fg/15 ring-inset hover:bg-white hover:shadow-lg hover:shadow-fg/10 hover:ring-fg/30;
@@ -142,7 +212,7 @@
     z-index: -1;
     opacity: 0;
     transition: opacity 0.3s;
-    background: radial-gradient(420px circle at var(--x, 50%) var(--y, 50%), rgb(37 99 235 / 0.12), transparent 60%);
+    background: radial-gradient(420px circle at var(--x, 50%) var(--y, 50%), color-mix(in srgb, var(--color-accent) 12%, transparent), transparent 60%);
   }
   &:hover::before {
     opacity: 1;
@@ -240,45 +310,6 @@
   }
 }
 
-/* Hero exit: the phone stage tips back and fades as the page scrolls away from it. */
-@utility hero-exit {
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: scroll()) {
-      animation: hero-exit linear both;
-      animation-timeline: scroll(root);
-      animation-range: 150px 1000px;
-    }
-  }
-}
-@keyframes hero-exit {
-  to {
-    opacity: 0.35;
-    scale: 0.94;
-    translate: 0 -3rem;
-  }
-}
-
-/* #how: the accent line draws down (phones) or across (desktop) while the steps cross the screen. */
-@utility draw {
-  --from: 1 0;
-  transform-origin: top left;
-  @variant md {
-    --from: 0 1;
-  }
-  @media (prefers-reduced-motion: no-preference) {
-    @supports (animation-timeline: view()) {
-      animation: draw linear both;
-      animation-timeline: view();
-      animation-range: entry 60% cover 55%;
-    }
-  }
-}
-@keyframes draw {
-  from {
-    scale: var(--from);
-  }
-}
-
 /* Contact title: each word goes from faint to full as the heading scrolls in, staggered by --i. */
 @utility word-in {
   @media (prefers-reduced-motion: no-preference) {
@@ -297,7 +328,7 @@
 
 /* Tilted sticker stamp on a card corner; straightens on hover. */
 @utility sticker {
-  @apply absolute -top-3 -right-2 rotate-6 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-white shadow-lg shadow-accent/30 transition-transform duration-300;
+  @apply absolute -top-3 -right-2 rotate-6 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-on-accent shadow-lg shadow-accent/30 transition-transform duration-300;
 }
 
 /* Spins as the whole page scrolls (rail star). Unsupported: sits still. */
@@ -329,74 +360,40 @@
   }
 }
 
-/* Cookie (components/Cookie.astro). Faces swap on data-mood; motion only on .cookie-live, like Tuco's `animated`.
-   Check new cookie-* names against EasyList Cookie: it hides .cookie-pop and #cookie-form site-wide, which made the mascot vanish. */
-.cookie {
-  overflow: visible;
+/* Boti (components/Boti.astro): stills of the hero's 3D robot. 'done' swaps in the cheering one and hops. */
+.boti-cheer {
+  opacity: 0;
 }
-.cookie [data-face] {
-  display: none;
+[data-mood='done'] > .boti-cheer {
+  opacity: 1;
 }
-.cookie-live {
-  cursor: pointer;
+[data-mood='done']:has(> .boti-cheer) > .boti-main {
+  opacity: 0;
 }
-/* The face leans toward the pointer (--lx/--ly from Cookie.astro's script). */
-.cookie-look {
-  translate: var(--lx, 0) var(--ly, 0);
-  transition: translate 0.2s ease-out;
+[data-mood='thinking'] > img {
+  rotate: -4deg;
 }
-.cookie[data-mood='hello'] [data-face='hello'],
-.cookie[data-mood='thinking'] [data-face='thinking'],
-.cookie[data-mood='done'] [data-face='done'],
-.cookie[data-mood='oops'] [data-face='oops'] {
-  display: inline;
+[data-mood='oops'] > img {
+  rotate: 6deg;
+}
+[data-mood] > img {
+  transition: rotate 0.3s ease-out, opacity 0.3s ease-out;
 }
 @media (prefers-reduced-motion: no-preference) {
-  .cookie-live .cookie-bob {
-    transform-box: fill-box;
-    transform-origin: 50% 100%;
-    animation: cookie-breathe 3.4s ease-in-out infinite;
-  }
-  .cookie-live[data-mood='done'] .cookie-bob {
-    animation: cookie-hop 1.1s cubic-bezier(0.3, 0, 0.3, 1) infinite;
-  }
-  .cookie-live .cookie-eyes {
-    transform-box: fill-box;
-    transform-origin: center;
-    animation: cookie-blink 4.2s infinite;
-  }
-  .cookie-live .cookie-crumbs circle {
-    animation: cookie-crumb 2.6s ease-in infinite;
-  }
-  .cookie-live .cookie-crumbs circle:nth-child(2) {
-    animation-delay: 0.9s;
-  }
-  .cookie-live .cookie-crumbs circle:nth-child(3) {
-    animation-delay: 1.7s;
-  }
-  .cookie-live .cookie-dot {
-    animation: cookie-dot 1.2s infinite;
-  }
-  .cookie-live .cookie-dot:nth-of-type(2) {
-    animation-delay: 0.2s;
-  }
-  .cookie-live .cookie-dot:nth-of-type(3) {
-    animation-delay: 0.4s;
-  }
-  .cookie-live .cookie-tear {
-    animation: cookie-tear 2s ease-in infinite;
+  [data-mood='done']:has(> .boti-cheer) > img {
+    animation: boti-hop 1.1s cubic-bezier(0.3, 0, 0.3, 1) infinite;
   }
   /* Re-added on every face change: a little pop so you see it react. */
   .mascot-pop {
     animation: mascot-pop 320ms cubic-bezier(0.3, 1.6, 0.6, 1);
   }
-  .cookie-chat[open] {
-    animation: cookie-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  .boti-chat[open] {
+    animation: chat-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   }
   .bubble-in {
     animation: bubble-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
-  /* FAQ: Cookie "types" for half a second, then the answer lands. */
+  /* FAQ: Boti "types" for half a second, then the answer lands. */
   details[open] .faq-answer {
     animation: bubble-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
@@ -410,68 +407,13 @@
 .faq-typing {
   opacity: 0;
 }
-@keyframes cookie-breathe {
-  50% {
-    scale: 1.03 0.97;
-  }
-}
-@keyframes cookie-hop {
+@keyframes boti-hop {
   0%,
   100% {
     translate: 0 0;
   }
   35% {
-    translate: 0 -8%;
-  }
-  55% {
-    translate: 0 0;
-    scale: 1.06 0.94;
-  }
-}
-@keyframes cookie-blink {
-  0%,
-  94%,
-  100% {
-    scale: 1 1;
-  }
-  97% {
-    scale: 1 0.1;
-  }
-}
-@keyframes cookie-crumb {
-  0% {
-    opacity: 0;
-    translate: 0 0;
-  }
-  15% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    translate: 6px 46px;
-  }
-}
-@keyframes cookie-dot {
-  0%,
-  60%,
-  100% {
-    opacity: 0.25;
-  }
-  30% {
-    opacity: 1;
-  }
-}
-@keyframes cookie-tear {
-  0% {
-    opacity: 0;
-    translate: 0 -4px;
-  }
-  30% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-    translate: 0 14px;
+    translate: 0 -10px;
   }
 }
 @keyframes mascot-pop {
@@ -479,7 +421,7 @@
     scale: 0.85;
   }
 }
-@keyframes cookie-in {
+@keyframes chat-in {
   from {
     translate: 100% 0;
   }
@@ -504,3 +446,15 @@
     opacity: 0;
   }
 }
+
+/* Example sites (components/kit): slogan rows. Two copies of the list, so -50% loops seamlessly. */
+.kit-marquee { animation: kit-marquee 40s linear infinite; }
+.kit-marquee-rev { animation-direction: reverse; }
+@media (prefers-reduced-motion: reduce) { .kit-marquee { animation: none; } }
+@keyframes kit-marquee { to { translate: -50% 0; } }
+
+/* Opening curtain on the example sites (kit/Curtain.astro): motion.ts steps it away; this lifts it anyway if the
+   script never runs, and reduced motion never sees it. */
+[data-curtain] { animation: kit-curtain-out 0s 2.5s forwards; }
+@keyframes kit-curtain-out { to { visibility: hidden; } }
+@media (prefers-reduced-motion: reduce) { [data-curtain] { display: none; } }

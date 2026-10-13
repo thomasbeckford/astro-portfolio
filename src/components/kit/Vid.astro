@@ -1,0 +1,9 @@
+---
+// Muted looping clip; motion.ts plays it only while on screen (and never under reduced motion).
+interface Props { src: string; poster: string; class?: string; [k: string]: unknown }
+const { src, poster, class: cls, ...rest } = Astro.props
+---
+<video data-auto muted loop playsinline preload="none" poster={poster} class:list={['object-cover', cls]} aria-hidden="true" {...rest}>
+  <source src={`${src}.webm`} type="video/webm" />
+  <source src={`${src}.mp4`} type="video/mp4" />
+</video>

@@ -5,22 +5,23 @@ import { site } from '@/site'
 
 // Plain-English UK GDPR notice (Art. 13: who, what, why, lawful basis, how long, rights). Keep it true: if analytics,
 // forms or new third parties are added, this page changes too.
-const updated = '8 October 2026'
+const updated = '13 October 2026'
 // Static copy, so set:html is safe; it lets the email and ICO be real links.
 const sections = [
   ['Who I am', `${site.name}, a sole trader in London, UK. I’m the controller of any personal data on this site. Contact: <a href="mailto:${site.email}" class="font-medium text-accent-ink underline underline-offset-2">${site.email}</a>.`],
-  ['What this site collects', 'Nothing by itself. No cookies of any kind, nothing saved in your browser, no analytics or advertising, and no forms that save what you type. That’s why there’s no cookie banner. Cookie, the quote helper, runs in your browser and sends nothing until you tap WhatsApp or email.'],
+  ['What this site collects', 'No cookies of any kind, nothing saved in your browser, no advertising, and no forms that save what you type. That’s why there’s no cookie banner. Cookie, the quote helper, runs in your browser and sends nothing until you tap WhatsApp or email.'],
+  ['Visit counts', 'I use Vercel Web Analytics to count visits: which pages are viewed, where visitors came from (the site that linked here, or a ref tag in the link), approximate location (country, region, city), browser, operating system and device type. It uses no cookies and saves nothing in your browser. Visitors are told apart by a code made from the request, which is thrown away after 24 hours, and I only ever see totals, never a person. Lawful basis: legitimate interests, to know whether the site works. To opt out, turn on Global Privacy Control or Do Not Track in your browser and nothing is counted.'],
   ['Hosting', 'The site is hosted by Vercel Inc., which processes basic server logs (such as IP address and browser) to deliver the site and keep it secure (legitimate interests). I don’t use them for anything else.'],
-  ['When you contact me', 'If you message me on WhatsApp or by email, I get what you send: usually your name, number or email, and details about your business. I use it only to reply, quote and do the work you ask for (steps before a contract, then the contract). I don’t sell it or add you to mailing lists. If we don’t work together, I delete it within 12 months. If we do, I keep invoices and the records behind them for 6 years, as HMRC requires (legal obligation). WhatsApp (Meta) and email (Google) handle those messages under their own privacy policies.'],
+  ['When you contact me', 'If you message me on WhatsApp or by email, I get what you send: usually your name, number or email, and details about your business. If you arrived from a link with a ref tag, or from another site, the message ends with that tag or the site’s name, like “(ref: facebook)”, so I know where you found me; you can delete it before sending. I use what you send only to reply, quote and do the work you ask for (steps before a contract, then the contract). I don’t sell it or add you to mailing lists. If we don’t work together, I delete it within 12 months. If we do, I keep invoices and the records behind them for 6 years, as HMRC requires (legal obligation). WhatsApp (Meta) and email (Google) handle those messages under their own privacy policies.'],
   ['Your rights', `You can ask to see, correct, delete or move the data I hold about you, ask me to restrict how I use it, or object to it. Email <a href="mailto:${site.email}" class="font-medium text-accent-ink underline underline-offset-2">${site.email}</a> and I’ll reply within a month. If you’re unhappy with the answer you can complain to the Information Commissioner’s Office at <a href="https://ico.org.uk/make-a-complaint/" class="font-medium text-accent-ink underline underline-offset-2">ico.org.uk</a>.`],
 ]
 ---
 
-<BaseLayout title={`Privacy | ${site.name}`} description={`How ${site.name}'s website handles personal data. Short version: no tracking.`}>
+<BaseLayout title={`Privacy | ${site.name}`} description={`How ${site.name}'s website handles personal data. Short version: no cookies, nothing that follows you.`}>
   <main id="main" class="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24">
     <a href="/" class="flex w-fit items-center gap-2.5 font-semibold tracking-tight"><Logo class="size-8" />{site.name}</a>
     <p class="eyebrow mt-14">Privacy</p>
-    <h1 class="h2 mt-3">Short version: <span class="mark">no tracking.</span></h1>
+    <h1 class="h2 mt-3">Short version: <span class="mark">no cookies, no tracking you.</span></h1>
     <p class="mt-4 text-sm text-muted">Last updated {updated}</p>
     <div class="mt-10 space-y-8">
       {

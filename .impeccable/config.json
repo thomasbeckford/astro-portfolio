@@ -1,0 +1,29 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "bounce-easing",
+        "value": "animate-bounce",
+        "createdAt": "2026-10-05T21:52:48.719Z",
+        "reason": "User confirmed: Cookie typing dots, Tuco parity"
+      },
+      {
+        "rule": "bounce-easing",
+        "value": "cubic-bezier(0.3, 1.6, 0.6, 1)",
+        "createdAt": "2026-10-05T21:52:48.757Z",
+        "reason": "User confirmed: cookie-pop overshoot, Tuco parity"
+      },
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "src/pages/index.astro"
+        ],
+        "createdAt": "2026-10-13T10:30:01.930Z",
+        "reason": "User confirmed the faint grid background is intentional (2026-10-13)"
+      }
+    ]
+  }
+}

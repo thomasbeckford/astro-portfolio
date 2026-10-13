@@ -1,0 +1,2 @@
+# Copiados a cada worktree nuevo (claude -w / claude --bg): solo los que también están en .gitignore.
+.env*

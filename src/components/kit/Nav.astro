@@ -1,0 +1,15 @@
+---
+// Site header. The 'poster' hero keeps it fixed with the name centred, hidden until the hero's wordmark hands over to it.
+import type { Demo } from '@/templates'
+const { d } = Astro.props as { d: Demo }
+const poster = d.hero.variant === 'poster'
+---
+<header class:list={['inset-x-0 top-0 z-20 flex items-center justify-between gap-4 px-4 py-4 sm:px-8', poster ? 'fixed bg-linear-to-b from-black/45 to-transparent text-white' : 'absolute']}>
+  <a href="#top" data-nav-mark={poster ? '' : undefined} class:list={['min-w-0 overflow-hidden font-(family-name:--display) text-lg text-ellipsis whitespace-nowrap', poster ? 'text-2xl font-bold tracking-[-0.05em] text-(--accent) md:absolute md:left-1/2 md:-translate-x-1/2' : 'tracking-tight uppercase']}>{poster ? d.mark : d.name}</a>
+  <nav aria-label={`${d.name} menu`} class="hidden gap-8 text-sm md:flex">
+    <a href="#services" class="hover:text-(--accent)">Services</a>
+    <a href="#how" class="hover:text-(--accent)">How it works</a>
+    {d.sections.includes('areas') && <a href="#areas" class="hover:text-(--accent)">Areas</a>}
+  </nav>
+  <a href="#contact" class="ml-auto shrink-0 rounded-full bg-(--accent) px-5 py-2.5 text-sm font-semibold whitespace-nowrap text-(--on-accent) md:ml-0">{d.hero.cta}</a>
+</header>

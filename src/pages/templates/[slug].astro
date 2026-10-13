@@ -1,0 +1,54 @@
+---
+// One example site per demo in templates.ts, built from the kit. noindex: the businesses are made up, and a made-up
+// name could match a real firm's in search. The gallery (/templates) is the page meant to be found.
+import '@fontsource/anton'
+import '@fontsource-variable/archivo/wdth.css'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Hero from '@/components/kit/Hero.astro'
+import Marquee from '@/components/kit/Marquee.astro'
+import Intro from '@/components/kit/Intro.astro'
+import Services from '@/components/kit/Services.astro'
+import Band from '@/components/kit/Band.astro'
+import Gallery from '@/components/kit/Gallery.astro'
+import Collage from '@/components/kit/Collage.astro'
+import Projects from '@/components/kit/Projects.astro'
+import Curtain from '@/components/kit/Curtain.astro'
+import Steps from '@/components/kit/Steps.astro'
+import Areas from '@/components/kit/Areas.astro'
+import Contact from '@/components/kit/Contact.astro'
+import DemoPill from '@/components/kit/DemoPill.astro'
+import { site } from '@/site'
+import { demos, type Demo } from '@/templates'
+
+export const getStaticPaths = () => demos.map((d) => ({ params: { slug: d.slug }, props: { d } }))
+const { d } = Astro.props as { d: Demo }
+const fonts = { archivo: "'Archivo Variable'", anton: "'Anton'", geist: "'Geist Variable'" }
+const c = d.colors
+const vars = `--bg:${c.bg};--fg:${c.fg};--muted:${c.muted};--accent:${c.accent};--on-accent:${c.onAccent};--panel:${c.panel};--alt:${c.alt};--display:${fonts[d.font]},system-ui,sans-serif;background:${c.bg}`
+---
+
+<BaseLayout title={`${d.trade} website example | ${site.name}`} description={`A full example website for a ${d.trade.toLowerCase()}, built by ${site.name}. Made-up business, real build.`} noindex>
+  <div id="main" class="overflow-x-clip bg-(--bg) text-(--fg)" style={vars}>
+    <Hero d={d} />
+    {d.sections.map((s) => (
+      s === 'marquee' && d.marquee ? <Marquee items={d.marquee} /> :
+      s === 'intro' ? <Intro d={d} /> :
+      s === 'services' ? <Services d={d} /> :
+      s === 'band' ? <Band d={d} /> :
+      s === 'gallery' ? <Gallery d={d} /> :
+      s === 'collage' ? <Collage d={d} /> :
+      s === 'projects' ? <Projects d={d} /> :
+      s === 'steps' ? <Steps d={d} /> :
+      s === 'areas' ? <Areas d={d} /> :
+      s === 'contact' ? <Contact d={d} /> : null
+    ))}
+  </div>
+  {d.hero.variant === 'poster' && <Curtain />}
+  <DemoPill />
+  <!-- Overscroll shows the page's own colour, not tebeck's paper. -->
+  <style is:inline set:html={`html,body{background:${c.bg}}`}></style>
+</BaseLayout>
+
+<script>
+  import '@/scripts/motion'
+</script>

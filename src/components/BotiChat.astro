@@ -1,0 +1,210 @@
+---
+// Boti's quote chat, the Tuco panel pattern (SoyMenu TucoButton/AgentChat): side panel, header face that follows the
+// state, empty state with chips, one avatar per turn, "thinking" row, oops on anything it can't answer.
+// Scripted, not AI: three questions, one fixed price, then an email to Thomas. Anything else it answers from the FAQ
+// in site.ts, so whatever the page says, Boti knows. Any [data-boti-open] opens it;
+// a value on it is sent as the first message.
+import Boti from '@/components/Boti.astro'
+import { site, christmasOffer, faqs } from '@/site'
+
+const { trades } = Astro.props as { trades: string[] }
+const starters = ['Get me a price', 'What’s the Christmas offer?', 'How long does it take?']
+---
+
+<dialog id="boti-chat" aria-labelledby="boti-title" data-trades={JSON.stringify(trades)} data-price={site.priceFrom} data-turnaround={site.turnaround} data-email={site.email} data-phone={site.phone.replace(/\D/g, '')} data-offer={christmasOffer.price} data-note={christmasOffer.note} data-faqs={JSON.stringify(faqs)} class="boti-chat fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-[440px] bg-transparent p-2 backdrop:bg-black/50 backdrop:backdrop-blur-sm">
+  <div class="flex h-full flex-col overflow-hidden rounded-3xl bg-night text-fg shadow-2xl shadow-black/60 ring-1 ring-line ring-inset">
+    <header class="flex items-center gap-3.5 border-b border-line px-4 py-3">
+      <Boti mood="mini" id="boti-face" class="w-[60px] shrink-0" />
+      <div class="min-w-0 flex-1">
+        <p id="boti-title" class="text-lg leading-tight font-bold">Boti</p>
+        <p class="text-sm text-muted">Thomas's quote helper. A robot with a script, not an AI.</p>
+      </div>
+      <button type="button" data-close aria-label="Close" class="grid size-11 place-items-center rounded-full text-muted transition hover:bg-fg/[0.06] hover:text-fg">
+        <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"></path></svg>
+      </button>
+    </header>
+
+    <div id="boti-log" aria-live="polite" class="flex-1 space-y-3 overflow-y-auto bg-[radial-gradient(color-mix(in_oklab,var(--color-accent)_14%,transparent)_1.5px,transparent_1.5px)] bg-size-[18px_18px] p-4">
+      <div data-empty class="flex h-full flex-col items-center justify-center text-center">
+        <Boti class="w-32" />
+        <p class="mt-4 text-xl font-bold">Hiya! How can I help?</p>
+        <p class="mt-1 text-sm text-muted">Ask me anything. I know Thomas's prices.</p>
+        <div class="mt-6 flex flex-wrap justify-center gap-2">
+          {starters.map((s) => <button type="button" data-say={s} class="min-h-11 rounded-xl bg-fg/[0.05] px-4 text-sm font-medium ring-1 ring-fg/15 transition ring-inset hover:bg-accent hover:text-on-accent">{s}</button>)}
+        </div>
+      </div>
+    </div>
+
+    <form id="chat-form" class="flex gap-2 border-t border-line p-3">
+      <input name="q" autofocus class="field" placeholder="Type a message" autocomplete="off" maxlength="80" aria-label="Message" />
+      <button class="btn-primary min-h-11 shrink-0 px-3.5" aria-label="Send">
+        <svg viewBox="0 0 24 24" class="size-5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+      </button>
+    </form>
+  </div>
+  <template id="boti-avatar"><Boti mood="mini" class="w-7 shrink-0" /></template>
+</dialog>
+
+<script>
+  const dlg = document.getElementById('boti-chat') as HTMLDialogElement
+  const log = document.getElementById('boti-log')!
+  const form = document.getElementById('chat-form') as HTMLFormElement
+  const face = document.getElementById('boti-face')!
+  const avatar = document.getElementById('boti-avatar') as HTMLTemplateElement
+  const { price, turnaround, email, phone, offer, note } = dlg.dataset
+  const trades = JSON.parse(dlg.dataset.trades!) as string[]
+  const faqs = JSON.parse(dlg.dataset.faqs!) as [string, string][]
+  const faq = (start: string) => faqs.find(([q]) => q.startsWith(start))?.[1]
+  // Topics people word in many ways, pointed at the FAQ that answers them. Checked before price, so "hosting cost" lands here.
+  const topics: [RegExp, string][] = [
+    [/\b(host|hosting|hosted|server)\b/, 'Do I pay for hosting?'],
+    [/\b(cms|payload|edit|editing|myself|update it|change it)\b/, 'Can I change the website myself?'],
+    [/\b(maintenance|maintain|care|monthly|month|ongoing|subscription)\b/, 'Are there ongoing costs?'],
+    [/\b(tech|stack|wordpress|wix|squarespace|astro|next\.?js|tanstack|react|framework|database|built with|build it with)\b/, 'What do you build it with?'],
+    [/\buse ai\b|\bclaude\b|\bchatgpt\b/, 'Do you use AI?'],
+    [/\b(redo|redesign|rebuild|old site|old website)\b/, 'I already have a website'],
+    [/\b(checkatrade|mybuilder|rated people)\b/, "I'm on Checkatrade"],
+    [/\b(seo|rank|ranking|top of google)\b/, 'Can you get me to the top of Google?'],
+  ]
+  // Last try before giving up: the FAQ sharing the most words with the question.
+  const stop = new Set(['what', 'does', 'have', 'with', 'your', 'that', 'this', 'there', 'will', 'from', 'about', 'thomas', 'website', 'site'])
+  const closest = (q: string) => {
+    const words = (q.match(/[a-z]{4,}/g) ?? []).filter((w) => !stop.has(w))
+    let best: [number, string] = [0, '']
+    for (const [fq, fa] of faqs) {
+      const score = words.reduce((n, w) => n + (fq.toLowerCase().includes(w) ? 2 : 0) + (fa.toLowerCase().includes(w) ? 1 : 0), 0)
+      if (score > best[0]) best = [score, fa]
+    }
+    return best[0] >= 3 ? best[1] : ''
+  }
+
+  const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+  let moodTimer = 0
+  const mood = (m: string, back = 0) => {
+    clearTimeout(moodTimer)
+    face.dataset.mood = m
+    face.classList.remove('mascot-pop')
+    void face.getBoundingClientRect()
+    face.classList.add('mascot-pop')
+    if (back) moodTimer = window.setTimeout(() => mood('hello'), back)
+  }
+
+  // One Boti per turn: the avatar goes on the first bubble of each bot turn.
+  let last = ''
+  const row = (who: 'bot' | 'me', ...kids: Node[]) => {
+    const el = document.createElement('div')
+    el.className = `bubble-in flex items-end gap-2 ${who === 'me' ? 'justify-end' : ''}`
+    if (who === 'bot') el.append(last === 'bot' ? Object.assign(document.createElement('span'), { className: 'w-7 shrink-0' }) : avatar.content.cloneNode(true))
+    el.append(...kids)
+    log.append(el)
+    log.scrollTop = log.scrollHeight
+    last = who
+    return el
+  }
+  const bubble = (who: 'bot' | 'me', text: string) =>
+    row(who, Object.assign(document.createElement('p'), { textContent: text, className: `max-w-[80%] px-3.5 py-3 text-pretty ${who === 'me' ? 'rounded-[16px_4px_16px_16px] bg-accent text-on-accent' : 'rounded-[4px_16px_16px_16px] bg-fg/[0.06] ring-1 ring-line'}` }))
+
+  const chips = (list: string[]) => {
+    const wrap = document.createElement('div')
+    wrap.className = 'bubble-in flex flex-wrap justify-end gap-2 pl-9'
+    wrap.dataset.chips = ''
+    for (const s of list) wrap.append(Object.assign(document.createElement('button'), { type: 'button', textContent: s, className: 'min-h-11 rounded-xl bg-fg/[0.05] px-3.5 text-sm font-medium ring-1 ring-fg/15 ring-inset transition hover:bg-accent hover:text-on-accent', onclick: () => (wrap.remove(), send(s)) }))
+    log.append(wrap)
+    log.scrollTop = log.scrollHeight
+  }
+  // Hand-off buttons: WhatsApp first (where trades actually reply), email as the fallback.
+  const links = (...list: [string, string, string][]) => {
+    const el = row('bot', ...list.map(([text, href, cls]) => Object.assign(document.createElement('a'), { textContent: text, href, className: `${cls} min-h-11`, target: href.startsWith('http') ? '_blank' : '', rel: 'noopener' })))
+    el.classList.add('pl-9', 'flex-wrap')
+    el.firstElementChild?.remove()
+  }
+  const handoff = (subject: string, body: string) => links(['WhatsApp Thomas', wa(body), 'btn-whatsapp'], ['Email instead', mail(subject, body), 'btn-ghost'])
+
+  // Boti "types" (thinking tilt, row with the thinking face), then answers and pops back upright.
+  const say = async (text: string, after?: () => void, m = 'done') => {
+    mood('thinking')
+    const wait = row('bot', Object.assign(document.createElement('p'), { textContent: 'Boti is thinking…', className: 'motion-safe:animate-pulse px-1 py-3 text-sm text-muted' }))
+    await sleep(650)
+    wait.remove()
+    last = ''
+    bubble('bot', text)
+    after?.()
+    mood(m, 2500)
+  }
+
+  const wa = (text: string) => `https://wa.me/${phone}?text=${encodeURIComponent(text)}`
+  const mail = (subject: string, body: string) => `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+  const lead = { trade: '', area: '' }
+  let step: 'idle' | 'trade' | 'area' | 'site' = 'idle'
+  const askTrade = (text: string) => {
+    step = 'trade'
+    return say(text, () => chips(trades))
+  }
+
+  const reply = (t: string) => {
+    const q = t.toLowerCase()
+    // A question or a sentence is not a trade: re-ask instead of quoting for "how much?".
+    if (step === 'trade' && (t.includes('?') || t.split(/\s+/).length > 4)) return say('I’ll get to that. First, what does your business do? Pick one or type it, like “plumber”.', () => chips(trades))
+    if (step === 'trade') {
+      lead.trade = t
+      step = 'area'
+      return say('Lovely. And where are you based?')
+    }
+    if (step === 'area') {
+      lead.area = t
+      step = 'site'
+      return say('Got a website already?', () => chips(['Yes, it needs redoing', 'No, starting fresh']))
+    }
+    if (step === 'site') {
+      step = 'idle'
+      const has = /^y/.test(q)
+      return say(
+        `Right then. A proper site for your business in ${lead.area}: normally £${price}, but over Christmas it’s £${offer}. Fixed price, live in ${turnaround}, free hosting, domain in your name, and you only pay once you’re happy.${has ? ' I’ll move your current address across.' : ''} Send it to Thomas?`,
+        () => handoff(`Website for my ${lead.trade.toLowerCase()} business`, `Hi Thomas, Boti sent me. I'm a ${lead.trade.toLowerCase()} in ${lead.area}. ${has ? 'I have a website that needs redoing.' : "I don't have a website yet."} I'd like the £${offer} Christmas offer.`),
+      )
+    }
+    for (const [re, start] of topics) if (re.test(q)) return say(faq(start)!, () => chips(['Get me a price']))
+    if (/\b(rescue|broken|buggy|lovable|bolt|no-code|nocode|vibe)\b/.test(q)) return say('Built something with AI or no-code and it’s stuck, buggy or insecure? Thomas reviews it, fixes it or rebuilds what needs it. That one’s priced on quote.', () => handoff('Rescue', `Hi Thomas, ${t}`))
+    if ((/\b(christmas|xmas|founding|offer|discount|deal)\b/.test(q) || q.includes(offer!))) return say(`Over Christmas the website is £${offer} instead of £${price}, ${note}. Same site, same care. Want one?`, () => chips(['Get me a price']))
+    if (/\b(price|prices|cost|costs|quote|much|cheap)\b|£/.test(q)) return askTrade('Easy. What does your business do?')
+    if (/\b(long|time|weeks?|fast|when|quick)\b/.test(q)) return say(`Usually ${turnaround} from your first message to live. Want a price too?`, () => chips(['Get me a price']))
+    if (/\b(own|owns|owner|domain|mine)\b/.test(q)) return say('You do. The domain is registered in your name, not Thomas’s.', () => chips(['Get me a price']))
+    if (/\b(ai|robot|bot|human)\b/.test(q)) return say('I’m a robot with a script, not an AI. Thomas reads every WhatsApp and email himself.', () => chips(['Get me a price']))
+    if (/^(hi|hello|hiya|hey|yo)\b/.test(q)) return say('Hiya! Want a price for your website?', () => chips(['Get me a price']))
+    const known = closest(q)
+    if (known) return say(known, () => chips(['Get me a price']))
+    return say('Ooh, that one’s beyond my wiring. Thomas will answer it properly.', () => handoff('Question from your website', `Hi Thomas, ${t}`), 'oops')
+  }
+
+  let queue: Promise<unknown> = Promise.resolve()
+  const send = (t: string) => {
+    t = t.trim()
+    if (!t) return
+    log.querySelector('[data-empty]')?.remove()
+    log.querySelectorAll('[data-chips]').forEach((c) => c.remove()) // stale options from earlier turns
+    bubble('me', t)
+    // Queue replies so two quick messages don't interleave their "thinking" rows.
+    queue = queue.then(() => reply(t))
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault()
+    send((form.elements.namedItem('q') as HTMLInputElement).value)
+    form.reset()
+  })
+  log.addEventListener('click', (e) => {
+    const s = (e.target as HTMLElement).closest<HTMLElement>('[data-say]')
+    if (s) send(s.dataset.say!)
+  })
+  document.addEventListener('click', (e) => {
+    const opener = (e.target as HTMLElement).closest<HTMLElement>('[data-boti-open]')
+    if (!opener) return
+    dlg.showModal()
+    mood('hello')
+    if (opener.dataset.botiOpen && log.querySelector('[data-empty]')) send(opener.dataset.botiOpen)
+  })
+  // Click outside the card (or the ✕) closes it.
+  dlg.addEventListener('click', (e) => {
+    if (e.target === dlg || (e.target as HTMLElement).closest('[data-close]')) dlg.close()
+  })
+</script>

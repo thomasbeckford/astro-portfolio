@@ -23,3 +23,10 @@ pnpm-debug.log*
 # jetbrains setting folder
 .idea/
 .vercel
+
+# Claude Code worktrees
+.claude/worktrees/
+
+# Local tooling output
+.playwright-mcp/
+.impeccable/hook.cache.json

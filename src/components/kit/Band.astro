@@ -1,0 +1,12 @@
+---
+// Full-bleed video band with one big line over it.
+import type { Demo } from '@/templates'
+import Vid from './Vid.astro'
+import { clip } from './media'
+const { d } = Astro.props as { d: Demo }
+---
+<section class="relative isolate flex h-[90dvh] items-center justify-center overflow-hidden">
+  <div class="absolute inset-0 -z-10 overflow-hidden"><Vid {...clip(d.slug, 'band')} data-parallax class="h-[124%] w-full" /></div>
+  <div class="absolute inset-0 -z-10 bg-black/45"></div>
+  <p data-split class="px-4 text-center font-(family-name:--display) text-6xl leading-[0.9] font-black tracking-tight text-white uppercase sm:text-9xl" style={d.font === 'archivo' ? 'font-stretch:125%' : undefined}>{d.band}</p>
+</section>
