@@ -9,7 +9,7 @@ import Icon from '@/components/Icon.astro'
 import Boti from '@/components/Boti.astro'
 import BotiChat from '@/components/BotiChat.astro'
 import Vid from '@/components/kit/Vid.astro'
-import { site, services, faqs, christmasOffer, steps, whatsapp as wa } from '@/site'
+import { site, services, faqs, steps, whatsapp as wa } from '@/site'
 import { demos } from '@/templates'
 import { trades } from '@/trades'
 import thomasFull from '@/assets/thombeck.png'
@@ -62,8 +62,8 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
           <div class="relative grid content-center gap-4">
             <div class="relative z-10 lg:pointer-events-none">
               <p class="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-white/[0.05] px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
-                <span class="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">£{christmasOffer.price}</span>
-                Christmas offer <span class="text-muted">· normally £{site.priceFrom}</span>
+                <span class="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">£{site.priceFrom}</span>
+                Fixed price <span class="text-muted">· pay when you’re happy</span>
               </p>
               <h1 data-letters class:list={[display, 'mt-6 text-[14.5vw] leading-[0.9] sm:text-[13vw] lg:text-[10vw]']}>
                 <span class="block">Websites that</span> <span class="block">make your</span> <span class="block text-accent">phone ring.</span>
@@ -113,8 +113,8 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <div class="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
           <div>
             <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">{website.name}</p>
-            <p class:list={[display, 'mt-4 text-[32vw] leading-[0.85] sm:text-[21vw] lg:text-[15vw]']}>£{christmasOffer.price}</p>
-            <p class="mt-4 max-w-sm text-muted">Christmas offer, {christmasOffer.note}. Normally £{site.priceFrom}.</p>
+            <p class:list={[display, 'mt-4 text-[32vw] leading-[0.85] sm:text-[21vw] lg:text-[15vw]']}>£{site.priceFrom}</p>
+            <p class="mt-4 max-w-sm text-muted">{website.note}</p>
             <ul class="mt-8 grid gap-3 border-t border-line pt-8 text-lg">
               {website.items.map((t) => <li class="flex gap-2.5"><span aria-hidden="true" class="text-accent">✓</span>{t}</li>)}
             </ul>

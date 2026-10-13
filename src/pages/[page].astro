@@ -5,7 +5,7 @@ import Logo from '@/components/Logo.astro'
 import Icon from '@/components/Icon.astro'
 import Phone from '@/components/Phone.astro'
 import TradeSite from '@/components/TradeSite.astro'
-import { site, christmasOffer, steps, services, whatsapp as wa } from '@/site'
+import { site, steps, services, whatsapp as wa } from '@/site'
 import { trades } from '@/trades'
 import { landings, type Landing } from '@/landings'
 import thomasFull from '@/assets/thombeck.png'
@@ -97,8 +97,8 @@ const website = services[0]
         </div>
         <div class="accent-band self-start rounded-3xl p-7 shadow-2xl shadow-[#2563eb]/30 sm:p-10">
           <h3 class="text-lg font-semibold">{l.quote ? l.title : website.name}</h3>
-          <p class="display mt-6 text-6xl sm:text-7xl">{l.quote ? 'On quote' : `£${christmasOffer.price}`}</p>
-          <p class="mt-3 max-w-sm text-sm text-muted">{l.quote ? 'Send me your web address. I look at what is there and come back with a fixed price, usually within a day.' : `Christmas offer, ${christmasOffer.note}. Normally £${site.priceFrom}.`}</p>
+          <p class="display mt-6 text-6xl sm:text-7xl">{l.quote ? 'On quote' : `£${site.priceFrom}`}</p>
+          <p class="mt-3 max-w-sm text-sm text-muted">{l.quote ? 'Send me your web address. I look at what is there and come back with a fixed price, usually within a day.' : website.note}</p>
           <ul class="mt-8 grid gap-3 border-t border-line pt-8">
             {website.items.map((t) => <li class="flex gap-2.5"><span aria-hidden="true">✓</span>{t}</li>)}
           </ul>

@@ -15,15 +15,12 @@ export const site = {
 
 export const whatsapp = (text: string) => `https://wa.me/${site.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
 
-// Christmas offer, also to get the first proven case studies. 🤔 End date not decided yet: remove after Christmas.
 // Hosting is on Thomas, for every site. The domain he buys too, registered in the client's name, and they pay him back at cost.
 // 🤔 Host on a plan that allows commercial use (Vercel Hobby doesn't).
 export const carePrice = 19
 // One-off add-on: a Payload CMS panel so the client edits words, photos and prices; Thomas keeps design and structure.
 // 🤔 Payload needs a server and a database: check it still fits free hosting before selling it.
 export const cmsPrice = 150
-
-export const christmasOffer = { price: 149, note: 'in exchange for a testimonial and a case study on this site' }
 
 // TODO: monthly price for ads once decided.
 export const services = [
@@ -43,7 +40,6 @@ export const steps = [
 
 export const faqs = [
   ['How long does it take?', `Usually ${site.turnaround} from your first message to a live site. You see it before it goes live.`],
-  ["What's the Christmas offer?", `Over Christmas the website is £${christmasOffer.price} instead of £${site.priceFrom}, ${christmasOffer.note}. Same site, same care, just cheaper while I build up reviews.`],
   ['I already have a website. Can you redo it?', 'Yes. I rebuild it and move your web address across, so you keep your domain and email.'],
   ['Do I need to write anything?', 'No. Tell me about your business in your own words and I write it up. You approve everything before it goes live.'],
   ['Who owns the website?', 'You do. The domain is registered in your name, not mine.'],
