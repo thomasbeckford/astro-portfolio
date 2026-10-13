@@ -27,7 +27,7 @@ const person = {
   image: ogImage.href,
   email: site.email,
   address: { '@type': 'PostalAddress', addressLocality: 'London', addressCountry: 'GB' },
-  knowsAbout: ['Websites for tradespeople', 'Small business websites', 'Website redesign', 'Local SEO', 'Google Ads', 'Meta Ads', 'Payload CMS', 'Astro', 'Next.js', 'TanStack Start', 'React', 'React Native', 'TypeScript', 'Node.js', 'PostgreSQL', 'Stripe', 'GSAP'],
+  knowsAbout: ['Websites for tradespeople', 'Small business websites', 'Website redesign', 'Local SEO', 'Google Ads', 'Meta Ads', 'Headless CMS', 'Payload CMS', 'Sanity', 'Contentstack', 'Headless WordPress', 'Web applications', 'Mobile apps', 'Astro', 'Next.js', 'TanStack Start', 'React', 'React Native', 'Expo', 'TypeScript', 'Node.js', 'PostgreSQL', 'Stripe', 'GSAP'],
   sameAs: [site.linkedin, site.github],
 }
 // What search engines and AI assistants should understand Thomas sells. Monthly prices carry a per-month unit.
@@ -94,7 +94,7 @@ const jsonLd = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${site.name}: websites for local businesses, built and looked after. From £${site.priceFrom}.`} />
+    <meta property="og:image:alt" content={`${site.name}: websites that make your phone ring. From £${site.priceFrom}, fixed price.`} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />

@@ -28,6 +28,7 @@ export const services = [
   { name: 'Edit it yourself', price: `+£${cmsPrice}, one-off`, note: 'Your own editing panel, built with Payload CMS', items: ['Log in and change words, photos and prices', 'No monthly fee to make changes', 'I look after the design, the content is yours'] },
   { name: 'Care plan', price: `From £${carePrice} a month`, note: 'Optional, cancel any time', items: ['Changes by message: prices, photos, services', 'Backups and security updates', 'Monthly check on speed and Google'] },
   { name: 'Ads', price: 'Monthly', note: 'Plus your ad budget', items: ['Google Business profile set up and kept fresh', 'Google and Meta ads set up and managed', 'A plain-English report each month'] },
+  { name: 'Web and mobile apps', price: 'On quote', note: 'Bookings, payments, logins, or an app in the stores?', items: ['Web apps with Next.js or TanStack Start', 'iOS and Android apps with React Native', 'Backend, APIs and Postgres databases', 'Payments with Stripe'] },
   { name: 'Animation', price: 'On quote', note: 'Want people to stop scrolling and look?', items: ['Scroll effects and motion', 'Interactive and 3D bits', 'Still fast on a phone'] },
   { name: 'Rescue', price: 'On quote', note: "Built something with AI or no-code and it's stuck, buggy or insecure?", items: ['Security and code review', 'Fix the bugs, stabilise it', 'Rebuild or scale what needs it'] },
 ]
@@ -43,7 +44,7 @@ export const faqs = [
   ['I already have a website. Can you redo it?', 'Yes. I rebuild it and move your web address across, so you keep your domain and email.'],
   ['Do I need to write anything?', 'No. Tell me about your business in your own words and I write it up. You approve everything before it goes live.'],
   ['Who owns the website?', 'You do. The domain is registered in your name, not mine.'],
-  ['Can I change the website myself?', `That's what the Edit it yourself add-on is for (£${cmsPrice}, one-off). I set up Payload CMS, an editing panel for your site: you log in, change the words, photos and prices, and press publish. No code, no monthly fee. I look after the design and anything that needs a developer.`],
+  ['Can I change the website myself?', `That's what the Edit it yourself add-on is for (£${cmsPrice}, one-off). I set up Payload CMS, an editing panel for your site: you log in, change the words, photos and prices, and press publish. No code, no monthly fee. Already on Sanity, Contentstack or WordPress, or need one of them? I work with those too, headless, priced on quote. I look after the design and anything that needs a developer.`],
   ['Do I pay for hosting?', "Hosting is on me: free, for as long as the site is with me. The only yearly cost is your domain: I buy it for you, in your name, and you pay me back what it costs, no markup."],
   ["I'm on Checkatrade. Do I still need a website?", "It helps. On Checkatrade you sit in a list next to your competitors, and the profile isn't yours. Your own site is just you, under your name, and it's the place to send people from your van, your cards and Google."],
   ['Can you get me to the top of Google?', "Nobody can honestly promise that. I build the site fast and set up properly for Google, and the Ads plan looks after your Google Business profile, which is what shows up when people nearby search for what you do."],

@@ -16,7 +16,17 @@ import thomasFull from '@/assets/thombeck.png'
 
 const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Website quote')}`
 const whatsapp = wa("Hi Thomas, I'd like a website quote.")
-const [website, ...extras] = services
+const [, ...extras] = services
+// The editing panels I set up, with what each is good at.
+const cms = [['Payload', 'Open source, self-hosted'], ['Sanity', 'Live, shared editing'], ['Contentstack', 'Enterprise, many sites'], ['WordPress', 'Headless: the editor you know']]
+// What the 'Bigger jobs' section lists: title, what it is, what it's built with.
+const builds = [
+  ['Web apps', 'Bookings, payments, customer logins and dashboards.', 'Next.js · TanStack Start · Stripe'],
+  ['Mobile apps', 'iOS and Android from one codebase, in the stores.', 'React Native · Expo'],
+  ['Backend and APIs', 'Databases, integrations, the part nobody sees.', 'Node · Fastify · Postgres'],
+  ['AI features', 'Chatbots, automation and agents that do real work.', 'LLM APIs · agents'],
+]
+const waPath = 'M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z'
 const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppercase'
 ---
 
@@ -41,7 +51,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
       <a href="/" class="flex items-center gap-2.5 font-semibold"><Logo class="size-9" /><span class="max-[420px]:sr-only">{site.name}</span></a>
       <nav aria-label="Main" class="flex items-center gap-2 text-sm font-semibold sm:gap-6">
         <a href="#sites" class="hidden transition hover:text-accent md:inline">Work</a>
-        <a href="#services" class="hidden transition hover:text-accent md:inline">Price</a>
+        <a href="#services" class="hidden transition hover:text-accent md:inline">Services</a>
         <a href="#faq" class="hidden transition hover:text-accent md:inline">Questions</a>
         <button type="button" data-boti-open aria-label="Ask Boti, the quote helper" class="flex h-11 items-center gap-2 rounded-full bg-white/[0.06] p-1 ring-1 ring-line transition hover:ring-fg/30 sm:pr-4">
           <Boti mood="mini" class="w-9" /><span class="hidden sm:inline">Ask Boti</span>
@@ -52,7 +62,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
 
     <!-- Phones get a WhatsApp button; it bows out at the contact section. -->
     <a id="wa-fab" href={whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp Thomas" class="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-[#1f2737] shadow-xl shadow-black/50 transition-[scale] duration-300 data-off:scale-0 sm:hidden">
-      <svg viewBox="0 0 24 24" class="size-7" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z"/></svg>
+      <svg viewBox="0 0 24 24" class="size-7" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>
     </a>
 
     <main id="main" tabindex="-1" class="outline-none">
@@ -88,11 +98,12 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
       <section id="sites" aria-labelledby="sites-title" class="scroll-mt-20 px-4 pt-32 sm:px-8">
         <h2 id="sites-title" data-split class:list={[display, 'text-[15vw] leading-[0.9] sm:text-[9.5vw]']}><span class="block">Pick a look.</span> <span class="block text-accent">Make it yours.</span></h2>
         <p class="mt-6 max-w-md text-lg text-muted">Full websites, each with its own look. Open one and have a look around.</p>
-        <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
           {[
             ...demos.map((d) => ({ href: `/templates/${d.slug}`, name: d.name, sub: d.look.join(' · '), src: `/templates/${d.slug}/scroll`, external: false })),
             { href: 'https://www.estancialajosefina.com/en', name: 'Estancia La Josefina', sub: 'Live client site · A lodge in Patagonia', src: '/work/josefina-scroll', external: true },
-        { href: 'https://arquerosya.com.ar/', name: 'ArquerosYa', sub: 'My own business · Hire a goalkeeper, Argentina', src: '/work/arquerosya-scroll', external: true },
+            { href: 'https://arquerosya.com.ar/', name: 'ArquerosYa', sub: 'My own business · Hire a goalkeeper, Argentina', src: '/work/arquerosya-scroll', external: true },
+            { href: 'https://soymenu.com.ar/', name: 'SoyMenu', sub: 'My own business · QR menus for restaurants, Argentina', src: '/work/soymenu-scroll', external: true },
           ].map((c) => (
             <li data-rise>
               <a href={c.href} data-preview={c.name} {...(c.external && { target: '_blank', rel: 'noopener' })} class="group block">
@@ -108,23 +119,32 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </ul>
       </section>
 
-      <!-- Price and the three steps on one screen; the add-ons as a quiet list. -->
+      <!-- The CMS options as giant type with one big way to get in touch, the three steps beside them, the add-ons as a quiet list. -->
       <section id="services" class="scroll-mt-20 px-4 py-24 sm:px-8 sm:py-32">
         <div class="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
           <div>
-            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">{website.name}</p>
-            <p class:list={[display, 'mt-4 text-[32vw] leading-[0.85] sm:text-[21vw] lg:text-[15vw]']}>£{site.priceFrom}</p>
-            <p class="mt-4 max-w-sm text-muted">{website.note}</p>
-            <ul class="mt-8 grid gap-3 border-t border-line pt-8 text-lg">
-              {website.items.map((t) => <li class="flex gap-2.5"><span aria-hidden="true" class="text-accent">✓</span>{t}</li>)}
+            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Headless CMS</p>
+            <h2 data-split class:list={[display, 'mt-4 text-6xl leading-[0.9] sm:text-8xl']}>You edit it. <span class="text-accent">I keep it fast.</span></h2>
+            <p class="mt-6 max-w-md text-lg text-pretty text-muted">Change your words, photos and prices yourself. I connect the site to the CMS that fits the job, and the pages stay quick.</p>
+            <ul class="mt-10 divide-y divide-line border-y border-line">
+              {cms.map(([n, t]) => (
+                <li class="grid gap-1.5 py-4 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-6">
+                  <span class:list={[display, 'text-5xl leading-none sm:text-6xl']}>{n}</span>
+                  <span class="font-mono text-xs tracking-[0.15em] text-muted uppercase">{t}</span>
+                </li>
+              ))}
             </ul>
+            <a href={whatsapp} target="_blank" rel="noopener" class="btn mt-10 min-h-20 w-full justify-between rounded-2xl bg-whatsapp px-7 text-xl text-[#1f2737] shadow-xl shadow-whatsapp/20 hover:shadow-whatsapp/40 sm:text-2xl">
+              <span class="flex items-center gap-3"><svg viewBox="0 0 24 24" class="size-8" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>WhatsApp me</span>
+              <span class="text-sm font-medium max-sm:hidden">One message, no forms</span>
+            </a>
           </div>
           <div>
             <h2 data-split class:list={[display, 'text-6xl leading-[0.9] sm:text-8xl']}>Three steps. <span class="text-muted">You only do the first one.</span></h2>
             <ol class="mt-10 divide-y divide-line border-y border-line">
               {steps.map((s) => (
                 <li class="grid grid-cols-[auto_1fr] gap-6 py-6">
-                  <span class:list={[display, 'text-6xl leading-none text-accent']}>{s.n}</span>
+                  <span aria-hidden="true" class:list={[display, 'text-6xl leading-none text-accent']}>{s.n}</span>
                   <div><h3 class="text-xl font-semibold">{s.title}</h3><p class="mt-1 text-pretty text-muted">{s.text}</p></div>
                 </li>
               ))}
@@ -136,6 +156,26 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             </ul>
           </div>
         </div>
+      </section>
+
+      <!-- For the bigger clients: what else gets built, with the two businesses above as the proof. -->
+      <section id="apps" aria-labelledby="apps-title" class="scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
+        <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Bigger jobs</p>
+        <h2 id="apps-title" data-split class:list={[display, 'mt-4 text-6xl leading-[0.9] sm:text-8xl lg:text-9xl']}>More than a website? <span class="text-accent">I build that too.</span></h2>
+        <div class="mt-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+          <p class="max-w-xl text-lg text-pretty text-muted">Bookings, payments, customer logins, an app in the stores, or the backend behind it all. <span class="text-fg">ArquerosYa and SoyMenu, above, are my own businesses: web apps, iOS and Android apps and the APIs behind them, built and run by me.</span></p>
+          <a href={wa('Hi Thomas, I have a bigger project in mind.')} target="_blank" rel="noopener" class="btn-ghost min-h-14 px-7 max-sm:w-full">Tell me about it<Icon name="arrow" class="size-4" /></a>
+        </div>
+        <ol class="mt-14 grid gap-px overflow-hidden rounded-3xl bg-line ring-1 ring-line sm:grid-cols-2 xl:grid-cols-4">
+          {builds.map(([title, text, stack], i) => (
+            <li data-rise class="flex flex-col bg-paper p-7 sm:p-8">
+              <span aria-hidden="true" class:list={[display, 'text-6xl leading-none text-accent']}>{String(i + 1).padStart(2, '0')}</span>
+              <h3 class="mt-10 text-2xl font-semibold">{title}</h3>
+              <p class="mt-2 text-pretty text-muted">{text}</p>
+              <p class="mt-auto pt-8 font-mono text-xs tracking-[0.15em] text-muted uppercase">{stack}</p>
+            </li>
+          ))}
+        </ol>
       </section>
 
       <!-- Questions: all collapsed, one open at a time. Anything else goes to Boti. -->
@@ -188,7 +228,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </div>
         <nav aria-label="Footer" class="flex gap-12">
           <div class="flex flex-col items-start">
-            {[['/templates', 'Templates'], ['#services', 'Price'], ['#faq', 'Questions'], ['#contact', 'Contact']].map(([h, t]) => <a href={h} class="py-1.5 transition hover:text-fg">{t}</a>)}
+            {[['/templates', 'Templates'], ['#services', 'Services'], ['#faq', 'Questions'], ['#contact', 'Contact']].map(([h, t]) => <a href={h} class="py-1.5 transition hover:text-fg">{t}</a>)}
           </div>
           <div class="flex flex-col items-start">
             <a href="/cv" class="py-1.5 transition hover:text-fg">CV</a>

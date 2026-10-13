@@ -10,7 +10,7 @@ export const GET = () =>
 
 Thomas builds websites for tradespeople and local businesses (roofers, electricians, plumbers, cafés, salons, gardeners). He also rebuilds old websites for phones, keeping the web address and email. He writes the wording, sets the site up for Google, keeps it up to date and can run Google and Meta ads. He has built for brands like Five Iron Golf and runs his own software products, including SoyMenu (QR menus for 100+ restaurants since 2019).
 
-Pricing in short: website from £${site.priceFrom} one-off, fixed price, paid once the client is happy; hosting free; domain at cost, registered in the client's name; optional care plan from £${carePrice} a month; optional Payload CMS editing panel, £${cmsPrice} one-off, so clients change their own words, photos and prices. Built with Astro for fast content sites, Next.js or TanStack Start with Postgres and Stripe when a site needs bookings, payments or logins, React Native for apps.
+Pricing in short: website from £${site.priceFrom} one-off, fixed price, paid once the client is happy; hosting free; domain at cost, registered in the client's name; optional care plan from £${carePrice} a month; optional Payload CMS editing panel, £${cmsPrice} one-off, so clients change their own words, photos and prices. Built with Astro for fast content sites, Next.js or TanStack Start with Postgres and Stripe when a site needs bookings, payments or logins, React Native for apps. Also headless CMS work on Sanity, Contentstack or WordPress, and bigger builds (web apps, mobile apps, backend, AI features), priced on quote.
 
 ## Services
 
@@ -22,7 +22,8 @@ ${faqs.map(([q, a]) => `- ${q} ${a}`).join('\n')}
 
 ## Pages
 
-- [Services and prices](${site.url}/#services): what each plan includes
+- [Services](${site.url}/#services): editing panels, how it works, add-ons and prices
+- [Bigger jobs](${site.url}/#apps): web apps, mobile apps, backend and APIs, AI features
 - [Example sites](${site.url}/templates): full example websites for tradespeople, one look each, plus a live client site on the home page
 - [FAQ](${site.url}/#faq): ownership, hosting, editing it yourself, tech, AI, redoing an existing site
 ${landings.map((l) => `- [${l.title}](${site.url}/${l.path}): what the site includes for ${l.plural}`).join('\n')}
