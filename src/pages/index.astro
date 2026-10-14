@@ -103,10 +103,10 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             ...demos.map((d) => ({ href: `/templates/${d.slug}`, name: d.name, sub: d.look.join(' · '), src: `/templates/${d.slug}/scroll`, external: false })),
             { href: 'https://www.estancialajosefina.com/en', name: 'Estancia La Josefina', sub: 'Live client site · A lodge in Patagonia', src: '/work/josefina-scroll', external: true },
             { href: 'https://arquerosya.com.ar/', name: 'ArquerosYa', sub: 'Co-founder · Hire a goalkeeper, Argentina', src: '/work/arquerosya-scroll', external: true },
-            { href: 'https://soymenu.com.ar/', name: 'SoyMenu', sub: 'My own business · QR menus for restaurants, Argentina', src: '/work/soymenu-scroll', external: true, noFrame: true }, // sends X-Frame-Options: SAMEORIGIN, so no preview modal
+            { href: 'https://soymenu.com.ar/', name: 'SoyMenu', sub: 'My own business · QR menus for restaurants, Argentina', src: '/work/soymenu-scroll', external: true },
           ].map((c) => (
             <li data-rise>
-              <a href={c.href} data-preview={'noFrame' in c ? undefined : c.name} {...(c.external && { target: '_blank', rel: 'noopener' })} class="group block">
+              <a href={c.href} data-preview={c.name} {...(c.external && { target: '_blank', rel: 'noopener' })} class="group block">
                 <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-panel ring-1 ring-fg/10">
                   <Vid src={c.src} poster={`${c.src}.jpg`} class="size-full" />
                   <span aria-hidden="true" class="absolute right-4 bottom-4 grid size-12 scale-75 place-items-center rounded-full bg-accent text-on-accent opacity-0 shadow-lg transition duration-300 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100"><Icon name="arrow" class="size-5 -rotate-45" /></span>
