@@ -9,7 +9,7 @@ import Icon from '@/components/Icon.astro'
 import Boti from '@/components/Boti.astro'
 import BotiChat from '@/components/BotiChat.astro'
 import Vid from '@/components/kit/Vid.astro'
-import { site, services, faqs, steps, whatsapp as wa } from '@/site'
+import { site, services, faqs, steps, liveWork, whatsapp as wa } from '@/site'
 import { demos } from '@/templates'
 import { trades } from '@/trades'
 import thomasFull from '@/assets/thombeck.png'
@@ -101,9 +101,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
           {[
             ...demos.map((d) => ({ href: `/templates/${d.slug}`, name: d.name, sub: d.look.join(' · '), src: `/templates/${d.slug}/scroll`, external: false })),
-            { href: 'https://www.estancialajosefina.com/en', name: 'Estancia La Josefina', sub: 'Live client site · A lodge in Patagonia', src: '/work/josefina-scroll', external: true },
-            { href: 'https://arquerosya.com.ar/', name: 'ArquerosYa', sub: 'Co-founder · Hire a goalkeeper, Argentina', src: '/work/arquerosya-scroll', external: true },
-            { href: 'https://soymenu.com.ar/', name: 'SoyMenu', sub: 'My own business · QR menus for restaurants, Argentina', src: '/work/soymenu-scroll', external: true },
+            ...liveWork.map((w) => ({ ...w, external: true })),
           ].map((c) => (
             <li data-rise>
               <a href={c.href} data-preview={c.name} {...(c.external && { target: '_blank', rel: 'noopener' })} class="group block">

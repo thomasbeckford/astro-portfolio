@@ -6,7 +6,7 @@ import BaseLayout from '@/layouts/BaseLayout.astro'
 import Logo from '@/components/Logo.astro'
 import Vid from '@/components/kit/Vid.astro'
 import { clip } from '@/components/kit/media'
-import { site } from '@/site'
+import { site, liveWork } from '@/site'
 import { demos } from '@/templates'
 const n = (i: number) => String(i + 1).padStart(2, '0')
 ---
@@ -49,6 +49,25 @@ const n = (i: number) => String(i + 1).padStart(2, '0')
           </li>
         ))}
       </ol>
+    </section>
+
+    <!-- Proof the templates aren't the whole story: real sites, live now. -->
+    <section aria-labelledby="live-title" class="px-4 pt-24 sm:px-8">
+      <h2 id="live-title" data-split class="font-(family-name:--display) text-[13.5vw] leading-[0.86] uppercase sm:text-[9vw]">Live <span class="text-[#4f8bff]">work.</span></h2>
+      <p class="mt-6 max-w-md text-lg text-[#a3a6ad]">Real names this time. Sites and apps I've built that are live now.</p>
+      <ul class="mt-12 grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+        {liveWork.map((w) => (
+          <li>
+            <a href={w.href} target="_blank" rel="noopener" class="group block">
+              <div class="aspect-[4/3] overflow-hidden rounded-2xl bg-white/5 ring-1 ring-white/10">
+                <Vid src={w.src} poster={`${w.src}.jpg`} class="size-full transition-transform duration-700 group-hover:scale-105" />
+              </div>
+              <p class="mt-4 font-(family-name:--display) text-4xl leading-none uppercase">{w.name}</p>
+              <p class="mt-2 text-sm text-[#a3a6ad]">{w.sub}</p>
+            </a>
+          </li>
+        ))}
+      </ul>
     </section>
 
     <section class="px-4 py-32 sm:px-8">

@@ -84,6 +84,13 @@ const jsonLd = {
         s.async = true
         s.src = 'https://www.googletagmanager.com/gtag/js?id=AW-18512791518'
         document.head.append(s)
+        // Conversion "WhatsApp or email click": the lead itself happens in WhatsApp or the mail app, this is the closest signal.
+        // auxclick only for the middle button (Chromium fires it on right-click too). Privacy and CV emails aren't leads.
+        if (!/^\/(privacy|cv)\b/.test(location.pathname))
+          for (const type of ['click', 'auxclick'])
+            addEventListener(type, (e) => {
+              if ((e.type === 'click' || e.button === 1) && e.target.closest?.('a[href^="https://wa.me/"], a[href^="mailto:"]')) gtag('event', 'conversion', { send_to: 'AW-18512791518/p7OYCPGc4ZwdEN6Py_tE' })
+            }, true)
       }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />

@@ -13,6 +13,13 @@ export const site = {
   phone: '+44 7917 628713',
 }
 
+// Real, live sites (the home's grid and the templates page both list them).
+export const liveWork = [
+  { href: 'https://www.estancialajosefina.com/en', name: 'Estancia La Josefina', sub: 'Live client site · A lodge in Patagonia', src: '/work/josefina-scroll' },
+  { href: 'https://arquerosya.com.ar/', name: 'ArquerosYa', sub: 'Co-founder · Hire a goalkeeper, Argentina', src: '/work/arquerosya-scroll' },
+  { href: 'https://soymenu.com.ar/', name: 'SoyMenu', sub: 'My own business · QR menus for restaurants, Argentina', src: '/work/soymenu-scroll' },
+]
+
 export const whatsapp = (text: string) => `https://wa.me/${site.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
 
 // Hosting is on Thomas, for every site. The domain he buys too, registered in the client's name, and they pay him back at cost.
