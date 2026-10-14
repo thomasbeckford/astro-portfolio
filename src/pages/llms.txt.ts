@@ -1,5 +1,4 @@
 import { site, services, faqs, carePrice, cmsPrice } from '@/site'
-import { landings } from '@/landings'
 
 // llmstxt.org: a plain summary so AI assistants quote the offer right instead of guessing from the page.
 export const GET = () =>
@@ -26,7 +25,6 @@ ${faqs.map(([q, a]) => `- ${q} ${a}`).join('\n')}
 - [Bigger jobs](${site.url}/#apps): web apps, mobile apps, backend and APIs, AI features
 - [Example sites](${site.url}/templates): full example websites for tradespeople, one look each, plus a live client site on the home page
 - [FAQ](${site.url}/#faq): ownership, hosting, editing it yourself, tech, AI, redoing an existing site
-${landings.map((l) => `- [${l.title}](${site.url}/${l.path}): what the site includes for ${l.plural}`).join('\n')}
 - [CV](${site.url}/cv): experience, stack and how Thomas works with AI agents, for recruiters and tech leads
 
 ## Contact

@@ -1,4 +1,4 @@
-// Live preview: each trade gets its own whole design (`style` picks the layout in TradeSite.astro), not just a colour.
+// Trades for the home's chat. `style` and the demo fields fed the old trade landings' phone preview (removed 2026-10-14).
 // `neon` is the home showcase's page accent while that trade is on the phone: the bright twin of that design's colour, readable on near-black.
 // Phone numbers sit in Ofcom's drama range (07700 900xxx), so they're never real.
 export const trades = [
