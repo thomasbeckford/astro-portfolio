@@ -13,7 +13,7 @@ export const site = {
   phone: '+44 7917 628713',
 }
 
-// Real, live sites (the home's grid and the templates page both list them).
+// Real, live sites (the home's #sites grid lists them).
 export const liveWork = [
   { href: 'https://www.estancialajosefina.com/en', name: 'Estancia La Josefina', sub: 'Live client site · A lodge in Patagonia', src: '/work/josefina-scroll' },
   { href: 'https://arquerosya.com.ar/', name: 'ArquerosYa', sub: 'Co-founder · Hire a goalkeeper, Argentina', src: '/work/arquerosya-scroll' },

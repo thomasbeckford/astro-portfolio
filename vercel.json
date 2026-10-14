@@ -4,7 +4,8 @@
     { "source": "/(.*)", "has": [{ "type": "host", "value": "www.tebeck.dev" }], "destination": "https://tebeck.dev/$1", "permanent": true },
     { "source": "/(.*)", "has": [{ "type": "host", "value": "tebeck.vercel.app" }], "destination": "https://tebeck.dev/$1", "permanent": true },
     { "source": "/websites-for-(.*)", "destination": "/", "permanent": true },
-    { "source": "/website-redesign", "destination": "/", "permanent": true }
+    { "source": "/website-redesign", "destination": "/", "permanent": true },
+    { "source": "/templates", "destination": "/#sites", "permanent": true }
   ],
   "headers": [
     {

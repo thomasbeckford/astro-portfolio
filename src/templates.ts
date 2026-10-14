@@ -10,7 +10,7 @@ export interface Demo {
   name: string
   mark: string // the giant wordmark
   tel: string
-  look: string[] // tags on the gallery card
+  look: string[] // tags on the home's #sites card
   font: 'archivo' | 'anton' | 'geist'
   colors: { bg: string; fg: string; muted: string; accent: string; onAccent: string; panel: string; alt: string }
   hero: { variant: 'wordmark' | 'scale' | 'letters' | 'poster' | 'cover'; kicker: string; head?: string; lede: string; cta: string }

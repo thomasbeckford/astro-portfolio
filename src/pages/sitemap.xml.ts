@@ -2,7 +2,7 @@ import { site } from '@/site'
 
 // ponytail: a handful of indexable pages, so no sitemap integration. Add @astrojs/sitemap when there are more.
 // No lastmod: a build date changes every deploy and Google learns to ignore it.
-const pages = ['/', '/templates','/cv', '/privacy']
+const pages = ['/', '/cv', '/privacy']
 
 export const GET = () =>
   new Response(

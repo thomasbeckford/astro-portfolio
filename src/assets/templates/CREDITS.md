@@ -76,3 +76,21 @@ Video files are in `public/templates/<slug>/` and photos in `src/assets/template
 | 2.jpg | https://www.pexels.com/photo/wooden-furniture-and-table-in-contemporary-kitchen-with-dining-zone-6284235/ | Max Vakhtbovych | Pexels License |
 | 3.jpg | https://www.pexels.com/photo/warm-wooden-staircase-in-soft-light-31565465/ | consumedbyjpgs | Pexels License |
 | 4.jpg | https://www.pexels.com/photo/wooden-furniture-in-room-17181947/ | hi room | Pexels License |
+
+## Nova (venue)
+
+| File | Source | Author | Licence |
+|---|---|---|---|
+| hero.jpg | https://www.pexels.com/photo/2747446/ | Wolfgang | Pexels License |
+| next.jpg | https://www.pexels.com/photo/7192878/ | Bence Szemerey | Pexels License |
+| e1.jpg | https://www.pexels.com/photo/22857353/ | Nur Andi Ravsanjani Gusma | Pexels License |
+| e2.jpg | https://www.pexels.com/photo/30692471/ | AMORIE SAM | Pexels License |
+| e3.jpg | https://www.pexels.com/photo/39005265/ | Caleb Oquendo | Pexels License |
+| about.jpg | https://www.pexels.com/photo/7304689/ | Danik Prihodko | Pexels License |
+| g1.jpg | https://www.pexels.com/photo/8448551/ | Daniel Nouri | Pexels License |
+| g2.jpg | https://www.pexels.com/photo/13230484/ | Lisa Fotios | Pexels License |
+| g3.jpg | https://www.pexels.com/photo/29848655/ | Wendy Wei | Pexels License |
+| g4.jpg | https://www.pexels.com/photo/2019327/ | Luis Quintero | Pexels License |
+| g5.jpg | https://www.pexels.com/photo/34516144/ | Caleb Oquendo | Pexels License |
+| trailer.mp4 / trailer.webm / trailer.jpg (0–6s) | https://www.pexels.com/video/rock-band-concert-857173/ | Vimeo (Pexels upload) | Pexels License |
+| trailer.mp4 / trailer.webm (6–13s) | https://www.pexels.com/video/crowd-concert-hands-26744501/ | Cristian Geza | Pexels License |

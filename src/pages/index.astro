@@ -1,5 +1,5 @@
 ---
-// The home, in the /templates look: giant condensed type on near-black. The robot says hello, the example sites do
+// The home, in the example sites' look: giant condensed type on near-black. The robot says hello, the example sites do
 // the selling (a grid of scroll-through previews), then price, questions and the ask. Motion comes from scripts/motion.ts.
 import '@fontsource-variable/big-shoulders-display'
 import { Image } from 'astro:assets'
@@ -101,6 +101,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
           {[
             ...demos.map((d) => ({ href: `/templates/${d.slug}`, name: d.name, sub: d.look.join(' · '), src: `/templates/${d.slug}/scroll`, external: false })),
+            { href: '/templates/nova', name: 'Nova', sub: 'Music venue · Dark · Night out', src: '/templates/nova/scroll', external: false },
             ...liveWork.map((w) => ({ ...w, external: true })),
           ].map((c) => (
             <li data-rise>
@@ -226,7 +227,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </div>
         <nav aria-label="Footer" class="flex gap-12">
           <div class="flex flex-col items-start">
-            {[['/templates', 'Templates'], ['#services', 'Services'], ['#faq', 'Questions'], ['#contact', 'Contact']].map(([h, t]) => <a href={h} class="py-1.5 transition hover:text-fg">{t}</a>)}
+            {[['#sites', 'Examples'], ['#services', 'Services'], ['#faq', 'Questions'], ['#contact', 'Contact']].map(([h, t]) => <a href={h} class="py-1.5 transition hover:text-fg">{t}</a>)}
           </div>
           <div class="flex flex-col items-start">
             <a href="/cv" class="py-1.5 transition hover:text-fg">CV</a>
