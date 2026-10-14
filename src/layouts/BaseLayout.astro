@@ -64,12 +64,27 @@ const jsonLd = {
 <html lang="en-GB" class:list={[dark && 'showcase']}>
   <head>
     <meta charset="utf-8" />
-    <!-- No consent banner on purpose: no cookies or browser storage. Vercel Web Analytics is cookieless (a request hash
-         dropped after 24h) and skips anyone with Global Privacy Control or Do Not Track on, as the privacy page says.
-         Judgement call, not a given: we lean on PECR's statistics exemption. Ads pixels or embeds mean a banner first. -->
+    <!-- Vercel Web Analytics is cookieless (a request hash dropped after 24h) and skips anyone with Global Privacy Control
+         or Do Not Track on, as the privacy page says. Judgement call, not a given: we lean on PECR's statistics exemption. -->
     <script is:inline>
       // Read by Vercel's Astro component: returning null drops the event.
       window.webAnalyticsBeforeSend = (e) => (navigator.globalPrivacyControl || navigator.doNotTrack === '1' ? null : e)
+    </script>
+    <!-- Google Ads tag (2026-10-14, Thomas's call, ending the no-cookies promise). Consent Mode v2, all denied: no cookies
+         until a consent banner grants them, only cookieless pings. Granting is the banner's job, still to do.
+         Skipped entirely under Global Privacy Control or Do Not Track, as the privacy page says. -->
+    <script is:inline>
+      if (!(navigator.globalPrivacyControl || navigator.doNotTrack === '1')) {
+        window.dataLayer = window.dataLayer || []
+        window.gtag = function () { dataLayer.push(arguments) }
+        gtag('consent', 'default', { ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied', analytics_storage: 'denied' })
+        gtag('js', new Date())
+        gtag('config', 'AW-18512791518')
+        const s = document.createElement('script')
+        s.async = true
+        s.src = 'https://www.googletagmanager.com/gtag/js?id=AW-18512791518'
+        document.head.append(s)
+      }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <title>{title}</title>

@@ -11,7 +11,7 @@ import { landings, type Landing } from '@/landings'
 import thomasFull from '@/assets/thombeck.png'
 
 // Landings (/websites-for-{trade}, /website-redesign): same offer as the home page, said in that audience's terms.
-// Static, no scripts. Fixed pages (index, cv, privacy) win over this route, so a landing path can't shadow them.
+// Static, no scripts of its own (BaseLayout adds the shared ones). Fixed pages (index, cv, privacy) win over this route, so a landing path can't shadow them.
 export const getStaticPaths = () => landings.map((l) => ({ params: { page: l.path }, props: { l } }))
 
 const { l } = Astro.props as { l: Landing }
