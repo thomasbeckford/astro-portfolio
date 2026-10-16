@@ -8,10 +8,11 @@ import Logo from '@/components/Logo.astro'
 import Icon from '@/components/Icon.astro'
 import Boti from '@/components/Boti.astro'
 import BotiChat from '@/components/BotiChat.astro'
-import Vid from '@/components/kit/Vid.astro'
 import { site, services, cmsPrice, faqs, steps, whatsapp as wa } from '@/site'
 import { work, home } from '@/work'
 import WorkCard from '@/components/WorkCard.astro'
+import PublishDemo from '@/components/PublishDemo.astro'
+import Vid from '@/components/kit/Vid.astro'
 import { trades } from '@/trades'
 import thomasFull from '@/assets/thombeck.png'
 
@@ -41,9 +42,13 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
        The style below unhides it after 2.5s no matter what, so a failed script can't leave it blank. -->
   <script is:inline>
     if (matchMedia('(prefers-reduced-motion: no-preference)').matches) document.documentElement.setAttribute('data-hold', '')
+    // Wide screens at the top of the page get the intro: the editing panel full screen first, the rest after (motion.ts).
+    if (matchMedia('(min-width: 1024px) and (prefers-reduced-motion: no-preference)').matches && !location.hash && scrollY < 10) document.documentElement.setAttribute('data-intro', '')
   </script>
   <style is:inline>
     html[data-hold] #hero h1 { visibility: hidden; animation: unhide 0s 2.5s forwards }
+    html[data-intro] #hero h1, html[data-intro] [data-intro-copy] { visibility: hidden; animation: unhide 0s 12s forwards }
+    html[data-intro] #hero [data-publish] { visibility: hidden; animation: unhide 0s 3s forwards }
     @keyframes unhide { to { visibility: visible } }
   </style>
 
@@ -67,12 +72,12 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
     </a>
 
     <main id="main" tabindex="-1" class="outline-none">
-      <!-- Hero: the giant line on the left, the 3D robot (scripts/robot.ts) on the right following the pointer. -->
+      <!-- Hero: the giant line on the left, PublishDemo (the editing panel publishing a change, a different example site each loop) on the right. -->
       <section id="hero" class="relative isolate">
         <div class="grid min-h-[100dvh] grid-rows-[1fr_auto] px-4 pt-24 pb-8 sm:px-8">
           <div class="relative grid content-center gap-4">
             <div class="relative z-10 lg:pointer-events-none">
-              <p class="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-white/[0.05] px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
+              <p data-intro-copy class="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-white/[0.05] px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
                 <span class="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">£{site.priceFrom}</span>
                 Fixed price <span class="text-muted">· pay when you’re happy</span>
               </p>
@@ -80,13 +85,15 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
                 <span class="block">Websites that</span> <span class="block">make your</span> <span class="block text-accent">phone ring.</span>
               </h1>
             </div>
-            <div id="robot-stage" class="relative h-72 sm:h-[26rem] lg:absolute lg:inset-y-0 lg:right-0 lg:h-auto lg:w-[40%]">
-              <p aria-hidden="true" class="pointer-events-none absolute right-0 bottom-2 left-0 z-10 text-center font-mono text-[11px] tracking-[0.2em] text-muted uppercase motion-reduce:hidden"><span class="pointer-coarse:hidden">Move your mouse. Click the robot</span><span class="hidden pointer-coarse:inline">Tap anywhere, then tap the robot</span></p>
-              <canvas class="absolute inset-0 size-full touch-pan-y" role="img" aria-label="A small 3D robot hovering beside the headline"></canvas>
+            <div class="relative lg:absolute lg:inset-y-0 lg:right-0 lg:grid lg:w-[34%] lg:content-center 2xl:w-[38%]">
+              <figure class="m-0">
+                <PublishDemo />
+                <figcaption data-intro-copy class="mt-3 font-mono text-[11px] tracking-[0.2em] text-muted uppercase">Drawing of the +£{cmsPrice} editing panel · <a href="#edit-it-yourself" class="text-fg underline underline-offset-4">See the real one</a></figcaption>
+              </figure>
             </div>
           </div>
-          <div class="mt-8 grid gap-6 border-t border-line pt-6 md:grid-cols-[1fr_auto] md:items-center">
-            <p class="max-w-lg text-lg text-pretty text-muted">Websites for UK small businesses. Fixed price, live in {site.turnaround}, and you pay once you’re happy.</p>
+          <div data-intro-copy class="mt-8 grid gap-6 border-t border-line pt-6 md:grid-cols-[1fr_auto] md:items-center">
+            <p class="max-w-lg text-lg text-pretty text-muted">Websites for UK small businesses. Fixed price, live in {site.turnaround}, and you pay once you’re happy. Want to change the words and photos yourself? Add your own <a href="#edit-it-yourself" class="text-fg underline underline-offset-4">editing panel</a>.</p>
             <div class="flex flex-wrap gap-3">
               <a href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Get a free quote<Icon name="arrow" class="size-4" /></a>
               <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
@@ -95,7 +102,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </div>
       </section>
 
-      <!-- The template sites, then live ones: a grid of looping scroll-throughs (recorded from each site). -->
+      <!-- The six template sites (live ones are on /work): a grid of looping scroll-throughs (recorded from each site). -->
       <section id="sites" aria-labelledby="sites-title" class="scroll-mt-20 px-4 pt-32 sm:px-8">
         <h2 id="sites-title" data-split class:list={[display, 'text-[15vw] leading-[0.9] sm:text-[9.5vw]']}><span class="block">Pick a look.</span> <span class="block text-accent">Make it yours.</span></h2>
         <p class="mt-6 max-w-md text-lg text-muted">Full websites, each with its own look. Open one and have a look around.</p>
@@ -146,7 +153,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </div>
 
         <!-- The Edit it yourself add-on in action: a real Payload panel and the client-starter site, recorded locally (client-starter/cms). -->
-        <div class="mt-24 grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:items-center">
+        <div id="edit-it-yourself" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1.6fr_1fr] lg:items-center">
           <div class="overflow-hidden rounded-2xl border border-line">
             <Vid src="/work/cms-demo" poster="/work/cms-demo.jpg" class="aspect-[8/5] w-full" />
           </div>
@@ -162,7 +169,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
                 </li>
               ))}
             </ol>
-            <p class="mt-4 text-sm text-pretty text-muted">The video is a real panel (Payload CMS) on an example site. Estancia La Josefina, above, runs on Payload too, in Spanish and English. Rather just send me a message? That is the Care plan.</p>
+            <p class="mt-4 text-sm text-pretty text-muted">The video is a real panel (Payload CMS) on an example site. Estancia La Josefina, one of my live sites, runs on Payload too, in Spanish and English. Rather just send me a message? That is the Care plan.</p>
           </div>
         </div>
       </section>
@@ -172,7 +179,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Bigger jobs</p>
         <h2 id="apps-title" data-split class:list={[display, 'mt-4 text-6xl leading-[0.9] sm:text-8xl lg:text-9xl']}>More than a website? <span class="text-accent">I build that too.</span></h2>
         <div class="mt-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-          <p class="max-w-xl text-lg text-pretty text-muted">Bookings, payments, customer logins, an app in the stores, or the backend behind it all. <span class="text-fg">SoyMenu, above, is a web app I built on my own. ArquerosYa, which I co-founded, is a web app plus iOS and Android apps in the stores, with the API behind them.</span></p>
+          <p class="max-w-xl text-lg text-pretty text-muted">Bookings, payments, customer logins, an app in the stores, or the backend behind it all. <span class="text-fg">SoyMenu is a web app I built on my own. ArquerosYa, which I co-founded, is a web app plus iOS and Android apps in the stores, with the API behind them.</span></p>
           <a href={wa('Hi Thomas, I have a bigger project in mind.')} target="_blank" rel="noopener" class="btn-ghost min-h-14 px-7 max-sm:w-full">Tell me about it<Icon name="arrow" class="size-4" /></a>
         </div>
         <ol class="mt-14 grid gap-px overflow-hidden rounded-3xl bg-line ring-1 ring-line sm:grid-cols-2 xl:grid-cols-4">
@@ -209,8 +216,13 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
       </section>
 
       <!-- The ask: one giant line, one person behind it, three ways in. -->
-      <section id="contact" class="scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
+      <!-- The 3D robot (scripts/robot.ts) beside "Yours next.", following the pointer. -->
+      <section id="contact" class="relative scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
         <h2 data-split class:list={[display, 'text-[19vw] leading-[0.85] sm:text-[16vw]']}>Yours <span class="text-accent">next.</span></h2>
+        <div id="robot-stage" class="relative mt-6 h-72 sm:h-[26rem] lg:absolute lg:top-2 lg:right-8 lg:mt-0 lg:h-[18rem] lg:w-[24%] xl:h-[22rem]">
+          <p aria-hidden="true" class="pointer-events-none absolute right-0 bottom-2 left-0 z-10 text-center font-mono text-[11px] tracking-[0.2em] text-muted uppercase motion-reduce:hidden"><span class="pointer-coarse:hidden">Move your mouse. Click the robot</span><span class="hidden pointer-coarse:inline">Tap anywhere, then tap the robot</span></p>
+          <canvas class="absolute inset-0 size-full touch-pan-y" role="img" aria-label="A small 3D robot hovering beside the heading"></canvas>
+        </div>
         <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div class="flex items-center gap-4">
             <span class="size-14 shrink-0 overflow-hidden rounded-2xl bg-accent/10"><Image src={thomasFull} alt="" width={240} class="w-[180%] max-w-none -ml-[33%]" /></span>
@@ -309,8 +321,8 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
   // An example's "Get one like this" jumps this page to #contact: close the preview on the way.
   addEventListener('hashchange', () => preview.close())
 
-  // The hero robot: its own small chunk, loaded after the page. No WebGL: the stage stays empty.
+  // The robot (in #contact): its own small chunk, loaded after the page. No WebGL: the stage stays empty.
   const robot = document.getElementById('robot-stage')!
   const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
-  import('@/scripts/robot').then((m) => m.mount(robot, reduced, document.getElementById('hero')!)).catch(() => robot.replaceChildren())
+  import('@/scripts/robot').then((m) => m.mount(robot, reduced, document.getElementById('contact')!)).catch(() => robot.replaceChildren())
 </script>

@@ -1,0 +1,92 @@
+---
+// Edit → Publish → Live, as an animation (pattern from onfuel.io's intro; notes in myBrain patrones-web/referencias/onfuel).
+// A drawn copy of the client-starter's Payload panel types a new button label and publishes, then turns into the example
+// site showing it, and switches that site to Spanish (more than one language comes with the panel). Each loop is another of the example sites (templates.ts), so it is never one trade. motion.ts runs the
+// timeline while on screen; without motion or JS it rests on the first site, live. Sized in em off the stage width.
+import { getImage } from 'astro:assets'
+import { demos } from '@/templates'
+import { photos } from '@/components/kit/media'
+
+// Spanish for the language switch at the end of each loop (demo only, the templates are English). No head: the mark stays.
+const es: Record<string, { kicker: string; head?: string; cta: string; items: string[] }> = {
+  electrician: { kicker: 'Electricista certificado · Bromley', cta: 'Pide presupuesto', items: ['Cargadores de coche eléctrico', 'Cuadros eléctricos', 'Recableado'] },
+  plumber: { kicker: 'Fontanero Gas Safe · Bromley', head: '¿Una fuga? ¿La caldera? Vamos para allá.', cta: 'Pide precio cerrado', items: ['Urgencias', 'Calderas', 'Baños'] },
+  roofer: { kicker: 'Tejados · Bromley y Kent', cta: 'Revisión gratis', items: ['Reparaciones', 'Tejados nuevos', 'Cubiertas planas'] },
+  landscaper: { kicker: 'Diseño de jardines y paisajismo · Bromley', head: 'De un terreno vacío a un jardín terminado.', cta: 'Pide una visita', items: ['Diseño de jardines', 'Patios y caminos', 'Césped'] },
+  decorator: { kicker: 'Pintor y decorador · Bromley', head: 'Paredes nuevas, sin ensuciar nada.', cta: 'Pide presupuesto', items: ['Pintura', 'Papel pintado', 'Preparación y carpintería'] },
+  joiner: { kicker: 'Carpintería a medida · Bromley', cta: 'Empieza tu proyecto', items: ['Cocinas', 'Escaleras', 'Muebles empotrados'] },
+}
+
+// Each site's first photo, small: the live card shows it beside the text.
+const sites = await Promise.all(demos.map(async (d) => ({
+  img: photos(d.slug)[0] ? (await getImage({ src: photos(d.slug)[0], width: 640, format: 'webp' })).src : '',
+  name: d.name, mark: d.mark, kicker: d.hero.kicker, head: d.hero.head ?? d.mark, cta: d.hero.cta,
+  items: d.services.items.slice(0, 3).map((i) => i.title),
+  es: es[d.slug] ? { ...es[d.slug], head: es[d.slug].head ?? d.hero.head ?? d.mark } : undefined,
+  css: `--s-bg:${d.colors.bg};--s-fg:${d.colors.fg};--s-accent:${d.colors.accent};--s-on:${d.colors.onAccent}`,
+})))
+const s = sites[0]
+---
+<div
+  data-publish={JSON.stringify(sites)}
+  data-pd-old="Contact us"
+  role="img"
+  aria-label="Animation: in the editing panel the button text of an example website is changed and Publish changes is pressed, then the website shows the new button."
+  class="relative aspect-[8/5] overflow-hidden rounded-2xl border border-line bg-[#0b0d12] [container-type:inline-size] max-sm:aspect-[4/3]"
+>
+  <!-- Font size lives here, not on the stage: cqw on the container itself would read the viewport. The example's colours
+       sit here too, off the tweened card, so a gsap revert never wipes them. -->
+  <div data-pd-theme style={s.css} class="absolute inset-0 text-[2.3cqw] max-sm:text-[2.7cqw]">
+  <div aria-hidden="true" data-pd-card class="absolute inset-x-[7%] inset-y-[8%] rounded-[1em] shadow-[0_0_0_1px_color-mix(in_srgb,var(--s-accent)_35%,transparent),0_2em_5em_-1em_color-mix(in_srgb,var(--s-accent)_35%,transparent)]">
+    <!-- The panel (client-starter/cms), light like Payload's admin. -->
+    <div data-pd-panel class="absolute inset-0 overflow-hidden rounded-[1em] bg-white text-[#222] opacity-0">
+      <div class="flex items-center gap-[.6em] border-b border-black/10 px-[1.4em] py-[.8em] text-[.9em]">
+        <span data-pd-out="initial" class="grid size-[1.6em] place-items-center rounded-full bg-(--s-accent) text-[.8em] font-bold text-(--s-on)">{s.mark[0]}</span>
+        <span class="text-black/50">/</span><span>Your website</span>
+        <span class="ml-auto font-semibold">View my website ↗</span>
+      </div>
+      <div class="px-[1.4em] pt-[1em]">
+        <div class="flex items-end justify-between gap-[1em]">
+          <p class="text-[1.9em] leading-none font-medium tracking-[-0.02em]">Your website</p>
+          <span data-pd-publish class="relative rounded-[.35em] bg-black/10 px-[.9em] py-[.5em] text-[.85em] whitespace-nowrap"><span data-pd-label>Publish changes</span></span>
+        </div>
+        <div class="mt-[1em] flex gap-[1.4em] border-b border-black/10 text-[.85em] text-black/45">
+          <span class="border-b-2 border-black pb-[.5em] text-black">Top of your page</span>
+          <span class="pb-[.5em]">Services</span>
+          <span class="pb-[.5em]">Contact</span>
+        </div>
+        <div class="mt-[1em] grid gap-[.6em]">
+          {[['Business name', s.name, 'name'], ['Top line', s.kicker, 'kicker'], ['Button', s.cta, 'cta']].map(([label, value, key]) => (
+            <div data-pd-row>
+              <p class="text-[.7em] text-black/50">{label}</p>
+              <p data-pd-field={key === 'cta' ? '' : undefined} class="mt-[.25em] truncate rounded-[.3em] border border-black/15 px-[.6em] py-[.35em] text-[.85em]"><span data-pd-in={key}>{value}</span><span data-pd-caret={key === 'cta' ? '' : undefined} class:list={['ml-px inline-block h-[1em] w-px bg-black align-[-.15em] opacity-0', key !== 'cta' && 'hidden']}></span></p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+    <!-- The live site, in that example's colours, where the new button lands. -->
+    <div data-pd-site class="absolute inset-0 overflow-hidden rounded-[1em] bg-(--s-bg) text-(--s-fg)">
+      <div class="flex items-center justify-between gap-[1em] px-[1.6em] py-[1em] text-[.85em]">
+        <span data-pd-out="mark" class="font-bold tracking-[-0.03em]">{s.mark}</span>
+        <span class="ml-auto flex gap-[.15em] rounded-full border border-current/20 p-[.2em] text-[.85em]"><span data-pd-lang="en" class="rounded-full bg-current/15 px-[.5em] py-[.15em]">EN</span><span data-pd-lang="es" class="rounded-full px-[.5em] py-[.15em] opacity-60">ES</span></span>
+        <span data-pd-live class="rounded-full bg-(--s-accent) px-[.9em] py-[.4em] font-semibold whitespace-nowrap text-(--s-on)"><span data-pd-out="cta">{s.cta}</span></span>
+      </div>
+      <div class="grid grid-cols-[1.15fr_1fr] gap-[1.2em] px-[1.6em]">
+        <div class="min-w-0">
+          <p data-pd-out="kicker" class="text-[.75em] text-(--s-accent)">{s.kicker}</p>
+          <p data-pd-out="head" class="mt-[.3em] text-[1.9em] leading-[0.95] font-semibold tracking-[-0.04em]">{s.head}</p>
+          <div class="mt-[1em] divide-y divide-current/10 border-y border-current/10 text-[.85em]">
+            {s.items.map((t, i) => <p data-pd-out={`item${i}`} class="overflow-hidden px-[.4em] py-[.5em] text-ellipsis whitespace-nowrap">{t}</p>)}
+          </div>
+        </div>
+        <img data-pd-img src={s.img} alt="" class="h-[13em] w-full rounded-[.6em] object-cover" />
+      </div>
+    </div>
+  </div>
+  <!-- The pointer: a plain arrow, moved by the timeline. -->
+  <svg aria-hidden="true" data-pd-cursor viewBox="0 0 24 24" class="pointer-events-none absolute top-0 left-0 size-[2.2em] opacity-0 drop-shadow-[0_.2em_.4em_rgb(0_0_0/.4)]">
+    <path d="M4 2l15 11.5-6.6.9 3.9 7.4-2.9 1.4-3.8-7.5L4 20z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round" />
+  </svg>
+  </div>
+</div>

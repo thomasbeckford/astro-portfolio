@@ -254,7 +254,7 @@ export function mount(stage: HTMLElement, reduced: boolean, area: HTMLElement = 
   let tx = x, lookX = 0, lookY = 1.2, pointerAt = -1e9, wanderAt = 0, now = 0, last = performance.now()
   let waved = false, still = 0, thrust = 1
   let accentAt = 0
-  let lift = 0, scrollAt = -1e9 // lift: 0 with the hero in place, 1 once it has scrolled mostly away
+  let lift = 0, scrollAt = -1e9 // lift: 0 with its area (the section passed to mount) in place, 1 once that has scrolled mostly away
   const IDLE = 15
 
   const draw = () => {
