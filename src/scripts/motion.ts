@@ -116,7 +116,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       .to(panel, { autoAlpha: 0, duration: 0.4 }, '<')
       .to(site, { autoAlpha: 1, duration: 0.4 }, '<')
       .fromTo(live, { boxShadow: '0 0 0 0em transparent' }, { boxShadow: '0 0 0 .35em rgba(255,255,255,0.35)', duration: 0.4, yoyo: true, repeat: 3 }, '+=0.1')
-      .call(() => st.dispatchEvent(new Event('pd:live')), [], '-=1.4')
       // Then the same site in Spanish: the visitor's language switch.
       .set(cursor, { x: () => at(esb).x + 40, y: () => at(esb).y + 60 }, '+=0.3')
       .to(cursor, { autoAlpha: 1, duration: 0.2 })
@@ -136,13 +135,13 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     const d = parseFloat(el.dataset.speed!) * 120
     gsap.fromTo(el, { y: d }, { y: -d, ease: 'none', scrollTrigger: { trigger: el.closest('section'), start: 'top bottom', end: 'bottom top', scrub: true } })
   })
-  // Hero intro (pattern from onfuel.io; the page set data-intro): the panel plays full screen on an empty hero, and once
-  // its first site is live it shrinks into its slot, the letters rise and the rest fades in. A scroll ends it early.
+  // Hero intro (pattern from onfuel.io; the page set data-intro): the panel opens large and centred on an empty hero, and
+  // as soon as it has built it moves into its slot (it keeps playing there), the letters rise and the rest fades in. A scroll ends it early.
   const intro = document.documentElement.hasAttribute('data-intro') && document.querySelector<HTMLElement>('#hero [data-publish]')
   if (intro) {
     const copy = all('#hero [data-intro-copy]')
     const r = intro.getBoundingClientRect()
-    const w = Math.min(innerWidth * 0.86, innerHeight * 0.78 * (r.width / r.height))
+    const w = Math.min(innerWidth * 0.62, innerHeight * 0.6 * (r.width / r.height))
     gsap.set(copy, { autoAlpha: 0 })
     gsap.set(intro, { visibility: 'visible', zIndex: 30, scale: w / r.width, x: innerWidth / 2 - (r.left + r.width / 2), y: innerHeight / 2 - (r.top + r.height / 2) })
     document.documentElement.removeAttribute('data-intro')
@@ -154,14 +153,13 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       done = true
       removeEventListener('scroll', early)
       gsap.timeline({ onComplete: () => { gsap.set(intro, { clearProps: 'zIndex' }); ScrollTrigger.refresh() } })
-        .to(intro, { x: 0, y: 0, scale: 1, duration: 1.2, ease: 'expo.inOut' })
-        .call(open, [], 0.5)
-        .to(copy, { autoAlpha: 1, duration: 0.6, stagger: 0.12 }, 0.9)
+        .to(intro, { x: 0, y: 0, scale: 1, duration: 0.9, ease: 'expo.inOut' })
+        .call(open, [], 0.35)
+        .to(copy, { autoAlpha: 1, duration: 0.6, stagger: 0.12 }, 0.6)
     }
     const early = () => scrollY > 10 && out()
     addEventListener('scroll', early, { passive: true })
-    intro.addEventListener('pd:live', () => gsap.delayedCall(0.9, out), { once: true })
-    gsap.delayedCall(11, out) // never strand the page if the panel doesn't play
+    gsap.delayedCall(1.6, out) // once the panel has built
   }
   // Hero name: letters rise in one by one.
   all('[data-letters]').forEach((el) => {
