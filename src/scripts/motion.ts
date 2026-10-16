@@ -127,6 +127,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       .to(cursor, { autoAlpha: 0, duration: 0.3 }, '+=0.3')
       .to({}, { duration: 1.6 })
     ScrollTrigger.create({ trigger: st, start: 'top 90%', end: 'bottom 10%', onToggle: (s) => (s.isActive ? tl.play() : tl.pause()) })
+    st.addEventListener('pd:restart', () => tl.restart()) // the hero intro starts it over once it shows
     // Reduced motion switched on mid-loop: gsap reverts the tweens, not the text, so put the first site back whole.
     cleanups.push(() => { show(sites[0]); label.textContent = 'Publish changes' })
   })
@@ -139,27 +140,35 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
   // as soon as it has built it moves into its slot (it keeps playing there), the letters rise and the rest fades in. A scroll ends it early.
   const intro = document.documentElement.hasAttribute('data-intro') && document.querySelector<HTMLElement>('#hero [data-publish]')
   if (intro) {
-    const copy = all('#hero [data-intro-copy]')
-    const r = intro.getBoundingClientRect()
-    const w = Math.min(innerWidth * 0.62, innerHeight * 0.6 * (r.width / r.height))
-    gsap.set(copy, { autoAlpha: 0 })
-    gsap.set(intro, { visibility: 'visible', zIndex: 30, scale: w / r.width, x: innerWidth / 2 - (r.left + r.width / 2), y: innerHeight / 2 - (r.top + r.height / 2) })
-    document.documentElement.removeAttribute('data-intro')
     let open = () => {}
     introGate = new Promise((res) => (open = res))
-    let done = false
-    const out = () => {
-      if (done) return
-      done = true
-      removeEventListener('scroll', early)
-      gsap.timeline({ onComplete: () => { gsap.set(intro, { clearProps: 'zIndex' }); ScrollTrigger.refresh() } })
-        .to(intro, { x: 0, y: 0, scale: 1, duration: 0.9, ease: 'expo.inOut' })
-        .call(open, [], 0.35)
-        .to(copy, { autoAlpha: 1, duration: 0.6, stagger: 0.12 }, 0.6)
-    }
-    const early = () => scrollY > 10 && out()
-    addEventListener('scroll', early, { passive: true })
-    gsap.delayedCall(1.6, out) // once the panel has built
+    // Measure once the fonts are in (the headline's font sets the hero's height, so the slot moves), and skip the intro
+    // when a reload has put the page back further down.
+    document.fonts.ready.then(() => {
+      if (scrollY > 10) { document.documentElement.removeAttribute('data-intro'); open(); return }
+      const copy = all('#hero [data-intro-copy]')
+      const r = intro.getBoundingClientRect()
+      const w = Math.min(innerWidth * 0.62, innerHeight * 0.6 * (r.width / r.height))
+      gsap.set(copy, { autoAlpha: 0 })
+      // Start the demo over with the card empty, so the example site from the markup never flashes before the panel builds.
+      gsap.set(intro.querySelector('[data-pd-card]'), { autoAlpha: 0 })
+      intro.dispatchEvent(new Event('pd:restart'))
+      gsap.set(intro, { visibility: 'visible', zIndex: 30, scale: w / r.width, x: innerWidth / 2 - (r.left + r.width / 2), y: innerHeight / 2 - (r.top + r.height / 2) })
+      document.documentElement.removeAttribute('data-intro')
+      let done = false
+      const out = () => {
+        if (done) return
+        done = true
+        removeEventListener('scroll', early)
+        gsap.timeline({ onComplete: () => { gsap.set(intro, { clearProps: 'zIndex' }); ScrollTrigger.refresh() } })
+          .to(intro, { x: 0, y: 0, scale: 1, duration: 0.9, ease: 'expo.inOut' })
+          .call(open, [], 0.35)
+          .to(copy, { autoAlpha: 1, duration: 0.6, stagger: 0.12 }, 0.6)
+      }
+      const early = () => scrollY > 10 && out()
+      addEventListener('scroll', early, { passive: true })
+      gsap.delayedCall(1.6, out) // once the panel has built
+    })
   }
   // Hero name: letters rise in one by one.
   all('[data-letters]').forEach((el) => {
