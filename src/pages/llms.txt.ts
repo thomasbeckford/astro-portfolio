@@ -24,6 +24,7 @@ ${faqs.map(([q, a]) => `- ${q} ${a}`).join('\n')}
 - [Services](${site.url}/#services): editing panels, how it works, add-ons and prices
 - [Bigger jobs](${site.url}/#apps): web apps, mobile apps, backend and APIs, AI features
 - [Example sites](${site.url}/#sites): full example websites for tradespeople and a music venue, one look each, plus a live client site
+- [All work](${site.url}/work): every example site and live client site on one page
 - [FAQ](${site.url}/#faq): ownership, hosting, editing it yourself, tech, AI, redoing an existing site
 - [CV](${site.url}/cv): experience, stack and how Thomas works with AI agents, for recruiters and tech leads
 

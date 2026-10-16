@@ -1,0 +1,29 @@
+---
+// Every site in the work grid. The home shows the first few and links here.
+// ponytail: plain links, no preview dialog (that lives on the home). Move it to a component if this page needs it.
+import '@fontsource-variable/big-shoulders-display'
+import BaseLayout from '@/layouts/BaseLayout.astro'
+import Logo from '@/components/Logo.astro'
+import Icon from '@/components/Icon.astro'
+import WorkCard from '@/components/WorkCard.astro'
+import { site } from '@/site'
+import { work } from '@/work'
+const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppercase'
+---
+
+<BaseLayout dark title={`All work | ${site.name}`} description={`Every website ${site.name} has built: example sites for UK trades and small businesses, and live ones. From £${site.priceFrom}.`}>
+  <div class="overflow-x-clip [--display:'Big_Shoulders_Display_Variable',system-ui,sans-serif]">
+    <header class="flex items-center justify-between gap-3 px-4 py-3 sm:px-8">
+      <a href="/" class="flex items-center gap-2.5 font-semibold"><Logo class="size-9" /><span class="max-[420px]:sr-only">{site.name}</span></a>
+      <a href="/#contact" class="btn-primary min-h-11 px-5">Get a quote</a>
+    </header>
+    <main class="px-4 pt-16 pb-32 sm:px-8">
+      <a href="/#sites" class="inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:text-accent"><Icon name="arrow" class="size-4 rotate-180" />Back to home</a>
+      <h1 class:list={[display, 'mt-8 text-[15vw] leading-[0.9] sm:text-[9.5vw]']}>All the work.</h1>
+      <p class="mt-6 max-w-md text-lg text-muted">{work.length} websites. Open one and have a look around.</p>
+      <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
+        {work.map((c) => <WorkCard c={c} />)}
+      </ul>
+    </main>
+  </div>
+</BaseLayout>

@@ -9,8 +9,9 @@ import Icon from '@/components/Icon.astro'
 import Boti from '@/components/Boti.astro'
 import BotiChat from '@/components/BotiChat.astro'
 import Vid from '@/components/kit/Vid.astro'
-import { site, services, faqs, steps, liveWork, whatsapp as wa } from '@/site'
-import { demos } from '@/templates'
+import { site, services, cmsPrice, faqs, steps, whatsapp as wa } from '@/site'
+import { work, onHome } from '@/work'
+import WorkCard from '@/components/WorkCard.astro'
 import { trades } from '@/trades'
 import thomasFull from '@/assets/thombeck.png'
 
@@ -99,23 +100,11 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <h2 id="sites-title" data-split class:list={[display, 'text-[15vw] leading-[0.9] sm:text-[9.5vw]']}><span class="block">Pick a look.</span> <span class="block text-accent">Make it yours.</span></h2>
         <p class="mt-6 max-w-md text-lg text-muted">Full websites, each with its own look. Open one and have a look around.</p>
         <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            ...demos.map((d) => ({ href: `/templates/${d.slug}`, name: d.name, sub: d.look.join(' · '), src: `/templates/${d.slug}/scroll`, external: false })),
-            { href: '/templates/nova', name: 'Nova', sub: 'Music venue · Dark · Night out', src: '/templates/nova/scroll', external: false },
-            ...liveWork.map((w) => ({ ...w, external: true })),
-          ].map((c) => (
-            <li data-rise>
-              <a href={c.href} data-preview={c.name} {...(c.external && { target: '_blank', rel: 'noopener' })} class="group block">
-                <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-panel ring-1 ring-fg/10">
-                  <Vid src={c.src} poster={`${c.src}.jpg`} class="size-full" />
-                  <span aria-hidden="true" class="absolute right-4 bottom-4 grid size-12 scale-75 place-items-center rounded-full bg-accent text-on-accent opacity-0 shadow-lg transition duration-300 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100"><Icon name="arrow" class="size-5 -rotate-45" /></span>
-                </div>
-                <p class="mt-5 text-2xl font-medium transition-colors group-hover:text-accent">{c.name}</p>
-                <p class="mt-1 text-lg text-muted">{c.sub}</p>
-              </a>
-            </li>
-          ))}
+          {work.slice(0, onHome).map((c) => <WorkCard c={c} />)}
         </ul>
+        {work.length > onHome && (
+          <a href="/work" class="btn-ghost mt-14 min-h-14 px-7 text-base max-sm:w-full">View all {work.length} sites<Icon name="arrow" class="size-4" /></a>
+        )}
       </section>
 
       <!-- The CMS options as giant type with one big way to get in touch, the three steps beside them, the add-ons as a quiet list. -->
@@ -153,6 +142,27 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
                 <li class="flex flex-wrap items-baseline justify-between gap-x-3 border-b border-line pb-3"><span class="font-semibold">{x.name}</span><span class="font-mono text-sm text-accent">{x.price}</span></li>
               ))}
             </ul>
+          </div>
+        </div>
+
+        <!-- The Edit it yourself add-on in action: a real Payload panel and the client-starter site, recorded locally (client-starter/cms). -->
+        <div class="mt-24 grid gap-10 lg:grid-cols-[1.6fr_1fr] lg:items-center">
+          <div class="overflow-hidden rounded-2xl border border-line">
+            <Vid src="/work/cms-demo" poster="/work/cms-demo.jpg" class="aspect-[8/5] w-full" />
+          </div>
+          <div>
+            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Edit it yourself · +£{cmsPrice}, one-off</p>
+            <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Change it <span class="text-accent">without calling me.</span></h3>
+            <p class="mt-6 text-lg text-pretty text-muted">I build your website with its own editing panel. You change prices, words and your phone number whenever you like, and it goes live on its own. No waiting on me, no monthly fee.</p>
+            <ol class="mt-8 divide-y divide-line border-y border-line">
+              {[['Log in', 'Your own panel, with your own password. No code, no page builder.'], ['Change it', 'Prices, words, phone number, the areas you cover. The design stays as it is.'], ['Press Publish changes', 'Your website updates by itself in a minute or two.']].map(([t, x], i) => (
+                <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
+                  <span aria-hidden="true" class:list={[display, 'text-3xl leading-none text-accent']}>{i + 1}</span>
+                  <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>
+                </li>
+              ))}
+            </ol>
+            <p class="mt-4 text-sm text-pretty text-muted">The video is a real panel (Payload CMS) on an example site. Rather just send me a message? That is the Care plan.</p>
           </div>
         </div>
       </section>
