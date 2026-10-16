@@ -10,7 +10,7 @@ import Boti from '@/components/Boti.astro'
 import BotiChat from '@/components/BotiChat.astro'
 import Vid from '@/components/kit/Vid.astro'
 import { site, services, cmsPrice, faqs, steps, whatsapp as wa } from '@/site'
-import { work, onHome } from '@/work'
+import { work, home } from '@/work'
 import WorkCard from '@/components/WorkCard.astro'
 import { trades } from '@/trades'
 import thomasFull from '@/assets/thombeck.png'
@@ -100,9 +100,9 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <h2 id="sites-title" data-split class:list={[display, 'text-[15vw] leading-[0.9] sm:text-[9.5vw]']}><span class="block">Pick a look.</span> <span class="block text-accent">Make it yours.</span></h2>
         <p class="mt-6 max-w-md text-lg text-muted">Full websites, each with its own look. Open one and have a look around.</p>
         <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
-          {work.slice(0, onHome).map((c) => <WorkCard c={c} />)}
+          {home.map((c) => <WorkCard c={c} />)}
         </ul>
-        {work.length > onHome && (
+        {work.length > home.length && (
           <a href="/work" class="btn-ghost mt-14 min-h-14 px-7 text-base max-sm:w-full">View all {work.length} sites<Icon name="arrow" class="size-4" /></a>
         )}
       </section>

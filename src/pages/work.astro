@@ -17,7 +17,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
       <a href="/" class="flex items-center gap-2.5 font-semibold"><Logo class="size-9" /><span class="max-[420px]:sr-only">{site.name}</span></a>
       <a href="/#contact" class="btn-primary min-h-11 px-5">Get a quote</a>
     </header>
-    <main class="px-4 pt-16 pb-32 sm:px-8">
+    <main id="main" tabindex="-1" class="outline-none px-4 pt-16 pb-32 sm:px-8">
       <a href="/#sites" class="inline-flex items-center gap-2 text-sm font-semibold text-muted transition hover:text-accent"><Icon name="arrow" class="size-4 rotate-180" />Back to home</a>
       <h1 class:list={[display, 'mt-8 text-[15vw] leading-[0.9] sm:text-[9.5vw]']}>All the work.</h1>
       <p class="mt-6 max-w-md text-lg text-muted">{work.length} websites. Open one and have a look around.</p>
@@ -27,3 +27,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
     </main>
   </div>
 </BaseLayout>
+
+<script>
+  import '@/scripts/motion'
+</script>

@@ -6,7 +6,7 @@ import type { work } from '@/work'
 const { c } = Astro.props as { c: (typeof work)[number] }
 ---
 <li data-rise>
-  <a href={c.href} data-preview={c.name} {...(c.external && { target: '_blank', rel: 'noopener' })} class="group block">
+  <a href={c.href} data-preview={c.external ? undefined : c.name} {...(c.external && { target: '_blank', rel: 'noopener' })} class="group block">
     <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-panel ring-1 ring-fg/10">
       <Vid src={c.src} poster={`${c.src}.jpg`} class="size-full" />
       <span aria-hidden="true" class="absolute right-4 bottom-4 grid size-12 scale-75 place-items-center rounded-full bg-accent text-on-accent opacity-0 shadow-lg transition duration-300 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100"><Icon name="arrow" class="size-5 -rotate-45" /></span>
