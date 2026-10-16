@@ -26,6 +26,7 @@ export interface Demo {
   areas: string[]
   contact: string
   sections: Section[]
+  curtain?: boolean // opening grid of blocks (kit/Curtain); defaults to on with the poster hero only
 }
 
 export const demos: Demo[] = [
@@ -209,6 +210,7 @@ export const demos: Demo[] = [
     look: ['Moody', 'Cinematic', 'Big type'],
     font: 'archivo',
     colors: { bg: '#0d0f0e', fg: '#f2ede4', muted: '#9c978d', accent: '#ff6a1a', onAccent: '#0d0f0e', panel: '#171a19', alt: '#2fa39b' },
+    curtain: true,
     hero: { variant: 'cover', kicker: 'Bespoke joinery · Bromley', lede: 'Kitchens, staircases and fitted furniture, made to measure in our workshop and fitted by the people who built them.', cta: 'Start a project' },
     intro: { label: 'The workshop', text: 'Every piece is drawn, cut and finished in one small workshop, then fitted by the same hands that made it.' },
     gallery: ['In the workshop', 'Kitchens', 'Staircases', 'Fitted furniture'],

@@ -45,7 +45,7 @@ const vars = `--bg:${c.bg};--fg:${c.fg};--muted:${c.muted};--accent:${c.accent};
       s === 'contact' ? <Contact d={d} /> : null
     ))}
   </div>
-  {d.hero.variant === 'poster' && <Curtain />}
+  {(d.curtain ?? d.hero.variant === 'poster') && <Curtain />}
   <DemoPill />
   <!-- Overscroll shows the page's own colour, not tebeck's paper. -->
   <style is:inline set:html={`html,body{background:${c.bg}}`}></style>
