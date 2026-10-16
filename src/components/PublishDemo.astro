@@ -6,6 +6,7 @@
 import { getImage } from 'astro:assets'
 import { demos } from '@/templates'
 import { photos } from '@/components/kit/media'
+import Icon from '@/components/Icon.astro'
 
 // Spanish for the language switch at the end of each loop (demo only, the templates are English). No head: the mark stays.
 const es: Record<string, { kicker: string; head?: string; cta: string; items: string[] }> = {
@@ -32,12 +33,12 @@ const s = sites[0]
   data-pd-old="Contact us"
   role="img"
   aria-label="Animation: in the editing panel the button text of an example website is changed and Publish changes is pressed, then the website shows the new button."
-  class="relative aspect-[8/5] overflow-hidden rounded-2xl border border-line bg-[#0b0d12] [container-type:inline-size] max-sm:aspect-[4/3]"
+  class="relative aspect-[8/5] [container-type:inline-size] max-sm:aspect-[4/3]"
 >
   <!-- Font size lives here, not on the stage: cqw on the container itself would read the viewport. The example's colours
        sit here too, off the tweened card, so a gsap revert never wipes them. -->
-  <div data-pd-theme style={s.css} class="absolute inset-0 text-[2.3cqw] max-sm:text-[2.7cqw]">
-  <div aria-hidden="true" data-pd-card class="absolute inset-x-[7%] inset-y-[8%] rounded-[1em] shadow-[0_0_0_1px_color-mix(in_srgb,var(--s-accent)_35%,transparent),0_2em_5em_-1em_color-mix(in_srgb,var(--s-accent)_35%,transparent)]">
+  <div data-pd-theme style={s.css} class="absolute inset-0 text-[2.5cqw] max-sm:text-[2.95cqw]">
+  <div aria-hidden="true" data-pd-card class="absolute inset-x-[3%] inset-y-[4%] rounded-[1em] shadow-[0_0_0_1px_color-mix(in_srgb,var(--s-accent)_35%,transparent),0_2em_5em_-1em_color-mix(in_srgb,var(--s-accent)_35%,transparent)]">
     <!-- The panel (client-starter/cms), light like Payload's admin. -->
     <div data-pd-panel class="absolute inset-0 overflow-hidden rounded-[1em] bg-white text-[#222] opacity-0">
       <div class="flex items-center gap-[.6em] border-b border-black/10 px-[1.4em] py-[.8em] text-[.9em]">
@@ -69,8 +70,8 @@ const s = sites[0]
     <div data-pd-site class="absolute inset-0 overflow-hidden rounded-[1em] bg-(--s-bg) text-(--s-fg)">
       <div class="flex items-center justify-between gap-[1em] px-[1.6em] py-[1em] text-[.85em]">
         <span data-pd-out="mark" class="font-bold tracking-[-0.03em]">{s.mark}</span>
-        <span class="ml-auto flex gap-[.15em] rounded-full border border-current/20 p-[.2em] text-[.85em]"><span data-pd-lang="en" class="rounded-full bg-current/15 px-[.5em] py-[.15em]">EN</span><span data-pd-lang="es" class="rounded-full px-[.5em] py-[.15em] opacity-60">ES</span></span>
-        <span data-pd-live class="rounded-full bg-(--s-accent) px-[.9em] py-[.4em] font-semibold whitespace-nowrap text-(--s-on)"><span data-pd-out="cta">{s.cta}</span></span>
+        <span data-pd-live class="ml-auto rounded-full bg-(--s-accent) px-[.9em] py-[.4em] font-semibold whitespace-nowrap text-(--s-on)"><span data-pd-out="cta">{s.cta}</span></span>
+        <span data-pd-lang class="-ml-[.4em] flex items-center gap-[.35em] rounded-full border border-current/20 px-[.6em] py-[.3em] font-semibold"><Icon name="globe" class="size-[1.15em]" /><span data-pd-code>EN</span></span>
       </div>
       <div class="grid grid-cols-[1.15fr_1fr] gap-[1.2em] px-[1.6em]">
         <div class="min-w-0">

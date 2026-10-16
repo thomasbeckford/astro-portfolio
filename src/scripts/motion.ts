@@ -66,8 +66,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     const q = (s: string) => st.querySelector<HTMLElement>(s)!
     const theme = q('[data-pd-theme]'), card = q('[data-pd-card]'), panel = q('[data-pd-panel]'), site = q('[data-pd-site]'), cursor = q('[data-pd-cursor]')
     const caret = q('[data-pd-caret]'), field = q('[data-pd-field]'), btn = q('[data-pd-publish]'), label = q('[data-pd-label]'), live = q('[data-pd-live]')
-    const en = q('[data-pd-lang="en"]'), esb = q('[data-pd-lang="es"]'), words = st.querySelectorAll('[data-pd-site] [data-pd-out]')
-    const lang = (on: HTMLElement, off: HTMLElement) => { on.style.background = 'color-mix(in srgb, currentColor 15%, transparent)'; on.style.opacity = '1'; off.style.background = 'transparent'; off.style.opacity = '.6' }
+    const esb = q('[data-pd-lang]'), code = q('[data-pd-code]'), words = st.querySelectorAll('[data-pd-site] [data-pd-out], [data-pd-code]')
     const img = q('[data-pd-img]') as HTMLImageElement, input = q('[data-pd-in="cta"]'), old = st.dataset.pdOld!
     const at = (el: HTMLElement, fx = 0.5, fy = 0.5) => {
       let x = el.offsetWidth * fx, y = el.offsetHeight * fy, e: HTMLElement | null = el
@@ -82,13 +81,13 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       const put = (k: string, v: string) => st.querySelectorAll<HTMLElement>(`[data-pd-out="${k}"],[data-pd-in="${k}"]`).forEach((el) => (el.textContent = v))
       put('initial', s.mark[0]); put('mark', s.mark); put('name', s.name); put('kicker', s.kicker); put('head', s.head); put('cta', s.cta)
       for (let n = 0; n < 3; n++) put(`item${n}`, s.items[n] ?? '')
-      lang(en, esb)
+      code.textContent = 'EN'
     }
     // The live site only: the panel keeps the English it was edited in.
     const spanish = () => { const e = sites[i].es; if (!e) return
       const put = (k: string, v: string) => st.querySelectorAll<HTMLElement>(`[data-pd-site] [data-pd-out="${k}"]`).forEach((el) => (el.textContent = v))
       put('kicker', e.kicker); put('head', e.head); put('cta', e.cta); for (let n = 0; n < 3; n++) put(`item${n}`, e.items[n] ?? '')
-      lang(esb, en) }
+      code.textContent = 'ES' }
     const typed = { n: 0 }
     const click = () => gsap.to(cursor, { scale: 0.82, duration: 0.08, yoyo: true, repeat: 1 })
     const tl = gsap.timeline({ paused: true, repeat: sites.length - 1, repeatDelay: 0.2, repeatRefresh: true, defaults: { ease: 'power2.inOut' } })
