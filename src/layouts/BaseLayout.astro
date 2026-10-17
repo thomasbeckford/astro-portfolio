@@ -3,7 +3,7 @@ import '@fontsource-variable/geist'
 import '@fontsource-variable/jetbrains-mono'
 import '@/styles/global.css'
 import Analytics from '@vercel/analytics/astro'
-import { site, services, carePrice, cmsPrice } from '@/site'
+import { site, services, carePrice, cmsPrice, alertsPrice } from '@/site'
 
 interface Props {
   title: string
@@ -27,13 +27,14 @@ const person = {
   image: ogImage.href,
   email: site.email,
   address: { '@type': 'PostalAddress', addressLocality: 'London', addressCountry: 'GB' },
-  knowsAbout: ['Websites for tradespeople', 'Small business websites', 'Website redesign', 'Local SEO', 'Google Ads', 'Meta Ads', 'Headless CMS', 'Payload CMS', 'Sanity', 'Contentstack', 'Headless WordPress', 'Web applications', 'Mobile apps', 'Astro', 'Next.js', 'TanStack Start', 'React', 'React Native', 'Expo', 'TypeScript', 'Node.js', 'PostgreSQL', 'Stripe', 'GSAP'],
+  knowsAbout: ['Websites for tradespeople', 'Small business websites', 'Website redesign', 'Local SEO', 'Google Ads', 'Meta Ads', 'Headless CMS', 'Payload CMS', 'Sanity', 'Contentstack', 'Headless WordPress', 'Web applications', 'Mobile apps', 'Astro', 'Next.js', 'TanStack Start', 'React', 'React Native', 'Expo', 'TypeScript', 'Node.js', 'PostgreSQL', 'Stripe', 'GSAP', 'n8n', 'Automation'],
   sameAs: [site.linkedin, site.github],
 }
 // What search engines and AI assistants should understand Thomas sells. Monthly prices carry a per-month unit.
 const prices: Record<string, object> = {
   Website: { '@type': 'PriceSpecification', minPrice: site.priceFrom, priceCurrency: 'GBP' },
   'Edit it yourself': { '@type': 'PriceSpecification', price: cmsPrice, priceCurrency: 'GBP' },
+  'Enquiry alerts': { '@type': 'PriceSpecification', price: alertsPrice, priceCurrency: 'GBP' },
   'Care plan': { '@type': 'UnitPriceSpecification', minPrice: carePrice, priceCurrency: 'GBP', unitCode: 'MON' },
 }
 const business = {

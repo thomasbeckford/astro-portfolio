@@ -30,10 +30,15 @@ export const carePrice = 19
 export const cmsPrice = 150
 
 // TODO: monthly price for ads once decided.
+// Enquiry alerts: the n8n flow tebeck.dev runs on itself (tap → Telegram ping + Sheet row, 9:00 reminder after 3 days).
+// 🤔 One-off because it runs on my shared n8n (Railway, ~US$5–10 a month in all, plan unchecked), not one server each.
+export const alertsPrice = 50
+
 export const services = [
   { name: 'Website', price: `From £${site.priceFrom}`, note: `One-off, fixed price: about £${Math.round(site.priceFrom / 365)} a day over a year. You pay once you're happy with it.`, items: ['Design and all the wording', 'Mobile-first, fast, set up for Google', 'Call, WhatsApp and enquiry buttons', 'Free hosting, no monthly fee', 'Your domain, in your name'] },
   { name: 'Edit it yourself', price: `+£${cmsPrice}, one-off`, note: 'Your own editing panel, built with Payload CMS', items: ['Log in and change words, photos and prices', 'More than one language included', 'No monthly fee to make changes', 'I look after the design, the content is yours'] },
   { name: 'Care plan', price: `From £${carePrice} a month`, note: 'Optional, cancel any time', items: ['Changes by message: prices, photos, services', 'Backups and security updates', 'Monthly check on speed and Google'] },
+  { name: 'Enquiry alerts', price: `+£${alertsPrice}, one-off`, note: 'Built with n8n, runs on my server', items: ['Every WhatsApp or email tap pings your phone (Telegram)', 'Logged in a Google Sheet, with where they found you', 'A reminder if one has waited 3 days'] },
   { name: 'Ads', price: 'Monthly', note: 'Plus your ad budget', items: ['Google Business profile set up and kept fresh', 'Google and Meta ads set up and managed', 'A plain-English report each month'] },
   { name: 'Web and mobile apps', price: 'On quote', note: 'Bookings, payments, logins, or an app in the stores?', items: ['Web apps with Next.js or TanStack Start', 'iOS and Android apps with React Native', 'Backend, APIs and Postgres databases', 'Payments with Stripe'] },
   { name: 'Animation', price: 'On quote', note: 'Want people to stop scrolling and look?', items: ['Scroll effects and motion', 'Interactive and 3D bits', 'Still fast on a phone'] },
