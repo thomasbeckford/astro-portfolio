@@ -178,6 +178,34 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     ScrollTrigger.create({ trigger: st, start: 'top 90%', end: 'bottom 10%', onToggle: (s) => (s.isActive ? tl.play() : tl.pause()) })
     cleanups.push(() => { status.textContent = 'New'; status.removeAttribute('style') })
   })
+  // Dashboards (DashDemo): the cursor picks "This month", the answers count up from 0, the bars grow, the late invoice lights up.
+  all('[data-dash]').forEach((st) => {
+    const q = (s: string) => st.querySelector<HTMLElement>(s)!
+    const week = q('[data-dd-week]'), month = q('[data-dd-month]'), cursor = q('[data-dd-cursor]'), late = q('[data-dd-card="late"]')
+    const nums = [...st.querySelectorAll<HTMLElement>('[data-dd-num]')], bars = [...st.querySelectorAll<HTMLElement>('[data-dd-bar]')]
+    const at = (el: HTMLElement, fx = 0.5, fy = 0.5) => {
+      let x = el.offsetWidth * fx, y = el.offsetHeight * fy, e: HTMLElement | null = el
+      while (e && e !== st) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent as HTMLElement | null }
+      return { x, y }
+    }
+    const show = (n: HTMLElement, v: number) => (n.textContent = v.toLocaleString('en-GB', { minimumFractionDigits: +n.dataset.dp!, maximumFractionDigits: +n.dataset.dp! }))
+    const pick = (on: HTMLElement, off: HTMLElement) => { gsap.set(on, { backgroundColor: '#fff', color: '#18181b', fontWeight: 600, boxShadow: '0 1px 2px rgba(0,0,0,.08)' }); gsap.set(off, { backgroundColor: 'rgba(255,255,255,0)', color: 'rgba(0,0,0,.5)', fontWeight: 400, boxShadow: 'none' }) }
+    const tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: 0.2, repeatRefresh: true, defaults: { ease: 'power2.inOut' } })
+    tl.call(() => { pick(week, month); nums.forEach((n) => show(n, 0)) })
+      .set(bars, { scaleY: 0.04 }).set(late, { boxShadow: '0 0 0 0 rgba(217,119,6,0)' })
+      .set(cursor, { autoAlpha: 0, scale: 1, x: () => st.offsetWidth * 0.55, y: () => st.offsetHeight * 0.9 })
+      .to(cursor, { autoAlpha: 1, duration: 0.2 }, '+=0.4')
+      .to(cursor, { x: () => at(month, 0.5).x, y: () => at(month, 0.6).y, duration: 0.9 })
+      .to(cursor, { scale: 0.82, duration: 0.08, yoyo: true, repeat: 1 })
+      .call(() => pick(month, week))
+      .to(cursor, { autoAlpha: 0, duration: 0.3 }, '+=0.2')
+      .to(bars, { scaleY: 1, duration: 0.8, stagger: 0.08, ease: 'power3.out' }, '<')
+    nums.forEach((n) => { const o = { v: 0 }; tl.fromTo(o, { v: 0 }, { v: +n.dataset.ddNum!, duration: 1.2, ease: 'power2.out', onUpdate: () => show(n, o.v) }, '<') })
+    tl.to(late, { boxShadow: '0 0 0 .25em rgba(217,119,6,.35)', duration: 0.4, yoyo: true, repeat: 3 }, '+=0.3')
+      .to({}, { duration: 2 })
+    ScrollTrigger.create({ trigger: st, start: 'top 90%', end: 'bottom 10%', onToggle: (s) => (s.isActive ? tl.play() : tl.pause()) })
+    cleanups.push(() => { nums.forEach((n) => show(n, +n.dataset.ddNum!)); [week, month].forEach((e) => e.removeAttribute('style')) })
+  })
   // Collage photos drifting at their own speed.
   all('[data-speed]').forEach((el) => {
     const d = parseFloat(el.dataset.speed!) * 120

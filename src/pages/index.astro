@@ -13,6 +13,7 @@ import { work, home } from '@/work'
 import WorkCard from '@/components/WorkCard.astro'
 import PublishDemo from '@/components/PublishDemo.astro'
 import LeadDemo from '@/components/LeadDemo.astro'
+import DashDemo from '@/components/DashDemo.astro'
 import Vid from '@/components/kit/Vid.astro'
 import { trades } from '@/trades'
 import thomasFull from '@/assets/thombeck.png'
@@ -216,6 +217,23 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             </li>
           ))}
         </ol>
+        <div id="dashboards" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+          <div class="w-full max-w-[56rem] lg:order-2 lg:justify-self-end"><DashDemo /></div>
+          <div class="lg:order-1">
+            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Dashboards · on quote</p>
+            <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Your numbers, <span class="text-accent">on one screen.</span></h3>
+            <p class="mt-6 max-w-xl text-lg text-pretty text-muted">Jobs in one app, invoices in another, costs in a spreadsheet. I build a dashboard that pulls them together and answers what you actually ask: am I making money, who owes me, is next week full.</p>
+            <ol class="mt-8 divide-y divide-line border-y border-line">
+              {[['It reads what you already use', 'Your spreadsheets, or your invoicing or booking tool if it can export.'], ['Answers, not a wall of charts', 'Plain English, on your phone or laptop.'], ['Logins for your team', 'Each person sees what they need, nothing more.']].map(([t, x], i) => (
+                <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
+                  <span aria-hidden="true" class:list={[display, 'text-3xl leading-none text-accent']}>{i + 1}</span>
+                  <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>
+                </li>
+              ))}
+            </ol>
+            <p class="mt-4 text-sm text-pretty text-muted">Built with TanStack Start, the way I'm building my own back-office for restaurants. The animation shows an example business.</p>
+          </div>
+        </div>
       </section>
 
       <!-- Questions: all collapsed, one open at a time. Anything else goes to Boti. -->

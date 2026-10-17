@@ -40,7 +40,7 @@ export const services = [
   { name: 'Care plan', price: `From £${carePrice} a month`, note: 'Optional, cancel any time', items: ['Changes by message: prices, photos, services', 'Backups and security updates', 'Monthly check on speed and Google'] },
   { name: 'Enquiry alerts', price: `+£${alertsPrice}, one-off`, note: 'Built with n8n, runs on my server', items: ['Every WhatsApp or email tap pings your phone (Telegram)', 'Logged in a Google Sheet, with where they found you', 'A reminder if one has waited 3 days'] },
   { name: 'Ads', price: 'Monthly', note: 'Plus your ad budget', items: ['Google Business profile set up and kept fresh', 'Google and Meta ads set up and managed', 'A plain-English report each month'] },
-  { name: 'Web and mobile apps', price: 'On quote', note: 'Bookings, payments, logins, or an app in the stores?', items: ['Web apps with Next.js or TanStack Start', 'iOS and Android apps with React Native', 'Backend, APIs and Postgres databases', 'Payments with Stripe'] },
+  { name: 'Web and mobile apps', price: 'On quote', note: 'Bookings, payments, logins, or an app in the stores?', items: ['Web apps with Next.js or TanStack Start', 'Dashboards that show your numbers in plain English', 'iOS and Android apps with React Native', 'Backend, APIs and Postgres databases', 'Payments with Stripe'] },
   { name: 'Animation', price: 'On quote', note: 'Want people to stop scrolling and look?', items: ['Scroll effects and motion', 'Interactive and 3D bits', 'Still fast on a phone'] },
   { name: 'Rescue', price: 'On quote', note: "Built something with AI or no-code and it's stuck, buggy or insecure?", items: ['Security and code review', 'Fix the bugs, stabilise it', 'Rebuild or scale what needs it'] },
 ]

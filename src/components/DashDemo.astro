@@ -1,0 +1,66 @@
+---
+// Dashboards, as an animation: an example trade's overview (the plain-question cards come from SoyGestión, my restaurant
+// back-office). The cursor picks "This month", the answers count up, the bars grow, a late invoice lights up. motion.ts
+// runs the timeline while on screen; without motion or JS it rests on the finished numbers. Sized in em off the stage.
+import { demos } from '@/templates'
+
+const d = demos.find((x) => x.slug === 'plumber') ?? demos[0]
+const css = `--s-accent:${d.colors.accent};--s-on:${d.colors.onAccent}`
+// Each answer: question, the number (counted up from 0), its unit, and the line under it.
+const cards = [
+  { q: 'Am I making money?', pre: 'Yes, £', to: 5.9, dp: 1, suf: 'k profit', sub: '£14.2k in, £8.3k out this month' },
+  { q: 'Who owes me?', pre: '£', to: 1240, dp: 0, suf: ' unpaid', sub: '3 invoices, one 30 days late', late: true },
+  { q: 'Is next week full?', pre: '', to: 4, dp: 0, suf: ' of 5 days booked', sub: 'Room for one more job, Friday' },
+]
+// Money in per month, in £k. The last bar is this month.
+const bars = [['May', 9.8], ['Jun', 11.2], ['Jul', 12.6], ['Aug', 10.4], ['Sep', 12.9], ['Oct', 14.2]] as const
+const max = 16
+---
+<div
+  data-dash
+  role="img"
+  aria-label="Animation: an example plumber's dashboard. Picking this month, three cards answer am I making money (yes, £5.9k profit), who owes me (£1,240 across 3 invoices, one late) and is next week full (4 of 5 days booked), and a bar chart of money in per month grows."
+  class="relative aspect-video [container-type:inline-size] max-sm:aspect-[4/5]"
+>
+  <div style={css} class="absolute inset-0 text-[2.2cqw] max-sm:text-[3.6cqw]">
+    <div aria-hidden="true" class="absolute inset-x-[3%] inset-y-[4%] flex overflow-hidden rounded-[1em] bg-[#f4f4f5] text-[#18181b] shadow-[0_0_0_1px_rgb(255_255_255/.12),0_2em_5em_-1em_rgb(0_0_0/.6)]">
+      <!-- Sidebar, like any back-office. Dropped on a phone. -->
+      <div class="flex w-[22%] shrink-0 flex-col gap-[.35em] bg-[#18181b] px-[.9em] py-[1em] text-[.8em] text-white/60 max-sm:hidden">
+        <span class="mb-[.8em] flex items-center gap-[.5em] font-semibold text-white"><span class="size-[1.1em] rounded-[.3em] bg-(--s-accent)"></span>{d.mark}</span>
+        {['Overview', 'Jobs', 'Invoices', 'Customers', 'Costs'].map((x, i) => <span class:list={['rounded-[.4em] px-[.6em] py-[.35em]', i === 0 && 'bg-white/10 text-white']}>{x}</span>)}
+      </div>
+      <div class="flex min-w-0 flex-1 flex-col gap-[.9em] p-[1.1em]">
+        <div class="flex items-center justify-between">
+          <span class="text-[1.05em] font-semibold tracking-[-0.02em]">Overview</span>
+          <span class="flex rounded-full bg-black/[0.06] p-[.2em] text-[.75em]">
+            <span data-dd-week class="rounded-full px-[.8em] py-[.25em] text-black/50">This week</span>
+            <span data-dd-month class="rounded-full bg-white px-[.8em] py-[.25em] font-semibold shadow-sm">This month</span>
+          </span>
+        </div>
+        <div class="grid grid-cols-3 gap-[.7em] max-sm:grid-cols-1 max-sm:gap-[.5em]">
+          {cards.map((c) => (
+            <div data-dd-card={c.late ? 'late' : ''} class="rounded-[.8em] bg-white px-[.9em] py-[.8em] ring-1 ring-black/5">
+              <p class="text-[.72em] text-black/50">{c.q}</p>
+              <p class="mt-[.25em] text-[1.05em] font-semibold tracking-[-0.02em] whitespace-nowrap">{c.pre}<span data-dd-num={c.to} data-dp={c.dp}>{c.to.toLocaleString('en-GB', { minimumFractionDigits: c.dp })}</span>{c.suf}</p>
+              <p class:list={['mt-[.2em] text-[.68em]', c.late ? 'text-[#b45309]' : 'text-black/45']}>{c.sub}</p>
+            </div>
+          ))}
+        </div>
+        <div class="flex min-h-0 flex-1 flex-col rounded-[.8em] bg-white px-[.9em] pt-[.7em] pb-[.5em] ring-1 ring-black/5">
+          <p class="text-[.72em] text-black/50">Money in, per month</p>
+          <div class="mt-[.5em] flex min-h-0 flex-1 items-end gap-[6%]">
+            {bars.map(([m, v], i) => (
+              <div class="flex h-full flex-1 flex-col justify-end">
+                <div data-dd-bar style={`height:${(v / max) * 100}%`} class:list={['origin-bottom rounded-t-[.35em]', i === bars.length - 1 ? 'bg-(--s-accent)' : 'bg-black/10']}></div>
+                <span class="mt-[.3em] text-center text-[.62em] text-black/45">{m}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+    <svg aria-hidden="true" data-dd-cursor viewBox="0 0 24 24" class="pointer-events-none absolute top-0 left-0 size-[2.2em] opacity-0 drop-shadow-[0_.2em_.4em_rgb(0_0_0/.4)]">
+      <path d="M4 2l15 11.5-6.6.9 3.9 7.4-2.9 1.4-3.8-7.5L4 20z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round" />
+    </svg>
+  </div>
+</div>
