@@ -156,8 +156,8 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </div>
 
         <!-- The Edit it yourself add-on in action: a real Payload panel and the client-starter site, recorded locally (client-starter/cms). -->
-        <div id="edit-it-yourself" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1.6fr_1fr] lg:items-center">
-          <div class="overflow-hidden rounded-2xl border border-line">
+        <div id="edit-it-yourself" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center">
+          <div class="w-full max-w-[56rem] overflow-hidden rounded-2xl border border-line">
             <Vid src="/work/cms-demo" poster="/work/cms-demo.jpg" class="aspect-[8/5] w-full" />
           </div>
           <div>
@@ -178,12 +178,13 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
 
         <!-- Enquiry alerts: the n8n flow this site runs on itself, drawn as an animation (LeadDemo). Text first here, so the
              two demos alternate sides. -->
-        <div id="enquiry-alerts" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.6fr] lg:items-center">
-          <div class="lg:order-2"><LeadDemo /></div>
+        <div id="enquiry-alerts" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
+          <!-- Capped so on a wide screen the drawing doesn't dwarf the text beside it. -->
+          <div class="w-full max-w-[56rem] lg:order-2 lg:justify-self-end"><LeadDemo /></div>
           <div class="lg:order-1">
             <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Enquiry alerts · +£{alertsPrice}, one-off</p>
             <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Never lose <span class="text-accent">an enquiry.</span></h3>
-            <p class="mt-6 text-lg text-pretty text-muted">Busy on a job, the message gets buried, the customer rings someone else. With this, every time someone taps WhatsApp or email on your website, your phone pings and it goes in a list, so nothing slips.</p>
+            <p class="mt-6 max-w-xl text-lg text-pretty text-muted">Busy on a job, the message gets buried, the customer rings someone else. With this, every time someone taps WhatsApp or email on your website, your phone pings and it goes in a list, so nothing slips.</p>
             <ol class="mt-8 divide-y divide-line border-y border-line">
               {[['Someone taps WhatsApp or email', 'On any page of your website.'], ['Your phone pings', 'A Telegram alert, and a row in a Google Sheet: when, how, and where they came from when the link says (Google, your ad).'], ['A nudge if it waits', 'Not marked as dealt with after 3 days? You get a reminder at 9 in the morning.']].map(([t, x], i) => (
                 <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
