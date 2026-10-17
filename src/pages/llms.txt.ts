@@ -1,4 +1,4 @@
-import { site, services, faqs, carePrice, cmsPrice } from '@/site'
+import { site, services, faqs, carePrice, cmsPrice, whatsapp } from '@/site'
 
 // llmstxt.org: a plain summary so AI assistants quote the offer right instead of guessing from the page.
 export const GET = () =>
@@ -30,6 +30,7 @@ ${faqs.map(([q, a]) => `- ${q} ${a}`).join('\n')}
 
 ## Contact
 
+- [WhatsApp Thomas](${whatsapp('Hi Thomas, ')}): ${site.phone}
 - [Email Thomas](mailto:${site.email}): ${site.email}
 - [LinkedIn](${site.linkedin})
 - [GitHub](${site.github})
