@@ -16,8 +16,10 @@ import Vid from '@/components/kit/Vid.astro'
 import { trades } from '@/trades'
 import thomasFull from '@/assets/thombeck.png'
 
-const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Website quote')}`
-const whatsapp = wa("Hi Thomas, I'd like a website quote.")
+// The quote message comes with blanks to fill, so a lead arrives with what I need to price the site.
+const quote = "Hi Thomas, I'd like a quote for a website for my business.\n\nBusiness name: \nWhat we do: \nArea we cover: \nCurrent website (if any): "
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Website quote')}&body=${encodeURIComponent(quote)}`
+const whatsapp = wa(quote)
 const [, ...extras] = services
 // The editing panels I set up, with what each is good at.
 const cms = [['Payload', 'Open source, self-hosted'], ['Sanity', 'Live, shared editing'], ['Contentstack', 'Enterprise, many sites'], ['WordPress', 'Headless: the editor you know']]
