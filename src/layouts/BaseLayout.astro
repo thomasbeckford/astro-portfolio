@@ -128,10 +128,13 @@ const jsonLd = {
     <script>
       // Where the visitor came from (?ref=meta-electrician, or else the referring site), added to the end of WhatsApp
       // and email messages so every lead says its source. Tagged at click time, so links built later are covered too.
-      // ponytail: in memory only (storage would need consent), so the ref is lost if they browse to another page first.
+      // ponytail: in memory only (storage would need consent), so ref and gclid are lost if they browse to another page first.
       const fromSite = document.referrer && new URL(document.referrer).host !== location.host ? new URL(document.referrer).hostname : ''
-      const ref = (new URLSearchParams(location.search).get('ref') || fromSite).replace(/[^\w.-]/g, '').slice(0, 40)
-      const tag = `(ref: ${ref})`
+      const query = new URLSearchParams(location.search)
+      const ref = (query.get('ref') || fromSite).replace(/[^\w.-]/g, '').slice(0, 40)
+      // A short code per page view, in the message and in the beacon below, so n8n's lead row matches the chat that arrives.
+      const code = [...crypto.getRandomValues(new Uint8Array(4))].map((n) => 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'[n % 31]).join('')
+      const tag = ref ? `(ref: ${ref} #${code})` : `(#${code})`
       // Rebuilt by hand, not with URL.searchParams: that encodes spaces as "+", which mail apps show literally.
       const tagged = (href: string, key: string) => {
         const [base, query = ''] = href.split('?')
@@ -141,17 +144,27 @@ const jsonLd = {
         params.set(key, text ? `${text}\n\n${tag}` : tag)
         return `${base}?${[...params].map(([k, v]) => `${k}=${encodeURIComponent(v)}`).join('&')}`
       }
+      // One beacon per page view to n8n (lead registry + Telegram alert). The ad click ID goes only when the Ads tag
+      // would load too (no GPC/DNT), so n8n can report closed clients back to Google Ads. Form-encoded: no CORS preflight.
+      const leadHook = 'https://n8n-production-d039.up.railway.app/webhook/lead-click'
+      const quiet = (navigator as any).globalPrivacyControl || navigator.doNotTrack === '1'
+      let sent = false
       // auxclick and contextmenu cover middle-click, "open in new tab" and copying the link.
-      if (ref)
-        for (const type of ['click', 'auxclick', 'contextmenu'])
-          addEventListener(
-            type,
-            (e) => {
-              const a = (e.target as Element).closest?.<HTMLAnchorElement>('a[href^="https://wa.me/"], a[href^="mailto:"]')
-              if (a) a.href = tagged(a.href, a.protocol === 'mailto:' ? 'body' : 'text')
-            },
-            true,
-          )
+      for (const type of ['click', 'auxclick', 'contextmenu'])
+        addEventListener(
+          type,
+          (e) => {
+            const a = (e.target as Element).closest?.<HTMLAnchorElement>('a[href^="https://wa.me/"], a[href^="mailto:"]')
+            if (!a || /^\/(privacy|cv)\b/.test(location.pathname)) return
+            const channel = a.protocol === 'mailto:' ? 'email' : 'whatsapp'
+            a.href = tagged(a.href, channel === 'email' ? 'body' : 'text')
+            if (sent || type === 'contextmenu') return
+            sent = true
+            const gclid = quiet ? '' : (query.get('gclid') ?? '').slice(0, 200)
+            navigator.sendBeacon(leadHook, new URLSearchParams({ code, ref, channel, gclid, page: location.pathname }))
+          },
+          true,
+        )
     </script>
   </body>
 </html>
