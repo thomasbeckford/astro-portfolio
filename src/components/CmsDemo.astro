@@ -1,0 +1,90 @@
+---
+// Edit it yourself, as an animation: the owner of an example site logs in to their panel, changes a price, presses
+// Publish changes, and the live site shows the new price. Drawn, not recorded, so it reads as an example. motion.ts runs
+// the timeline while on screen; without motion or JS it rests on the panel with the new price. Sized in em off the stage.
+import { demos } from '@/templates'
+
+const d = demos.find((x) => x.slug === 'roofer') ?? demos[0]
+const css = `--s-bg:${d.colors.bg};--s-fg:${d.colors.fg};--s-muted:${d.colors.muted};--s-accent:${d.colors.accent};--s-on:${d.colors.onAccent}`
+// Example prices; the second one gets edited: `was` is the number in the field before, `to` what gets typed over it.
+const rows = [
+  { name: d.services.items[0].title, price: 'From £180' },
+  { name: d.services.items[1].title, was: '6,500', to: '5,900' },
+  { name: d.services.items[2].title, price: 'From £1,200' },
+  { name: d.services.items[3].title, price: 'From £350' },
+]
+const email = `owner@${d.mark.toLowerCase()}.example`
+---
+<div
+  data-cms
+  data-cm-was={rows[1].was}
+  data-cm-to={rows[1].to}
+  data-cm-email={email}
+  role="img"
+  aria-label={`Animation: the owner of an example roofing website logs in to their editing panel, changes the price of ${rows[1].name} from £${rows[1].was} to £${rows[1].to}, presses Publish changes, and the live website shows the new price.`}
+  class="relative aspect-[8/5] [container-type:inline-size] max-sm:aspect-[4/5]"
+>
+  <div style={css} class="absolute inset-0 text-[2.2cqw] max-sm:text-[3.6cqw]">
+    <div aria-hidden="true" class="absolute inset-x-[3%] inset-y-[4%] overflow-hidden rounded-[1em] bg-white text-[#18181b] shadow-[0_0_0_1px_rgb(255_255_255/.12),0_2em_5em_-1em_rgb(0_0_0/.6)]">
+      <!-- 1. The login, in the site's own colours. -->
+      <div data-cm-login class="invisible absolute inset-0 grid place-items-center bg-[#f4f4f5] opacity-0">
+        <div class="w-[58%] rounded-[1em] bg-white px-[1.6em] py-[1.4em] ring-1 ring-black/5 max-sm:w-[84%]">
+          <p class="flex items-center gap-[.5em] text-[1.1em] font-semibold tracking-[-0.02em]"><span class="size-[1em] rounded-[.25em] bg-(--s-accent)"></span>{d.name}</p>
+          <p class="mt-[.3em] text-[.72em] text-black/50">Log in to change your website.</p>
+          <p class="mt-[1em] text-[.65em] text-black/50">Email</p>
+          <p data-cm-email-field class="mt-[.25em] h-[2.1em] rounded-[.45em] px-[.7em] text-[.8em] leading-[2.1em] ring-1 ring-black/15"><span data-cm-email-text></span></p>
+          <p class="mt-[.7em] text-[.65em] text-black/50">Password</p>
+          <p data-cm-pass-field class="mt-[.25em] h-[2.1em] rounded-[.45em] px-[.7em] text-[.8em] leading-[2.1em] tracking-[.15em] ring-1 ring-black/15"><span data-cm-pass></span></p>
+          <span data-cm-login-btn class="mt-[1em] block rounded-[.45em] bg-[#18181b] py-[.55em] text-center text-[.8em] font-semibold text-white">Log in</span>
+        </div>
+      </div>
+      <!-- 2. The panel: the site's prices, one field at a time. -->
+      <div data-cm-panel class="absolute inset-0 flex bg-[#f4f4f5]">
+        <div class="flex w-[22%] shrink-0 flex-col gap-[.35em] bg-[#18181b] px-[.9em] py-[1em] text-[.8em] text-white/60 max-sm:hidden">
+          <span class="mb-[.8em] flex items-center gap-[.5em] font-semibold text-white"><span class="size-[1.1em] rounded-[.3em] bg-(--s-accent)"></span>{d.mark}</span>
+          {['Home page', 'Services', 'Areas', 'Contact'].map((x, i) => <span class:list={['rounded-[.4em] px-[.6em] py-[.35em]', i === 1 && 'bg-white/10 text-white']}>{x}</span>)}
+        </div>
+        <div class="flex min-w-0 flex-1 flex-col gap-[.8em] p-[1.1em]">
+          <div class="flex items-center justify-between gap-[.6em]">
+            <span class="text-[1.05em] font-semibold tracking-[-0.02em]">Services</span>
+            <span data-cm-publish class="rounded-[.45em] bg-black/10 px-[.9em] py-[.45em] text-[.75em] font-semibold whitespace-nowrap text-black/40"><span data-cm-publish-label>Publish changes</span></span>
+          </div>
+          {rows.map((r, i) => (
+            <div class="grid grid-cols-[1fr_.9fr] items-end gap-[.7em] rounded-[.8em] bg-white px-[.9em] py-[.7em] ring-1 ring-black/5">
+              <div><p class="text-[.62em] text-black/50">Service</p><p class="mt-[.2em] rounded-[.4em] px-[.6em] py-[.35em] text-[.78em] ring-1 ring-black/10">{r.name}</p></div>
+              <div><p class="text-[.62em] text-black/50">Price</p>
+                {i === 1
+                  ? <p data-cm-field class="mt-[.2em] rounded-[.4em] px-[.6em] py-[.35em] text-[.78em] whitespace-nowrap ring-1 ring-black/10">From £<span data-cm-price>{r.to}</span><span data-cm-caret class="ml-[.05em] inline-block h-[1em] w-[.08em] translate-y-[.15em] bg-current opacity-0"></span></p>
+                  : <p class="mt-[.2em] rounded-[.4em] px-[.6em] py-[.35em] text-[.78em] ring-1 ring-black/10">{r.price}</p>}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <!-- 3. The live site, with the new price. -->
+      <div data-cm-site class="invisible absolute inset-0 bg-(--s-bg) px-[1.6em] py-[1em] text-(--s-fg) opacity-0">
+        <div class="flex items-center justify-between text-[.85em]">
+          <span class="font-bold tracking-[-0.03em] uppercase">{d.mark}</span>
+          <span class="font-semibold opacity-60">{d.tel}</span>
+        </div>
+        <p class="mt-[1em] text-[2.4em] leading-[0.95] font-bold tracking-[-0.04em] uppercase">{d.band}</p>
+        <p class="mt-[1.2em] text-[.72em] text-(--s-accent)">{d.services.label}</p>
+        <div class="mt-[.5em] divide-y divide-white/10 border-y border-white/10">
+          {rows.map((r, i) => (
+            <div class="flex items-baseline justify-between gap-[1em] py-[.8em]">
+              <span class="text-[1.5em] leading-none font-bold tracking-[-0.03em] uppercase">{r.name}</span>
+              <span data-cm-live={i === 1 ? '' : undefined} class:list={['rounded-full px-[.7em] py-[.2em] text-[.8em] whitespace-nowrap', i === 1 ? 'font-semibold text-(--s-accent)' : 'text-(--s-muted)']}>{r.price ?? `From £${r.to}`}</span>
+            </div>
+          ))}
+        </div>
+      </div>
+      <!-- Which step it's on, matching the list beside it. -->
+      <span data-cm-step class="invisible absolute right-[3%] bottom-[4%] flex items-center gap-[.5em] rounded-full bg-[#18181b]/90 py-[.3em] pr-[.9em] pl-[.3em] text-[.75em] font-semibold text-white opacity-0 ring-1 ring-white/15 shadow-[0_.5em_1.5em_-.3em_rgb(0_0_0/.4)]">
+        <span data-cm-step-n class="grid size-[1.6em] place-items-center rounded-full bg-(--s-accent) text-(--s-on)">1</span><span data-cm-step-t>Log in</span>
+      </span>
+    </div>
+    <svg aria-hidden="true" data-cm-cursor viewBox="0 0 24 24" class="pointer-events-none absolute top-0 left-0 size-[2.2em] opacity-0 drop-shadow-[0_.2em_.4em_rgb(0_0_0/.4)]">
+      <path d="M4 2l15 11.5-6.6.9 3.9 7.4-2.9 1.4-3.8-7.5L4 20z" fill="#fff" stroke="#111" stroke-width="1.4" stroke-linejoin="round" />
+    </svg>
+  </div>
+</div>
