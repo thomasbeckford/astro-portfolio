@@ -120,6 +120,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
 
       <!-- The CMS options as giant type with one big way to get in touch, the three steps beside them, the add-ons as a quiet list. -->
       <section id="services" class="scroll-mt-20 px-4 py-24 sm:px-8 sm:py-32">
+        <div class="mx-auto max-w-[96rem]">
         <div class="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
           <div>
             <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Edit it yourself</p>
@@ -157,8 +158,8 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </div>
 
         <!-- The Edit it yourself add-on in action, drawn as an animation (CmsDemo): log in, change a price, publish. -->
-        <div id="edit-it-yourself" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center">
-          <div class="w-full max-w-[56rem]"><CmsDemo /></div>
+        <div id="edit-it-yourself" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-32">
+          <div class="w-full"><CmsDemo /></div>
           <div>
             <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Edit it yourself · +£{cmsPrice}, one-off</p>
             <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Change it <span class="text-accent">without calling me.</span></h3>
@@ -177,9 +178,8 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
 
         <!-- Enquiry alerts: the n8n flow this site runs on itself, drawn as an animation (LeadDemo). Text first here, so the
              two demos alternate sides. -->
-        <div id="enquiry-alerts" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
-          <!-- Capped so on a wide screen the drawing doesn't dwarf the text beside it. -->
-          <div class="w-full max-w-[56rem] lg:order-2 lg:justify-self-end"><LeadDemo /></div>
+        <div id="enquiry-alerts" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-32">
+          <div class="w-full lg:order-2"><LeadDemo /></div>
           <div class="lg:order-1">
             <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Enquiry alerts · +£{alertsPrice}, one-off</p>
             <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Never lose <span class="text-accent">an enquiry.</span></h3>
@@ -195,10 +195,12 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             <p class="mt-4 text-sm text-pretty text-muted">Built with n8n, running on my server. This website uses the same setup for its own enquiries. The animation shows an example site.</p>
           </div>
         </div>
+        </div>
       </section>
 
       <!-- For the bigger clients: what else gets built, with the two businesses above as the proof. -->
       <section id="apps" aria-labelledby="apps-title" class="scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
+        <div class="mx-auto max-w-[96rem]">
         <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Bigger jobs</p>
         <h2 id="apps-title" data-split class:list={[display, 'mt-4 text-6xl leading-[0.9] sm:text-8xl lg:text-9xl']}>More than a website? <span class="text-accent">I build that too.</span></h2>
         <div class="mt-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
@@ -215,8 +217,8 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             </li>
           ))}
         </ol>
-        <div id="dashboards" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center">
-          <div class="w-full max-w-[56rem] lg:order-2 lg:justify-self-end"><DashDemo /></div>
+        <div id="dashboards" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-32">
+          <div class="w-full lg:order-2"><DashDemo /></div>
           <div class="lg:order-1">
             <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Dashboards · on quote</p>
             <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Your numbers, <span class="text-accent">on one screen.</span></h3>
@@ -232,11 +234,12 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             <p class="mt-4 text-sm text-pretty text-muted">Built with TanStack Start, the way I'm building my own back-office for restaurants. The animation shows an example business.</p>
           </div>
         </div>
+        </div>
       </section>
 
       <!-- Questions: all collapsed, one open at a time. Anything else goes to Boti. -->
       <section id="faq" class="scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
-        <div class="grid gap-12 lg:grid-cols-[1fr_1.6fr]">
+        <div class="mx-auto grid max-w-[96rem] gap-12 lg:grid-cols-[1fr_1.6fr] lg:gap-32">
           <div class="lg:sticky lg:top-24 lg:self-start">
             <h2 data-split class:list={[display, 'text-6xl leading-[0.9] sm:text-8xl']}>Ask <span class="text-accent">Boti.</span></h2>
             <Boti class="mt-8 hidden w-36 lg:block" />
