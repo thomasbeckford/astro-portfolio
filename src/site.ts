@@ -7,6 +7,8 @@ export const site = {
   email: 'tebeckford@gmail.com',
   linkedin: 'https://www.linkedin.com/in/thomas-beckford-07520775/',
   github: 'https://github.com/thomasbeckford',
+  // Google Business Profile, by its Knowledge Graph id (the share.google link is only a redirect).
+  gbp: 'https://www.google.com/search?kgmid=/g/11z_lwyx_k',
   priceFrom: 399,
   turnaround: 'about a week',
   years: '10+',

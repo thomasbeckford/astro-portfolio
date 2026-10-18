@@ -45,10 +45,12 @@ const business = {
   image: ogImage.href,
   logo: new URL('/icon-512.png', Astro.site).href,
   email: site.email,
+  telephone: site.phone,
   founder: { '@id': person['@id'] },
   address: person.address,
   areaServed: [{ '@type': 'Country', name: 'United Kingdom' }],
   priceRange: `From £${site.priceFrom}`,
+  sameAs: [site.gbp],
   makesOffer: services.map((x) => ({
     '@type': 'Offer',
     itemOffered: { '@type': 'Service', name: x.name, description: x.items.join('. ') },
