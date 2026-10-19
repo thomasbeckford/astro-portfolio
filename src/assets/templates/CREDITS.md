@@ -173,18 +173,8 @@ Video files are in `public/templates/<slug>/` and photos in `src/assets/template
 | File | Source | Author | Licence |
 |---|---|---|---|
 | hero.mp4 / hero.webm / hero.jpg | https://www.pexels.com/video/friends-throwing-darts-together-8757821/ | Kevin Malik | Pexels License (trimmed) |
-| band.mp4 / band.webm / band.jpg | https://www.pexels.com/video/teens-playing-air-hockey-5780952/ | cottonbro studio | Pexels License (trimmed) |
 | 1.jpg | https://www.pexels.com/photo/a-man-throwing-a-dart-8762620/ | Kevin Malik | Pexels License (cropped) |
-| 2.jpg | https://www.pexels.com/photo/close-up-shot-of-a-table-football-5453906/ | Tima Miroshnichenko | Pexels License |
-| 3.jpg | https://www.pexels.com/photo/delicious-cheeseburgers-with-french-fries-36750270/ | Mohamed Olwy | Pexels License |
-| 4.jpg | https://www.pexels.com/photo/colorful-cocktails-on-elegant-bar-counter-36630828/ | Mohamed Olwy | Pexels License |
-| 5.jpg | https://www.pexels.com/photo/men-celebrating-at-a-bar-3851632/ | Pressmaster | Pexels License |
-| 6.jpg | https://www.pexels.com/photo/people-on-concert-5192307/ | Maor Attias | Pexels License |
-| 7.jpg | https://www.pexels.com/photo/man-pouring-beer-in-glass-5858067/ | Pavel Danilyuk | Pexels License |
-| 8.jpg | https://www.pexels.com/photo/vibrant-retro-arcade-joystick-and-buttons-close-up-29702648/ | Dan Butler | Pexels License |
-| venues/borough.jpg | https://www.pexels.com/photo/industrial-warehouse-fronts-in-london-archway-37327562/ | Airam Dato-on | Pexels License |
-| venues/camden.jpg | https://www.pexels.com/photo/cozy-rustic-bar-interior-with-colorful-stools-34104246/ | zona .exe123ph | Pexels License |
-| venues/deansgate.jpg | https://www.pexels.com/photo/illuminated-city-at-night-14957247/ | Miguel Saddi Vitorino | Pexels License |
-| venues/digbeth.jpg | https://www.pexels.com/photo/interior-design-of-a-bar-and-restaurant-5863513/ | Rachel Claire | Pexels License |
-| venues/ropewalks.jpg | https://www.pexels.com/photo/night-view-of-liverpool-s-royal-albert-dock-30841290/ | Dominik Gryzbon | Pexels License |
-| venues/quayside.jpg | https://www.pexels.com/photo/tyne-bridge-and-swing-bridge-12918223/ | Daniel Smyth | Pexels License |
+| 2.jpg | https://www.pexels.com/photo/delicious-cheeseburgers-with-french-fries-36750270/ | Mohamed Olwy | Pexels License |
+| 3.jpg | https://www.pexels.com/photo/colorful-cocktails-on-elegant-bar-counter-36630828/ | Mohamed Olwy | Pexels License |
+| 4.jpg | https://www.pexels.com/photo/men-celebrating-at-a-bar-3851632/ | Pressmaster | Pexels License |
+| 5.jpg | https://www.pexels.com/photo/man-pouring-beer-in-glass-5858067/ | Pavel Danilyuk | Pexels License |

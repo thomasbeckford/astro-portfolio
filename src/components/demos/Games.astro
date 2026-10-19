@@ -38,9 +38,9 @@ const hours = Array.from({ length: 12 }, (_, i) => 12 + i)
 const clock = (h: number) => `${h % 12 || 12}${h < 12 || h === 24 ? 'am' : 'pm'}`
 
 const extras = [
-  { key: 'food', name: 'Food', text: 'Sharing boards and fries brought to the oche.', each: 16, pic: pic[2] },
-  { key: 'drinks', name: 'Drinks', text: 'Two drinks each, poured as you arrive.', each: 12, pic: pic[3] },
-  { key: 'host', name: 'A host', text: 'Runs a tournament for your group, trophy included.', flat: 90, pic: pic[6] },
+  { key: 'food', name: 'Food', text: 'Sharing boards and fries brought to the oche.', each: 16, pic: pic[1] },
+  { key: 'drinks', name: 'Drinks', text: 'Two drinks each, poured as you arrive.', each: 12, pic: pic[2] },
+  { key: 'host', name: 'A host', text: 'Runs a tournament for your group, trophy included.', flat: 90, pic: pic[4] },
 ]
 
 const fame = [
@@ -297,7 +297,7 @@ const chip = 'shrink-0 rounded-full border border-(--fg)/20 px-4 py-2 text-sm fo
 </section>
 
 <section id="contact" class="relative isolate overflow-hidden px-4 pt-32 pb-28 sm:px-8 sm:pt-44">
-  {pic[4] && <div class="absolute inset-0 -z-10 overflow-hidden"><Image src={pic[4]} alt="" widths={[800, 1400, 2000]} sizes="100vw" data-parallax class="h-[124%] w-full object-cover" /></div>}
+  {pic[3] && <div class="absolute inset-0 -z-10 overflow-hidden"><Image src={pic[3]} alt="" widths={[800, 1400, 2000]} sizes="100vw" data-parallax class="h-[124%] w-full object-cover" /></div>}
   <div class="absolute inset-0 -z-10 bg-linear-to-b from-(--bg) via-(--bg)/60 to-(--bg)/90"></div>
   <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_minmax(0,34rem)] lg:items-end">
     <div>
