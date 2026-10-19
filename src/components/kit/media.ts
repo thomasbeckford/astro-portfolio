@@ -8,5 +8,5 @@ export const photos = (slug: string) =>
     .map(([, m]) => m.default)
 export const clip = (slug: string, name: 'hero' | 'band' | 'card') => ({ src: `/templates/${slug}/${name}`, poster: `/templates/${slug}/${name === 'card' ? 'hero' : name}.jpg` })
 // Rough glyph width (in em) per display font, to size a one-line wordmark to the viewport width.
-const glyph = { archivo: 0.9, anton: 0.47, geist: 0.6 }
+const glyph = { archivo: 0.9, anton: 0.47, geist: 0.6, shrikhand: 0.8 }
 export const fit = (text: string, font: keyof typeof glyph, max = 30) => `min(${max}vw, ${(92 / (text.length * glyph[font])).toFixed(2)}vw)`

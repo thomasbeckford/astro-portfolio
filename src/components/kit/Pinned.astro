@@ -1,0 +1,29 @@
+---
+// The steps, with a photo that stays put on wide screens and changes as each step scrolls past (motion.ts). Photos 6..8.
+// On phones (and without JS on wide screens beyond the first photo) each step simply shows its own photo.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const pics = photos(d.slug).slice(5)
+---
+<section id="how" data-pinned class="mx-auto grid max-w-7xl gap-x-16 px-4 py-24 sm:px-8 lg:grid-cols-2 lg:py-0">
+  <div class="sticky top-0 hidden h-dvh items-center lg:flex">
+    <div class="relative aspect-[4/5] w-full overflow-hidden rounded-[28px] bg-(--panel)">
+      {d.steps.map((_, i) => pics[i] && <Image data-pin-pic src={pics[i]} alt="" widths={[600, 1000, 1400]} sizes="45vw" class:list={['absolute inset-0 size-full object-cover motion-safe:transition-opacity motion-safe:duration-700', i && 'opacity-0']} />)}
+    </div>
+  </div>
+  <div>
+    <h2 class="font-(family-name:--display) text-4xl leading-[1.05] font-semibold tracking-[-0.04em] sm:text-6xl lg:pt-[20dvh]">How it goes</h2>
+    <ol>
+      {d.steps.map((s, i) => (
+        <li data-pin-step class="py-12 lg:flex lg:min-h-[80dvh] lg:flex-col lg:justify-center lg:py-0">
+          {pics[i] && <Image src={pics[i]} alt="" widths={[500, 900]} sizes="100vw" class="mb-8 aspect-[4/3] w-full rounded-[28px] object-cover lg:hidden" />}
+          <span class="text-sm font-medium text-(--accent)">Step {i + 1}</span>
+          <h3 class="mt-3 text-3xl font-semibold tracking-[-0.03em] sm:text-5xl">{s.title}</h3>
+          <p class="mt-4 max-w-md text-lg text-(--muted)">{s.text}</p>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

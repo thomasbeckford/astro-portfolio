@@ -48,9 +48,9 @@ export const services = [
 ]
 
 export const steps = [
-  { n: '01', title: 'Send one message', text: 'WhatsApp or email. Tell me what you do and where. Two minutes, no forms, no calls unless you want one.' },
+  { n: '01', title: 'Send one message', text: 'WhatsApp or email. Tell me what you do and where. Two minutes, no forms.' },
   { n: '02', title: `See it in ${site.turnaround}`, text: 'I write the words, pick the photos and build it. You get a link to the real site on your phone.' },
-  { n: '03', title: 'Pay when you’re happy', text: 'Tell me what to change. Nothing goes live until you say yes in writing (a WhatsApp counts), and only then you pay. No deposit.' },
+  { n: '03', title: 'Pay when you’re happy', text: 'Tell me what to change. Nothing goes live until you say yes in writing (WhatsApp counts). Then you pay. No deposit.' },
 ]
 
 export const faqs = [

@@ -1,0 +1,24 @@
+---
+// Bento of rounded tiles, one detail each: a line of text over a photo. Photos 2..5 (photo 1 is the 'product' hero's).
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const pics = photos(d.slug).slice(1)
+const span = ['md:col-span-2', '', '', 'md:col-span-2'] // wide, narrow / narrow, wide
+---
+<section aria-label="Details" class="mx-auto max-w-7xl px-4 py-24 sm:px-8 sm:py-32">
+  <h2 data-split class="max-w-3xl font-(family-name:--display) text-4xl leading-[1.05] font-semibold tracking-[-0.04em] text-balance sm:text-6xl">{d.intro.label}</h2>
+  <p class="mt-5 max-w-xl text-lg text-(--muted)">{d.intro.text}</p>
+  <div class="mt-14 grid gap-4 md:grid-cols-3">
+    {(d.tiles ?? []).map((t, i) => pics[i] && (
+      <article data-rise class:list={['flex flex-col overflow-hidden rounded-[28px] bg-(--panel)', span[i % 4]]}>
+        <div class="p-7 sm:p-9">
+          <h3 class="text-2xl font-semibold tracking-[-0.03em]">{t.title}</h3>
+          <p class="mt-2 max-w-sm text-(--muted)">{t.text}</p>
+        </div>
+        <Image src={pics[i]} alt="" widths={[500, 900, 1400]} sizes={span[i % 4] ? '(min-width: 768px) 60vw, 100vw' : '(min-width: 768px) 30vw, 100vw'} class="mt-auto h-72 w-full object-cover sm:h-96" />
+      </article>
+    ))}
+  </div>
+</section>

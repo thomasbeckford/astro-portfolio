@@ -1,0 +1,19 @@
+---
+// Two half-screen photos, one per main line of work, with a big label each. Stacked on phones. Photos 1..2.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const pics = photos(d.slug)
+---
+<section aria-label="Extensions and lofts" class="grid gap-1 md:grid-cols-2">
+  {(d.split ?? []).map((s, i) => pics[i] && (
+    <a href="#contact" aria-label={`Get a price for ${s.title.toLowerCase()}`} class="group relative isolate flex h-[80dvh] flex-col justify-end overflow-hidden p-6 text-white sm:p-10 md:h-[92dvh]">
+      <Image src={pics[i]} alt="" widths={[600, 1000, 1600]} sizes="(min-width: 768px) 50vw, 100vw" class="absolute inset-0 -z-20 size-full object-cover motion-safe:transition-transform motion-safe:duration-700 motion-safe:group-hover:scale-105" />
+      <div class="absolute inset-0 -z-10 bg-linear-to-t from-black/75 via-black/10 to-transparent"></div>
+      <h2 class="font-(family-name:--display) text-[clamp(3rem,17vw,8rem)] leading-[0.85] uppercase md:text-[clamp(3rem,8.5vw,8rem)]">{s.title}</h2>
+      <p class="mt-4 max-w-sm text-lg text-white/85">{s.text}</p>
+      <span class="mt-6 self-start rounded-full bg-white px-6 py-3 font-semibold text-black transition-colors group-hover:bg-(--accent)">Get a price</span>
+    </a>
+  ))}
+</section>

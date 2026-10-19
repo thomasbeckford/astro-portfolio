@@ -94,3 +94,78 @@ Video files are in `public/templates/<slug>/` and photos in `src/assets/template
 | g5.jpg | https://www.pexels.com/photo/34516144/ | Caleb Oquendo | Pexels License |
 | trailer.mp4 / trailer.webm / trailer.jpg (0–6s) | https://www.pexels.com/video/rock-band-concert-857173/ | Vimeo (Pexels upload) | Pexels License |
 | trailer.mp4 / trailer.webm (6–13s) | https://www.pexels.com/video/crowd-concert-hands-26744501/ | Cristian Geza | Pexels License |
+
+## Kitchen fitter
+
+| File | Source | Author | Licence |
+|---|---|---|---|
+| 1.jpg | https://www.pexels.com/photo/modern-furniture-in-spacious-minimalist-kitchen-7005291/ | Max Vakhtbovych | Pexels License |
+| 2.jpg | https://www.pexels.com/photo/marble-counter-top-on-a-cabinet-19866407/ | Lisa Anna | Pexels License |
+| 3.jpg | https://www.pexels.com/photo/modern-kitchen-drawer-with-utensils-and-marble-counter-38311093/ | Bilguun Gantumur | Pexels License |
+| 4.jpg | https://www.pexels.com/photo/black-horizontal-handle-on-a-white-drawer-4194847/ | Kaboompics.com | Pexels License |
+| 5.jpg | https://www.pexels.com/photo/a-shot-of-kitchen-interior-10223859/ | Ron Lach | Pexels License |
+| 6.jpg | https://www.pexels.com/photo/man-inspecting-kitchen-in-modern-apartment-34558043/ | HONG SON | Pexels License |
+| 7.jpg | https://www.pexels.com/photo/an-interior-of-a-modern-kitchen-counter-7045356/ | Max Vakhtbovych | Pexels License |
+| 8.jpg | https://www.pexels.com/photo/man-adjusting-modern-kitchen-cabinet-shelf-interior-34558042/ | HONG SON | Pexels License |
+
+## Builder
+
+| File | Source | Author | Licence |
+|---|---|---|---|
+| hero.mp4 / hero.webm / hero.jpg | https://www.pexels.com/video/a-man-using-a-grinder-6046356/ | K | Pexels License |
+| 1.jpg | https://www.pexels.com/photo/a-brick-house-under-construction-4692281/ | Brett Jordan | Pexels License |
+| 2.jpg | https://www.pexels.com/photo/sunlit-attic-window-with-wooden-interior-30473221/ | Kate Filatova | Pexels License |
+| 3.jpg | https://www.pexels.com/photo/house-renovation-project-with-tools-and-scaffolding-28885512/ | Brett Jordan | Pexels License |
+| 4.jpg | https://www.pexels.com/photo/residential-home-construction-and-renovation-28885519/ | Brett Jordan | Pexels License |
+| 5.jpg | https://www.pexels.com/photo/major-home-renovation-15798781/ | Francesco Ungaro | Pexels License |
+| 6.jpg | https://www.pexels.com/photo/close-up-of-man-building-bricks-wall-19688828/ | GOWTHAM AGM | Pexels License |
+| 7.jpg | https://www.pexels.com/photo/room-on-attic-8082327/ | Max Vakhtbovych | Pexels License |
+| 8.jpg | https://www.pexels.com/photo/wooden-frame-of-roof-on-concrete-building-8491085/ | Saeed Khokhar | Pexels License |
+
+## Golf bar
+
+| File | Source | Author | Licence |
+|---|---|---|---|
+| band.mp4 / band.webm / band.jpg (public/templates/golf, cut together from four clips) | https://www.pexels.com/video/female-mini-golf-player-legs-close-up-6533026/ | Anna Tarazevich | Pexels License (trimmed) |
+| band.* | https://www.pexels.com/video/people-having-fun-while-drinking-10576667/ | cottonbro studio | Pexels License (trimmed) |
+| band.* | https://www.pexels.com/video/smiling-young-people-in-a-bar-6962015/ | Ivan S | Pexels License (trimmed) |
+| band.* | https://www.pexels.com/video/friends-clinking-beers-at-the-bar-7039913/ | Darlene Alderson | Pexels License (trimmed) |
+| venues/shoreditch.jpg | https://www.pexels.com/photo/a-grayscale-of-a-road-under-a-bridge-6135770/ | Samuel Sweet | Pexels License |
+| venues/clapham.jpg | https://www.pexels.com/photo/colorful-hanging-bulbs-in-a-lush-garden-setting-30378581/ | Blackcurrant Great | Pexels License |
+| venues/northern-quarter.jpg | https://www.pexels.com/photo/black-barstools-2387566/ | Adrien Olichon | Pexels License |
+| venues/call-lane.jpg | https://www.pexels.com/photo/cozy-night-bar-in-katowice-poland-38082102/ | Bohdan Hyrovych | Pexels License |
+| venues/harbourside.jpg | https://www.pexels.com/photo/tamsui-fishermans-wharf-bay-at-night-18765056/ | Wei86 Travel | Pexels License |
+| venues/merchant-city.jpg | https://www.pexels.com/photo/people-sitting-on-concert-in-casino-16674070/ | Matheus Bertelli | Pexels License |
+| 1.jpg | https://www.pexels.com/photo/indoor-golf-simulator-room-in-mississauga-31212256/ | swingzone | Pexels License |
+| 2.jpg | https://www.pexels.com/photo/elderly-man-in-blue-polo-shirt-playing-golf-8878024/ | Raphael Loquellano | Pexels License |
+| 3.jpg | https://www.pexels.com/photo/delicious-cheeseburgers-with-french-fries-36750270/ | Mohamed Olwy | Pexels License |
+| 4.jpg | https://www.pexels.com/photo/a-close-up-shot-of-a-cocktail-drink-12973203/ | Kuiyibo Campos | Pexels License |
+| 5.jpg | https://www.pexels.com/photo/young-people-toasting-in-a-nightclub-15880880/ | Xuân Thống Trần | Pexels License |
+| 6.jpg | https://www.pexels.com/photo/nighttime-golf-practice-at-driving-range-in-mesa-35554396/ | Jessie Kiermayr | Pexels License |
+| 7.jpg | https://www.pexels.com/photo/friends-toasting-with-beer-glasses-at-night-36474955/ | Srijit Mudi | Pexels License |
+| 8.jpg | https://www.pexels.com/photo/close-up-photo-of-golf-ball-5487300/ | Jurie Maree | Pexels License |
+| leaves/monstera.webp | https://www.pexels.com/photo/vibrant-green-monstera-leaf-on-white-background-36881511/ | Valentin Ilas | Pexels License (background removed) |
+| leaves/monstera-side.webp | https://www.pexels.com/photo/green-leaf-plant-on-white-background-11231875/ | C M | Pexels License (background removed) |
+| leaves/palm.webp | https://www.pexels.com/photo/close-up-of-a-green-palm-leaf-on-white-background-12597569/ | Aymam Rakib | Pexels License (background removed) |
+| leaves/palm-hanging.webp | https://www.pexels.com/photo/silhouette-of-palm-leaves-on-plain-white-background-7268615/ | ÀniL | Pexels License (background removed) |
+| leaves/fan-palm.webp | https://www.pexels.com/photo/close-up-of-green-palm-leaves-7193658/ | Kaboompics.com | Pexels License (background removed) |
+| menu/smash-burger.jpg | https://www.pexels.com/photo/hands-in-gloves-cutting-burger-on-plate-24245659/ | George Frewat | Pexels License (cropped) |
+| menu/halloumi-burger.jpg | https://www.pexels.com/photo/food-healthy-dinner-meal-104349/ | Markus Spiske | Pexels License (cropped) |
+| menu/jackfruit-tacos.jpg | https://www.pexels.com/photo/delicious-mexican-tacos-with-assorted-fillings-28895960/ | Nano Erdozain | Pexels License (cropped) |
+| menu/jerk-wings.jpg | https://www.pexels.com/photo/deliciously-glazed-chicken-wings-on-display-40070469/ | Gabriel Tovar | Pexels License (cropped) |
+| menu/loaded-fries.jpg | https://www.pexels.com/photo/french-fries-with-meat-cheese-and-herbs-20535803/ | Nadin Sh | Pexels License (cropped) |
+| menu/sharing-board.jpg | https://www.pexels.com/photo/a-plate-with-fried-meat-onion-rings-and-fries-25390062/ | Valeria Boltneva | Pexels License (cropped) |
+| menu/rough-rum-punch.jpg | https://www.pexels.com/photo/tropical-fruit-cocktail-with-pineapple-garnish-32793268/ | Nano Erdozain | Pexels License (cropped) |
+| menu/monstera-mule.jpg | https://www.pexels.com/photo/close-up-shot-of-a-cup-of-liquor-14469343/ | Alan Retano | Pexels License (cropped) |
+| menu/back-nine-negroni.jpg | https://www.pexels.com/photo/a-glass-of-red-wine-with-an-orange-slice-on-top-27851286/ | Marcelo Verfe | Pexels License (cropped) |
+| menu/mango-spritz.jpg | https://www.pexels.com/photo/cocktail-drink-on-a-cocktail-glass-6059781/ | Marcelo Verfe | Pexels License (cropped) |
+| menu/clubhouse-old-fashioned.jpg | https://www.pexels.com/photo/elegant-old-fashioned-cocktail-on-bar-counter-29707925/ | Airam Dato-on | Pexels License (cropped) |
+| menu/house-lager.jpg | https://www.pexels.com/photo/a-clear-drinking-glass-with-beer-5538223/ | cottonbro studio | Pexels License (cropped) |
+| menu/pale-ale.jpg | https://www.pexels.com/photo/a-person-holding-a-beer-in-a-glass-5743361/ | Aleks BM | Pexels License (cropped) |
+| menu/ipa.jpg | https://www.pexels.com/photo/a-wooden-tray-with-four-beers-on-it-27623564/ | Donovan Kelly | Pexels License (cropped) |
+| menu/stout.jpg | https://www.pexels.com/photo/frosted-glass-of-dark-lager-19963544/ | Alexandre Lima | Pexels License (cropped) |
+| menu/apple-cider.jpg | https://www.pexels.com/photo/clear-wine-glasses-7412/ | JÉSHOOTS | Pexels License (cropped) |
+| menu/virgin-punch.jpg | https://www.pexels.com/photo/pineapple-juice-in-clear-drinking-glass-5817623/ | Shameel mukkath | Pexels License (cropped) |
+| menu/alcohol-free-lager.jpg | https://www.pexels.com/photo/close-up-shot-of-bottles-of-beer-5537952/ | cottonbro studio | Pexels License (cropped) |
+| menu/zero-g-t.jpg | https://www.pexels.com/photo/close-up-of-a-glass-with-a-cold-cocktail-standing-on-a-table-16550820/ | Amar Preciado | Pexels License (cropped) |
+| menu/homemade-lemonade.jpg | https://www.pexels.com/photo/lemon-juice-on-a-clear-glass-with-drinking-straw-4134388/ | İbrahim Hakkı Uçman | Pexels License (cropped) |

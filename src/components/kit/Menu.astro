@@ -1,0 +1,62 @@
+---
+// The menu as a page, not a PDF: one menu for every venue, written once. Pick a venue and what it doesn't serve drops
+// out (a list it lacks the `needs` for, items `only` at other venues); a tab per list, diet filters, and a photo that
+// follows the tab (photos 3, 4, 7, 4). motion.ts wires it; without JS every list shows in turn, items marked by venue.
+// Each item gets its own photo from assets/templates/golf/menu, named after the item (Zero G&T → zero-g-t.jpg).
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const menu = d.menu ?? []
+const all = photos(d.slug)
+const pics = [all[2], all[3], all[6], all[3]]
+const diets = { V: 'Vegetarian', VG: 'Vegan', GF: 'Gluten free' }
+const venues = d.venues ?? []
+const dishes = import.meta.glob<{ default: ImageMetadata }>('@/assets/templates/*/menu/*.jpg', { eager: true })
+const dish = (name: string) => dishes[`/src/assets/templates/${d.slug}/menu/${name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')}.jpg`]?.default
+---
+<section id="menu" data-menu class="bg-(--panel) px-4 py-24 sm:px-8 sm:py-32">
+  <div class="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1fr_1.1fr]">
+    <div class="relative hidden lg:block">
+      <div class="sticky top-8 aspect-[4/5] overflow-hidden rounded-3xl">
+        {pics.map((p, i) => p && <Image src={p} alt="" widths={[600, 1000, 1400]} sizes="45vw" data-menu-pic={i} class:list={['absolute inset-0 size-full object-cover transition-opacity duration-500', i > 0 && 'opacity-0']} />)}
+      </div>
+    </div>
+    <div class="min-w-0">
+      <p class="font-(family-name:--display) text-sm font-black tracking-wide text-(--accent) uppercase">Brought to your bay</p>
+      <h2 data-split class="mt-4 font-(family-name:--display) text-[clamp(2.25rem,8vw,5.5rem)] leading-[0.9] font-black tracking-[-0.03em] uppercase">The menu</h2>
+      <p class="mt-5 max-w-md text-lg text-(--muted)">Order from the screen in your bay and it comes to you. Prices in pounds.</p>
+      <label data-menu-venue class="mt-8 hidden w-fit items-center gap-3 rounded-full border border-(--fg)/25 py-1.5 pr-2 pl-5 text-sm font-semibold focus-within:border-(--accent)">At
+        <select class="rounded-full bg-(--fg)/10 px-3 py-1.5 font-semibold [color-scheme:dark] outline-none">
+          {venues.map((v) => <option value={v.name} data-has={v.has.join('|')}>{v.name}</option>)}
+        </select>
+      </label>
+      <div data-menu-tabs role="tablist" aria-label="Menu" class="mt-10 hidden flex-wrap gap-x-6 gap-y-2 border-b border-(--fg)/15">
+        {menu.map((m, i) => <button type="button" role="tab" id={`menu-tab-${i}`} aria-controls={`menu-${i}`} aria-selected={String(i === 0)} tabindex={i ? -1 : 0} class="-mb-px border-b-2 border-transparent pb-3 font-(family-name:--display) text-sm font-black tracking-wide text-(--muted) uppercase transition-colors hover:text-(--fg) aria-selected:border-(--accent) aria-selected:text-(--fg) sm:text-base">{m.tab}</button>)}
+      </div>
+      <div data-menu-diets role="group" aria-label="Only show" class="mt-5 hidden flex-wrap gap-2">
+        {Object.entries(diets).map(([k, label]) => <button type="button" data-diet={k} aria-pressed="false" class="rounded-full border border-(--fg)/25 px-3.5 py-1.5 text-sm font-semibold transition-colors hover:border-(--accent) aria-pressed:border-(--accent) aria-pressed:bg-(--accent) aria-pressed:text-(--on-accent)">{label}</button>)}
+      </div>
+      {menu.map((m, i) => (
+        <div id={`menu-${i}`} data-menu-list role="tabpanel" aria-labelledby={`menu-tab-${i}`} data-needs={m.needs} class="mt-8">
+          <h3 data-menu-heading class="font-(family-name:--display) text-xl font-black uppercase">{m.tab}</h3>
+          <ul class="divide-y divide-(--fg)/10">
+            {m.items.map((it) => (
+              <li data-tags={(it.tags ?? []).join(' ')} data-only={it.only?.join('|')} class="flex items-center gap-4 py-5 sm:gap-5 [&[hidden]]:hidden">
+                {dish(it.name) && <Image src={dish(it.name)!} alt="" widths={[96, 192]} sizes="96px" class="size-16 shrink-0 rounded-2xl object-cover sm:size-24" />}
+                <div class="min-w-0 flex-1">
+                <p class="flex items-baseline gap-3 font-semibold sm:text-lg">
+                  <span>{it.name}</span><span aria-hidden="true" class="flex-1 translate-y-[-0.3em] border-b border-dotted border-(--fg)/30"></span><span class="tabular-nums">£{it.price}</span>
+                </p>
+                <p class="mt-1 text-(--muted)">{it.text}{it.only && <span data-menu-only class="text-(--fg)/50"> At {it.only.join(', ')}.</span>}{it.tags?.map((tag) => <abbr title={diets[tag]} class="ml-2 rounded-full border border-(--fg)/25 px-1.5 py-px text-[0.65rem] font-bold no-underline">{tag}</abbr>)}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+          <p data-menu-empty hidden class="py-5 text-(--muted)"></p>
+        </div>
+      ))}
+      <p class="mt-6 text-sm text-(--muted)">V vegetarian · VG vegan · GF gluten free. Tell staff about any allergy.</p>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,29 @@
+---
+// A cookie banner as the business would have it: equal Accept and Reject, and switches per kind. It looks the part and
+// sets nothing; any choice puts it away (motion.ts). Shown by JS a moment after load, so without JS there's none.
+// Outside #main (it's fixed), so it takes the page's colour vars as `style`.
+const { style } = Astro.props as { style: string }
+const kinds = [
+  { name: 'Essential', text: 'Keep the site working and your booking going.', fixed: true },
+  { name: 'Analytics', text: 'Tell us which pages get read, without your name on it.' },
+  { name: 'Marketing', text: 'Show you our offers on other sites.' },
+]
+const btn = 'rounded-full px-4 py-2.5 text-sm font-bold transition-colors'
+---
+<section id="cookies" aria-labelledby="cookies-title" hidden {style} data-lenis-prevent class="fixed inset-x-3 bottom-20 z-50 max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-3xl border border-(--fg)/15 bg-(--panel)/95 p-5 text-(--fg) shadow-[0_20px_60px_#0009] backdrop-blur sm:right-auto sm:bottom-5 sm:left-5 sm:max-w-sm sm:p-6">
+  <h2 id="cookies-title" class="font-(family-name:--display) text-xl">Cookies with your round?</h2>
+  <p class="mt-2 text-sm text-(--muted)">Some keep the site working. With your OK, others help us see what’s popular and show you our offers elsewhere.</p>
+  <div id="cookies-prefs" hidden class="mt-4 divide-y divide-(--fg)/10 border-y border-(--fg)/10">
+    {kinds.map((k) => (
+      <label class="flex items-start gap-4 py-3">
+        <span class="flex-1 text-sm"><span class="block font-semibold">{k.name}</span><span class="text-(--muted)">{k.fixed ? 'Always on. ' : ''}{k.text}</span></span>
+        <input type="checkbox" role="switch" checked={k.fixed} disabled={k.fixed} class="mt-0.5 h-6 w-11 shrink-0 cursor-pointer appearance-none rounded-full bg-(--fg)/20 transition-colors before:block before:size-5 before:translate-x-0.5 before:translate-y-0.5 before:rounded-full before:bg-(--fg) before:transition-transform checked:bg-(--accent) checked:before:translate-x-[1.375rem] checked:before:bg-(--on-accent) focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-(--accent) disabled:cursor-not-allowed disabled:opacity-60" />
+      </label>
+    ))}
+  </div>
+  <div class="mt-5 grid grid-cols-2 gap-2">
+    <button type="button" data-cookies-done="none" class:list={[btn, 'border border-(--fg)/30 hover:border-(--fg)']}>Reject all</button>
+    <button type="button" data-cookies-done="all" class:list={[btn, 'bg-(--accent) text-(--on-accent) hover:brightness-110']}>Accept all</button>
+    <button type="button" data-cookies-more aria-expanded="false" aria-controls="cookies-prefs" class="col-span-2 py-1.5 text-sm font-semibold text-(--muted) underline underline-offset-4 hover:text-(--fg)">Choose</button>
+  </div>
+</section>

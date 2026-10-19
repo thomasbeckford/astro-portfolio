@@ -1,0 +1,22 @@
+---
+// Grass along the bottom of the screen for as long as the hero is on it (kit/Hero 'booking'): the strip is fixed, and
+// clip-path on its holder cuts it off at the hero's edges, so you walk out of the jungle as the hero scrolls away.
+// Three depths, each dark at the root and lit at the tips, swaying out of step (CSS, motion-safe only). Decorative.
+import { rng, grass } from './jungle'
+const r = rng(4)
+const layers = [
+  { d: grass(r, 1200, 160, 320), h: 160, root: '#06140c', tip: '#1d4f2c', cls: 'h-full', delay: '0s' },
+  { d: grass(r, 1200, 130, 260), h: 130, root: '#081a0f', tip: '#2f6e3a', cls: 'h-[82%]', delay: '-1.2s' },
+  { d: grass(r, 1200, 100, 200), h: 100, root: '#0a1f12', tip: '#4f8f45', cls: 'h-[62%]', delay: '-2.4s' },
+]
+---
+<div aria-hidden="true" class="pointer-events-none absolute inset-0 z-10 [clip-path:inset(0)]">
+  <div class="fixed inset-x-0 bottom-0 h-[clamp(4.5rem,15vh,9rem)]">
+    {layers.map((l, i) => (
+      <svg viewBox={`0 0 1200 ${l.h}`} preserveAspectRatio="none" class:list={['grass-sway absolute inset-x-0 bottom-0 w-full', l.cls]} style={`animation-delay:${l.delay}`}>
+        <defs><linearGradient id={`grass-${i}`} x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color={l.root} /><stop offset="1" stop-color={l.tip} /></linearGradient></defs>
+        <path d={l.d} fill={`url(#grass-${i})`} />
+      </svg>
+    ))}
+  </div>
+</div>

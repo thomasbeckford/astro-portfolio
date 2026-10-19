@@ -32,6 +32,9 @@ importers:
       '@fontsource/anton':
         specifier: ^5.3.0
         version: 5.3.0
+      '@fontsource/shrikhand':
+        specifier: ^5.3.0
+        version: 5.3.0
       '@tailwindcss/vite':
         specifier: ^4.3.3
         version: 4.3.3(vite@8.3.2(@types/node@24.3.1)(esbuild@0.28.2)(jiti@2.7.0)(yaml@2.8.1))
@@ -536,6 +539,9 @@ packages:
 
   '@fontsource/anton@5.3.0':
     resolution: {integrity: sha512-OR1D5n124n2XRs66SbX7IjcOSptljEJE8FcDNnlni2y1/M6KpTx7cU2PIWzTSsBj4WFkHPw24On8qw3qkQZuTw==}
+
+  '@fontsource/shrikhand@5.3.0':
+    resolution: {integrity: sha512-AWCCj1oNNpMK5hXfFo4JO5KyLhPrdBmpbA0wyIl4IUB05WTU0CGP2UgGX7Lcq/N8nS2+hcxzCPMSQ1R55FuMPg==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -2583,6 +2589,8 @@ snapshots:
   '@fontsource-variable/space-grotesk@5.3.0': {}
 
   '@fontsource/anton@5.3.0': {}
+
+  '@fontsource/shrikhand@5.3.0': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

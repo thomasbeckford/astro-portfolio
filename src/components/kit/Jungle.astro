@@ -1,0 +1,36 @@
+---
+// The golf demo's hero jungle: photographed leaves, cut out (assets/templates/golf/leaves), at the edges in three depths:
+// far (dark, blurred), mid, near (bright, sharp, casting a shadow), with grass that stays at the bottom of the screen
+// while the hero and the next section scroll past (kit/Grass). motion.ts parts the near leaves on load and pushes every
+// layer out as you scroll in; CSS sways them. Decorative only.
+// Rendered twice: layer 'back' (backdrop, far and mid) behind the headline, 'front' (near) in front of it.
+// Each piece's outer box sways and moves; the leaf inside it is turned and flipped into place.
+import { Image } from 'astro:assets'
+import monstera from '@/assets/templates/golf/leaves/monstera.webp'
+import monsteraSide from '@/assets/templates/golf/leaves/monstera-side.webp'
+import palm from '@/assets/templates/golf/leaves/palm.webp'
+import hanging from '@/assets/templates/golf/leaves/palm-hanging.webp'
+import fan from '@/assets/templates/golf/leaves/fan-palm.webp'
+const { layer } = Astro.props as { layer: 'back' | 'front' }
+const pieces = [
+  { src: hanging, depth: 'far', side: 1, origin: 'top', pos: 'right-[4%] -top-[6%] w-[36vw] lg:w-[20vw]', turn: '' },
+  { src: fan, depth: 'far', side: -1, origin: 'bottom left', pos: '-left-[10%] bottom-[4%] w-[70vw] lg:w-[34vw]', turn: '' },
+  { src: palm, depth: 'far', side: 1, origin: 'bottom right', pos: '-right-[12%] bottom-[8%] w-[56vw] lg:w-[28vw]', turn: '-scale-x-100' },
+  { src: hanging, depth: 'mid', side: -1, origin: 'top', pos: 'left-[8%] -top-[12%] w-[32vw] lg:w-[17vw]', turn: '-scale-x-100' },
+  { src: monsteraSide, depth: 'mid', side: 1, origin: 'right', pos: '-right-[6%] top-[20%] w-[50vw] lg:w-[28vw]', turn: '-scale-x-100 -rotate-12' },
+  { src: monstera, depth: 'mid', side: -1, origin: 'bottom left', pos: '-left-[7%] top-[30%] w-[44vw] lg:w-[24vw]', turn: 'rotate-45' },
+  { src: palm, depth: 'near', side: -1, origin: 'top left', pos: '-left-[16%] -top-[22%] w-[72vw] lg:w-[34vw]', turn: 'rotate-90' },
+  { src: monstera, depth: 'near', side: 1, origin: 'bottom right', pos: '-right-[10%] -bottom-[18%] w-[56vw] lg:w-[25vw]', turn: '-rotate-40' },
+  { src: hanging, depth: 'near', side: 1, origin: 'top', pos: 'right-[10%] -top-[16%] w-[34vw] lg:w-[15vw]', turn: 'rotate-12' },
+] as const
+const look = { far: 'brightness-[.42] saturate-[.85] blur-[3px]', mid: 'brightness-[.72]', near: 'brightness-[.85] drop-shadow-[0_30px_40px_rgba(0,0,0,0.6)]' }
+---
+<div aria-hidden="true" class:list={['pointer-events-none absolute inset-0 overflow-hidden', layer === 'back' ? '-z-10' : 'z-10']}>
+  {layer === 'back' && <div class="absolute inset-0 bg-[radial-gradient(60%_55%_at_50%_55%,#1f4d2b_0%,#0b2014_60%,#06140c_100%)]"></div>}
+  {layer === 'back' && <div class="absolute inset-0 bg-[radial-gradient(38%_30%_at_50%_42%,rgba(255,182,39,0.16),transparent_70%),radial-gradient(120%_90%_at_50%_45%,transparent_55%,rgba(0,0,0,0.55))]"></div>}
+  {pieces.map((p, i) => (layer === 'front') === (p.depth === 'near') && (
+    <div data-jungle={p.depth} data-side={p.side} class:list={['jungle-sway absolute', p.pos]} style={`transform-origin:${p.origin};animation-duration:${6 + i}s;animation-delay:-${i * 1.3}s`}>
+      <Image src={p.src} alt="" widths={[400, 700, 1000]} sizes="(min-width: 1024px) 34vw, 72vw" loading="eager" class:list={['w-full', p.turn, look[p.depth]]} />
+    </div>
+  ))}
+</div>

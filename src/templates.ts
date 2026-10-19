@@ -2,7 +2,7 @@
 // components/kit. `sections` picks which kit sections the demo shows and in what order. Media is free stock
 // (src/assets/templates/CREDITS.md): photos in src/assets/templates/<slug>/1..4.jpg, video in public/templates/<slug>/.
 // Nothing here is a claim about a real business: no reviews, ratings or stats. Numbers sit in Ofcom's drama range.
-export type Section = 'marquee' | 'intro' | 'services' | 'band' | 'gallery' | 'collage' | 'projects' | 'faq' | 'steps' | 'areas' | 'contact'
+export type Section = 'marquee' | 'intro' | 'services' | 'band' | 'gallery' | 'collage' | 'projects' | 'faq' | 'steps' | 'areas' | 'contact' | 'tiles' | 'pinned' | 'split' | 'rail' | 'venues' | 'live' | 'tournaments' | 'menu' | 'clubhouse' | 'count' | 'prices'
 type Item = { title: string; text: string; points?: string[] } // points: what's included, on the stack cards
 export interface Demo {
   slug: string
@@ -11,14 +11,22 @@ export interface Demo {
   mark: string // the giant wordmark
   tel: string
   look: string[] // tags on the home's #sites card
-  font: 'archivo' | 'anton' | 'geist'
+  font: 'archivo' | 'anton' | 'geist' | 'shrikhand'
   colors: { bg: string; fg: string; muted: string; accent: string; onAccent: string; panel: string; alt: string }
-  hero: { variant: 'wordmark' | 'scale' | 'letters' | 'poster' | 'cover'; kicker: string; head?: string; lede: string; cta: string }
+  hero: { variant: 'wordmark' | 'scale' | 'letters' | 'poster' | 'cover' | 'product' | 'campaign' | 'booking'; kicker: string; head?: string; lede: string; cta: string }
   marquee?: string[]
   intro: { label: string; text: string }
   gallery?: string[] // captions for photos 1..4
   collage?: string // headline among floating photos 1..5
-  projects?: { title: string; kind: string }[] // full-screen panels over photos 6..8
+  projects?: { title: string; kind: string }[] // full-screen panels over photos 6..8, or the rail's cards over photos 3..8
+  tiles?: Item[] // bento tiles over photos 2..5, under the intro as heading
+  split?: Item[] // two half-screen photos 1..2
+  venues?: { name: string; city: string; text: string; has: string[]; lat: number; lon: number }[] // a brand with several sites: kit/Venues sorts them by distance from you
+  teams?: string[] // made-up team names for the live scores and the cup draw (kit/Live, kit/Tournaments)
+  bays?: { name: string; when: string; price: number }[] // price a bay per hour, split per head by kit/Prices
+  included?: string[] // what comes with a bay (kit/Prices)
+  events?: { title: string; day: number; time: string; text: string }[] // weekly, day 0 = Sunday, UK time (kit/Tournaments)
+  menu?: { tab: string; needs?: string; items: { name: string; text: string; price: string; tags?: ('V' | 'VG' | 'GF')[]; only?: string[] }[] }[] // one menu for every venue (kit/Menu): `needs` hides a list where a venue lacks that (its `has`), `only` keeps an item to some venues
   faq?: { q: string; a: string }[] // beside photos 5..7
   services: { variant: 'stack' | 'rows'; label: string; items: Item[] }
   band: string
@@ -26,10 +34,82 @@ export interface Demo {
   areas: string[]
   contact: string
   sections: Section[]
+  sentence?: boolean // headings in sentence case instead of the kit's capitals
+  cookies?: boolean // a cookie banner that looks the part and sets nothing (kit/Cookies)
   curtain?: boolean // opening grid of blocks (kit/Curtain); defaults to on with the poster hero only
 }
 
 export const demos: Demo[] = [
+  {
+    slug: 'golf',
+    trade: 'Golf bar',
+    name: 'Overgrown',
+    mark: 'Overgrown',
+    tel: '07700 900420',
+    look: ['Booking by venue', 'Find your nearest', 'Live scores', 'Price per player', 'Tournaments', 'Menu by venue'],
+    font: 'shrikhand',
+    colors: { bg: '#0b1d12', fg: '#eef2e2', muted: '#9fb5a2', accent: '#ffb627', onAccent: '#0b1d12', panel: '#12301d', alt: '#eef2e2' },
+    hero: { variant: 'booking', kicker: 'Golf simulators · Jungle bar · Kitchen', head: 'Into the rough', lede: 'Simulator bays hidden in a jungle of real plants, with a kitchen and a long bar. No clubs, no experience and no dress code needed.', cta: 'Find a bay' },
+    intro: { label: 'Live from the bays', text: 'Every bay keeps score on screen, and the scores land here as they’re played.' },
+    teams: ['The Mulligans', 'Bunker Mentality', 'Tee Party', 'Sand Trappers', 'Birdie Brains', 'The Back Nine', 'Rough Diamonds', 'Grip It and Sip It', 'Lost Balls', 'Chip Happens', 'Par for the Course', 'The Fairway Fiends', 'Tee Total', 'Putt Pirates', 'Wedge Issue', 'Slice Squad'],
+    bays: [
+      { name: 'Off-peak', when: 'Mon to Fri, before 5pm', price: 30 },
+      { name: 'Peak', when: 'Evenings and weekends', price: 48 },
+      { name: 'Late', when: 'Fri and Sat, after 10pm', price: 40 },
+    ],
+    included: ['Clubs, balls and gloves', 'A host to show you how', 'Food and drinks to your bay', 'Left-handed clubs too'],
+    events: [
+      { title: 'Thursday scramble', day: 4, time: '19:00', text: 'Teams of four, nine holes, best ball counts. Food’s included.' },
+      { title: 'Closest to the pin', day: 5, time: '21:00', text: 'One shot each on a par 3. The nearest the flag wins a round for the table.' },
+      { title: 'Sunday long drive', day: 0, time: '15:00', text: 'Three swings each. The longest carry goes on the board for the month.' },
+      { title: 'League night', day: 2, time: '19:30', text: 'Teams of four, ten weeks, one cup. The final is played at Merchant City.' },
+    ],
+    menu: [
+      { tab: 'Food', needs: 'Kitchen', items: [
+        { name: 'Smash burger', text: 'Two patties, American cheese, pickles and house sauce.', price: '13.50' },
+        { name: 'Halloumi burger', text: 'Grilled halloumi, hot honey, slaw.', price: '12.00', tags: ['V'] },
+        { name: 'Jackfruit tacos', text: 'Three tacos, pineapple salsa, lime.', price: '10.50', tags: ['VG'] },
+        { name: 'Jerk wings', text: 'Ten wings, charred, with a scotch bonnet dip.', price: '9.50', tags: ['GF'] },
+        { name: 'Loaded fries', text: 'Cheese sauce, crispy onions, jalapeños.', price: '7.00', tags: ['V'] },
+        { name: 'Sharing board', text: 'Wings, sliders, fries and dips for four.', price: '32.00', only: ['Shoreditch', 'Northern Quarter', 'Merchant City'] },
+      ] },
+      { tab: 'Cocktails', items: [
+        { name: 'Rough rum punch', text: 'Two rums, pineapple, lime and allspice.', price: '11.00', tags: ['VG', 'GF'] },
+        { name: 'Monstera mule', text: 'Vodka, ginger beer, lime and mint.', price: '10.50', tags: ['VG', 'GF'] },
+        { name: 'Back nine negroni', text: 'Gin, bitter and sweet vermouth, orange.', price: '11.00', tags: ['VG', 'GF'] },
+        { name: 'Mango spritz', text: 'Mango, prosecco and soda. In the garden, summer only.', price: '10.00', tags: ['VG', 'GF'], only: ['Clapham'] },
+        { name: 'Clubhouse old fashioned', text: 'Bourbon, demerara and bitters, stirred.', price: '12.00', tags: ['VG', 'GF'] },
+      ] },
+      { tab: 'Beer', items: [
+        { name: 'House lager', text: 'Crisp and cold, by the pint.', price: '6.20', tags: ['VG'] },
+        { name: 'Pale ale', text: 'Citrus and pine, from a brewery down the road. Different at every venue.', price: '6.50', tags: ['VG'] },
+        { name: 'IPA', text: 'Hazy, tropical, 6.2%.', price: '6.80', tags: ['VG'] },
+        { name: 'Stout', text: 'Coffee and chocolate, on nitro.', price: '6.40' },
+        { name: 'Apple cider', text: 'Dry and cloudy.', price: '6.00', tags: ['VG', 'GF'] },
+      ] },
+      { tab: 'No and low', items: [
+        { name: 'Virgin punch', text: 'Pineapple, lime, allspice and soda.', price: '6.00', tags: ['VG', 'GF'] },
+        { name: 'Alcohol-free lager', text: '0.0%, by the bottle.', price: '5.00', tags: ['VG'] },
+        { name: 'Zero G&T', text: 'Alcohol-free gin, tonic and cucumber.', price: '7.00', tags: ['VG', 'GF'] },
+        { name: 'Homemade lemonade', text: 'Lemon, mint and a little sugar.', price: '4.00', tags: ['VG', 'GF'] },
+      ] },
+    ],
+    venues: [
+      { name: 'Shoreditch', city: 'London', text: 'Two floors of bays under the railway arches.', has: ['Bays', 'Kitchen', 'Bar', 'Private room'], lat: 51.5265, lon: -0.0786 },
+      { name: 'Clapham', city: 'London', text: 'Bays, a long bar and a garden for summer.', has: ['Bays', 'Kitchen', 'Bar', 'Garden'], lat: 51.4622, lon: -0.1383 },
+      { name: 'Northern Quarter', city: 'Manchester', text: 'An old textile warehouse, now full of bays.', has: ['Bays', 'Kitchen', 'Bar', 'Private room'], lat: 53.4838, lon: -2.236 },
+      { name: 'Call Lane', city: 'Leeds', text: 'Bays upstairs, bar downstairs, open till late.', has: ['Bays', 'Bar'], lat: 53.7951, lon: -1.5404 },
+      { name: 'Harbourside', city: 'Bristol', text: 'Bays looking out over the water.', has: ['Bays', 'Kitchen', 'Bar'], lat: 51.4497, lon: -2.601 },
+      { name: 'Merchant City', city: 'Glasgow', text: 'Our biggest room, with a stage for the league final.', has: ['Bays', 'Kitchen', 'Bar', 'Private room'], lat: 55.859, lon: -4.2449 },
+    ],
+    services: { variant: 'rows', label: 'Parties', items: [] },
+    band: 'Bad swings welcome',
+    steps: [],
+    areas: ['London', 'Manchester', 'Leeds', 'Bristol', 'Glasgow'],
+    contact: 'Bring the team',
+    sections: ['live', 'band', 'prices', 'count', 'tournaments', 'menu', 'venues', 'clubhouse'],
+    cookies: true,
+  },
   {
     slug: 'electrician',
     trade: 'Electrician',
@@ -233,5 +313,86 @@ export const demos: Demo[] = [
     areas: ['Bromley', 'Chislehurst', 'Sevenoaks', 'Beckenham', 'Orpington', 'Keston'],
     contact: 'Got a project?',
     sections: ['intro', 'gallery', 'services', 'band', 'steps', 'areas', 'contact'],
+  },
+  {
+    slug: 'kitchen',
+    trade: 'Kitchen fitter',
+    name: 'Quiet Kitchen Co.',
+    mark: 'Quiet',
+    tel: '07700 900418',
+    look: ['Minimal', 'Bright', 'Product feel'],
+    font: 'geist',
+    colors: { bg: '#f4f5f7', fg: '#141518', muted: '#5f6368', accent: '#0b63ce', onAccent: '#ffffff', panel: '#ffffff', alt: '#141518' },
+    sentence: true,
+    hero: { variant: 'product', kicker: 'Kitchen fitter · Bromley', head: 'The kitchen. Finally right.', lede: 'Planned around how you cook, fitted by one small team, finished so every drawer closes the same way.', cta: 'Book a home visit' },
+    intro: { label: 'Small things you use every day.', text: 'A kitchen is a thousand little moves a week. We sweat the ones you’ll notice.' },
+    tiles: [
+      { title: 'Worktops', text: 'Templated in your kitchen, cut to fit the walls you actually have.' },
+      { title: 'Drawers', text: 'Soft-close and deep enough for the big pans.' },
+      { title: 'Handles', text: 'Chosen with you, set at the same height on every door.' },
+      { title: 'Light', text: 'Pendants and under-cabinet strips planned with the layout, not after it.' },
+    ],
+    services: {
+      variant: 'rows',
+      label: 'What we fit',
+      items: [
+        { title: 'Full kitchens', text: 'Planned with you, supplied and fitted, from the first sketch to the last plinth.' },
+        { title: 'Worktops', text: 'Quartz, laminate or solid wood, templated and fitted to the millimetre.' },
+        { title: 'Refits', text: 'Keep the layout, change the doors, tops and handles.' },
+        { title: 'Fitting only', text: 'Already bought your kitchen? We fit it, with the plumber and electrician we always work with.' },
+      ],
+    },
+    band: 'Fitted to the millimetre.',
+    steps: [
+      { title: 'We visit and measure', text: 'An hour at your place. We measure everything and ask how you cook.' },
+      { title: 'You see it first', text: 'A drawing and a fixed price before anything is ordered.' },
+      { title: 'Fitted, then tidied', text: 'One team from start to finish. Floors swept, boxes gone.' },
+    ],
+    areas: ['Bromley', 'Beckenham', 'Chislehurst', 'Shortlands', 'Bickley', 'West Wickham'],
+    contact: 'Let’s plan your kitchen',
+    sections: ['tiles', 'services', 'pinned', 'areas', 'contact'],
+  },
+  {
+    slug: 'builder',
+    trade: 'Builder',
+    name: 'Ironside Build',
+    mark: 'Ironside',
+    tel: '07700 900419',
+    look: ['Black and volt', 'Campaign', 'Big type'],
+    font: 'anton',
+    colors: { bg: '#0a0a0a', fg: '#fafafa', muted: '#a3a3a3', accent: '#d4ff3a', onAccent: '#0a0a0a', panel: '#161616', alt: '#ffffff' },
+    hero: { variant: 'campaign', kicker: 'Extensions and lofts · Bromley', head: 'Build the room you’re missing', lede: 'Rear extensions and loft conversions across Bromley, from drawings and Building Control to the last coat of plaster.', cta: 'Start your build' },
+    intro: { label: 'Who we are', text: 'A small building firm that runs every job itself, start to finish.' },
+    split: [
+      { title: 'Extensions', text: 'Rear, side return and wraparound. More kitchen, more light.' },
+      { title: 'Lofts', text: 'Dormers and roof lights. A bedroom and shower room where the boxes were.' },
+    ],
+    services: {
+      variant: 'rows',
+      label: 'What we build',
+      items: [
+        { title: 'Rear extensions', text: 'Single storey or double, with the steel, the roof and the bifolds.' },
+        { title: 'Loft conversions', text: 'Dormer, hip to gable or roof lights, with the stairs to match.' },
+        { title: 'Side returns', text: 'The alley down the side turned into kitchen.' },
+        { title: 'Garage conversions', text: 'An office, gym or bedroom where the car never went.' },
+      ],
+    },
+    projects: [
+      { title: 'Rear extension, doors in', kind: 'Extension' },
+      { title: 'Single storey, flat roof', kind: 'Extension' },
+      { title: 'Opening through to the new room', kind: 'Structural' },
+      { title: 'New walls going up', kind: 'Brickwork' },
+      { title: 'Loft, ready to move in', kind: 'Loft' },
+      { title: 'New roof on', kind: 'Roofing' },
+    ],
+    band: 'Built bigger. Built right.',
+    steps: [
+      { title: 'Site visit', text: 'We look at the house, talk through the build and what it needs.' },
+      { title: 'Drawings and price', text: 'Plans, Building Control and a fixed price, in writing.' },
+      { title: 'Built and signed off', text: 'One team on site until the inspector signs it off.' },
+    ],
+    areas: ['Bromley', 'Beckenham', 'Orpington', 'Petts Wood', 'Hayes', 'Chislehurst'],
+    contact: 'Let’s build',
+    sections: ['split', 'services', 'rail', 'steps', 'areas', 'contact'],
   },
 ]

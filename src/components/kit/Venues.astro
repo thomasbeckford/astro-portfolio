@@ -1,0 +1,64 @@
+---
+// Every venue, and how far each is from you: "Use my location" (motion.ts) sorts the list by distance, marks the
+// nearest and puts you on the little map. Nothing is sent anywhere; the sum happens in the browser. Without JS, or
+// if location is refused, the list stays in its own order. "Book" picks that venue on the hero's ticket.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+const { d } = Astro.props as { d: Demo }
+const venues = d.venues ?? []
+const cities = [...new Set(venues.map((x) => x.city))]
+const places = import.meta.glob<{ default: ImageMetadata }>('@/assets/templates/*/venues/*.jpg', { eager: true })
+const place = (name: string) => places[`/src/assets/templates/${d.slug}/venues/${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.jpg`]?.default
+// The map: plain lat/lon, squashed by cos(53.6°) so Britain keeps roughly its shape. motion.ts projects you the same way.
+const box = { lon: -4.9, lat: 56.3, w: 5.4, h: 5.4, k: 0.593 }
+const x = (lon: number) => +((lon - box.lon) * box.k * 100).toFixed(1)
+const y = (lat: number) => +((box.lat - lat) * 100).toFixed(1)
+const W = x(box.lon + box.w), H = y(box.lat - box.h)
+const spots = cities.map((c) => { const vs = venues.filter((v) => v.city === c); return { c, n: vs.length, x: x(vs.reduce((s, v) => s + v.lon, 0) / vs.length), y: y(vs.reduce((s, v) => s + v.lat, 0) / vs.length) } })
+---
+<section id="venues" data-venues class="px-4 py-24 sm:px-8 sm:py-32">
+  <div class="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1fr_22rem]">
+    <div class="min-w-0">
+      <p class="font-(family-name:--display) text-sm font-black tracking-wide text-(--accent) uppercase">{venues.length} venues · {cities.length} cities</p>
+      <h2 data-split class="mt-4 font-(family-name:--display) text-[clamp(2.25rem,8vw,5.5rem)] leading-[0.9] font-black tracking-[-0.03em] uppercase">Find your nearest</h2>
+      <div data-geo class="mt-8 hidden flex-wrap items-center gap-4">
+        <button type="button" data-geo-go class="rounded-full bg-(--accent) px-5 py-2.5 text-sm font-bold text-(--on-accent) transition-transform active:scale-[0.98] disabled:opacity-60">Use my location</button>
+        <p data-geo-note role="status" class="text-sm text-(--muted)">Your location stays on your device.</p>
+      </div>
+      <ul data-geo-list class="mt-8 border-b border-(--fg)/15">
+        {venues.map((v) => (
+          <li data-lat={v.lat} data-lon={v.lon} class="group grid grid-cols-[5.5rem_1fr] gap-x-4 gap-y-4 border-t border-(--fg)/15 py-6 sm:grid-cols-[9rem_1fr_auto] sm:items-center sm:gap-x-6">
+            <div class="relative aspect-[4/3] self-start overflow-hidden rounded-2xl bg-(--panel) sm:self-center">{place(v.name) && <Image src={place(v.name)!} alt="" widths={[180, 360]} sizes="(min-width: 640px) 9rem, 5.5rem" class="size-full object-cover brightness-90 transition-[transform,filter] duration-700 ease-out group-hover:brightness-110 motion-safe:group-hover:scale-110" />}</div>
+            <div class="min-w-0">
+              <p class="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-bold tracking-widest text-(--muted) uppercase">
+                {v.city}<span data-geo-dist class="text-(--fg) empty:hidden"></span><span data-geo-near hidden class="rounded-full bg-(--accent) px-2 py-0.5 text-(--on-accent)">Nearest</span>
+              </p>
+              <h3 class="mt-1.5 font-(family-name:--display) text-[clamp(1.5rem,5vw,2.25rem)] leading-none font-black tracking-[-0.02em] uppercase">{v.name}</h3>
+              <p class="mt-2 text-(--muted)">{v.text} <span class="text-(--fg)/50">{v.has.join(' · ')}</span></p>
+            </div>
+            <a href="#book" data-book-venue={v.name} class="col-start-2 justify-self-start rounded-full border sm:col-start-auto border-(--fg)/30 px-5 py-2.5 text-sm font-bold whitespace-nowrap transition-colors hover:border-(--accent) hover:bg-(--accent) hover:text-(--on-accent)">Book {v.name} →</a>
+          </li>
+        ))}
+      </ul>
+    </div>
+    <div class="relative hidden lg:block">
+      <svg data-geo-map data-box={JSON.stringify(box)} viewBox={`-20 -20 ${W + 40} ${H + 40}`} role="img" aria-label={`Map of the ${cities.length} cities`} class="sticky top-8 w-full overflow-visible">
+        {Array.from({ length: 6 }, (_, i) => <line x1="0" x2={W} y1={y(box.lat - i - 0.3)} y2={y(box.lat - i - 0.3)} stroke="currentColor" stroke-opacity="0.12" stroke-dasharray="3 5" />)}
+        {Array.from({ length: 6 }, (_, i) => <line y1="0" y2={H} x1={x(box.lon + i + 0.4)} x2={x(box.lon + i + 0.4)} stroke="currentColor" stroke-opacity="0.12" stroke-dasharray="3 5" />)}
+        {spots.map((s) => (
+          <g>
+            <circle cx={s.x} cy={s.y} r="14" fill="var(--accent)" fill-opacity="0.18" class="origin-center [transform-box:fill-box] motion-safe:animate-[ping_2.4s_cubic-bezier(0,0,0.2,1)_infinite]" />
+            <circle cx={s.x} cy={s.y} r="10" fill="var(--accent)" fill-opacity="0.2" />
+            <circle cx={s.x} cy={s.y} r="5" fill="var(--accent)" />
+            <text x={s.x + (s.x > W * 0.6 ? -12 : 12)} y={s.y + 4} text-anchor={s.x > W * 0.6 ? 'end' : 'start'} fill="currentColor" font-size="13" font-weight="700">{s.c}{s.n > 1 && ` · ${s.n}`}</text>
+          </g>
+        ))}
+        <g data-geo-you hidden>
+          <line data-geo-line stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="4 4" />
+          <circle data-geo-dot r="6" fill="var(--fg)" stroke="var(--bg)" stroke-width="2" />
+          <text data-geo-label fill="var(--fg)" font-size="13" font-weight="700">You</text>
+        </g>
+      </svg>
+    </div>
+  </div>
+</section>

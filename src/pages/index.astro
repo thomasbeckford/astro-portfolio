@@ -53,6 +53,8 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
     html[data-hold] #hero h1 { visibility: hidden; animation: unhide 0s 2.5s forwards }
     html[data-intro] #hero h1, html[data-intro] [data-intro-copy] { visibility: hidden; animation: unhide 0s 4s forwards }
     html[data-intro] #hero [data-publish] { visibility: hidden; animation: unhide 0s 3s forwards }
+    /* The demo's resting state (the first example site, live) only shows without motion; with it, the loop opens on the panel. */
+    html[data-hold] #hero [data-pd-card] { visibility: hidden; animation: unhide 0s 4s forwards }
     @keyframes unhide { to { visibility: visible } }
   </style>
 
@@ -125,7 +127,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
           <div>
             <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Edit it yourself</p>
             <h2 data-split class:list={[display, 'mt-4 text-6xl leading-[0.9] sm:text-8xl']}>You edit it. <span class="text-accent">I keep it fast.</span></h2>
-            <p class="mt-6 max-w-md text-lg text-pretty text-muted">Change your words, photos and prices yourself. I connect the site to the CMS that fits the job, and the pages stay quick.</p>
+            <p class="mt-6 max-w-md text-lg text-pretty text-muted">Change your words, photos and prices yourself. Your site runs on the CMS that fits the job.</p>
             <ul class="mt-10 divide-y divide-line border-y border-line">
               {cms.map(([n, t]) => (
                 <li class="grid gap-1.5 py-4 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-6">
@@ -163,16 +165,16 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
           <div>
             <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Edit it yourself · +£{cmsPrice}, one-off</p>
             <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Change it <span class="text-accent">without calling me.</span></h3>
-            <p class="mt-6 text-lg text-pretty text-muted">I build your website with its own editing panel. You change prices, words and your phone number whenever you like, and it goes live on its own. No waiting on me, no monthly fee.</p>
+            <p class="mt-6 text-lg text-pretty text-muted">Your website comes with its own editing panel. Change prices, words or your number whenever you like. No waiting on me, no monthly fee.</p>
             <ol class="mt-8 divide-y divide-line border-y border-line">
-              {[['Log in', 'Your own panel, with your own password. No code, no page builder.'], ['Change it', 'Prices, words, phone number, the areas you cover. The design stays as it is.'], ['Press Publish changes', 'Your website updates by itself in a minute or two.']].map(([t, x], i) => (
+              {[['Log in', 'Your own password. No code.'], ['Change it', 'Prices, words, phone number, areas.'], ['Press Publish changes', 'Live in a minute or two.']].map(([t, x], i) => (
                 <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
                   <span aria-hidden="true" class:list={[display, 'text-3xl leading-none text-accent']}>{i + 1}</span>
                   <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>
                 </li>
               ))}
             </ol>
-            <p class="mt-4 text-sm text-pretty text-muted">Built with Payload CMS. The animation shows an example site. Estancia La Josefina, one of my live sites, runs on Payload too, in Spanish and English. Rather just send me a message? That is the Care plan.</p>
+            <p class="mt-4 text-sm text-pretty text-muted">Built with Payload CMS. The animation is an example site. Estancia La Josefina runs on Payload too. Rather just message me? That is the Care plan.</p>
           </div>
         </div>
 
@@ -204,7 +206,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Bigger jobs</p>
         <h2 id="apps-title" data-split class:list={[display, 'mt-4 text-6xl leading-[0.9] sm:text-8xl lg:text-9xl']}>More than a website? <span class="text-accent">I build that too.</span></h2>
         <div class="mt-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
-          <p class="max-w-xl text-lg text-pretty text-muted">Bookings, payments, customer logins, an app in the stores, or the backend behind it all. <span class="text-fg">SoyMenu is a web app I built on my own. ArquerosYa, which I co-founded, is a web app plus iOS and Android apps in the stores, with the API behind them.</span></p>
+          <p class="max-w-xl text-lg text-pretty text-muted">Bookings, payments, logins, apps in the stores, or the backend behind it. <span class="text-fg">SoyMenu is a web app I built on my own. ArquerosYa, which I co-founded, is a web app plus iOS and Android apps.</span></p>
           <a href={wa('Hi Thomas, I have a bigger project in mind.')} target="_blank" rel="noopener" class="btn-ghost min-h-14 px-7 max-sm:w-full">Tell me about it<Icon name="arrow" class="size-4" /></a>
         </div>
         <ol class="mt-14 grid gap-px overflow-hidden rounded-3xl bg-line ring-1 ring-line sm:grid-cols-2 xl:grid-cols-4">
@@ -212,8 +214,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             <li data-rise class="flex flex-col bg-paper p-7 sm:p-8">
               <span aria-hidden="true" class:list={[display, 'text-6xl leading-none text-accent']}>{String(i + 1).padStart(2, '0')}</span>
               <h3 class="mt-10 text-2xl font-semibold">{title}</h3>
-              <p class="mt-2 text-pretty text-muted">{text}</p>
-              <p class="mt-auto pt-8 font-mono text-xs tracking-[0.15em] text-muted uppercase">{stack}</p>
+                            <p class="mt-auto pt-8 font-mono text-xs tracking-[0.15em] text-muted uppercase">{stack}</p>
             </li>
           ))}
         </ol>
@@ -222,9 +223,9 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
           <div class="lg:order-1">
             <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Dashboards · on quote</p>
             <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Your numbers, <span class="text-accent">on one screen.</span></h3>
-            <p class="mt-6 max-w-xl text-lg text-pretty text-muted">Jobs in one app, invoices in another, costs in a spreadsheet. I build a dashboard that pulls them together and answers what you actually ask: am I making money, who owes me, is next week full.</p>
+            <p class="mt-6 max-w-xl text-lg text-pretty text-muted">Jobs, invoices and costs, on one screen. Am I making money, who owes me, is next week full?</p>
             <ol class="mt-8 divide-y divide-line border-y border-line">
-              {[['It reads what you already use', 'Your spreadsheets, or your invoicing or booking tool if it can export.'], ['Answers, not a wall of charts', 'Plain English, on your phone or laptop.'], ['Logins for your team', 'Each person sees what they need, nothing more.']].map(([t, x], i) => (
+              {[['It reads what you already use', 'Spreadsheets, or your invoicing or booking tool.'], ['Answers, not charts', 'Plain English, on your phone.'], ['Logins for your team', 'Each person sees what they need.']].map(([t, x], i) => (
                 <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
                   <span aria-hidden="true" class:list={[display, 'text-3xl leading-none text-accent']}>{i + 1}</span>
                   <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>

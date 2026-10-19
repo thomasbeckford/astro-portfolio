@@ -3,6 +3,7 @@
 // name could match a real firm's in search. The home's #sites grid is where they are listed.
 import '@fontsource/anton'
 import '@fontsource-variable/archivo/wdth.css'
+import '@fontsource/shrikhand'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Hero from '@/components/kit/Hero.astro'
 import Marquee from '@/components/kit/Marquee.astro'
@@ -17,19 +18,41 @@ import Steps from '@/components/kit/Steps.astro'
 import Faq from '@/components/kit/Faq.astro'
 import Areas from '@/components/kit/Areas.astro'
 import Contact from '@/components/kit/Contact.astro'
+import Tiles from '@/components/kit/Tiles.astro'
+import Pinned from '@/components/kit/Pinned.astro'
+import Split from '@/components/kit/Split.astro'
+import Rail from '@/components/kit/Rail.astro'
+import Venues from '@/components/kit/Venues.astro'
+import Live from '@/components/kit/Live.astro'
+import Tournaments from '@/components/kit/Tournaments.astro'
+import Menu from '@/components/kit/Menu.astro'
+import Clubhouse from '@/components/kit/Clubhouse.astro'
+import Counter from '@/components/kit/Counter.astro'
+import Prices from '@/components/kit/Prices.astro'
+import Cookies from '@/components/kit/Cookies.astro'
 import DemoPill from '@/components/kit/DemoPill.astro'
 import { site } from '@/site'
 import { demos, type Demo } from '@/templates'
 
 export const getStaticPaths = () => demos.map((d) => ({ params: { slug: d.slug }, props: { d } }))
 const { d } = Astro.props as { d: Demo }
-const fonts = { archivo: "'Archivo Variable'", anton: "'Anton'", geist: "'Geist Variable'" }
+const fonts = { archivo: "'Archivo Variable'", anton: "'Anton'", geist: "'Geist Variable'", shrikhand: "'Shrikhand'" }
 const c = d.colors
-const vars = `--bg:${c.bg};--fg:${c.fg};--muted:${c.muted};--accent:${c.accent};--on-accent:${c.onAccent};--panel:${c.panel};--alt:${c.alt};--display:${fonts[d.font]},system-ui,sans-serif;background:${c.bg}`
+const theme = `--bg:${c.bg};--fg:${c.fg};--muted:${c.muted};--accent:${c.accent};--on-accent:${c.onAccent};--panel:${c.panel};--alt:${c.alt};--display:${fonts[d.font]},system-ui,sans-serif${d.font === 'shrikhand' ? ';font-synthesis-weight:none' : ''}` // Shrikhand has one weight; a faked bold smears it
+const vars = `${theme};background:${c.bg}`
 ---
 
 <BaseLayout title={`${d.trade} website example | ${site.name}`} description={`A full example website for a ${d.trade.toLowerCase()}, built by ${site.name}. Made-up business, real build.`} noindex>
-  <div id="main" class="overflow-x-clip bg-(--bg) text-(--fg)" style={vars}>
+  <!-- With motion, hold the hero name back until SplitText has cut it (motion.ts unhides it), so it never flashes whole
+       first. The style unhides it after 2.5s no matter what, so a failed script can't leave it blank. -->
+  <script is:inline>
+    if (matchMedia('(prefers-reduced-motion: no-preference)').matches) document.documentElement.setAttribute('data-hold', '')
+  </script>
+  <style is:inline>
+    html[data-hold] [data-letters] { visibility: hidden; animation: unhide 0s 2.5s forwards }
+    @keyframes unhide { to { visibility: visible } }
+  </style>
+  <div id="main" tabindex="-1" class:list={['overflow-x-clip bg-(--bg) outline-none text-(--fg)', d.sentence && '[&_.uppercase]:normal-case']} style={vars}>
     <Hero d={d} />
     {d.sections.map((s) => (
       s === 'marquee' && d.marquee ? <Marquee items={d.marquee} /> :
@@ -42,10 +65,22 @@ const vars = `--bg:${c.bg};--fg:${c.fg};--muted:${c.muted};--accent:${c.accent};
       s === 'faq' ? <Faq d={d} /> :
       s === 'steps' ? <Steps d={d} /> :
       s === 'areas' ? <Areas d={d} /> :
-      s === 'contact' ? <Contact d={d} /> : null
+      s === 'contact' ? <Contact d={d} /> :
+      s === 'tiles' ? <Tiles d={d} /> :
+      s === 'pinned' ? <Pinned d={d} /> :
+      s === 'split' ? <Split d={d} /> :
+      s === 'rail' ? <Rail d={d} /> :
+      s === 'venues' ? <Venues d={d} /> :
+      s === 'live' ? <Live d={d} /> :
+      s === 'tournaments' ? <Tournaments d={d} /> :
+      s === 'menu' ? <Menu d={d} /> :
+      s === 'clubhouse' ? <Clubhouse d={d} /> :
+      s === 'count' ? <Counter d={d} /> :
+      s === 'prices' ? <Prices d={d} /> : null
     ))}
   </div>
   {(d.curtain ?? d.hero.variant === 'poster') && <Curtain />}
+  {d.cookies && <Cookies style={theme} />}
   <DemoPill />
   <!-- Overscroll shows the page's own colour, not tebeck's paper. -->
   <style is:inline set:html={`html,body{background:${c.bg}}`}></style>

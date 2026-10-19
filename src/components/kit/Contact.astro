@@ -5,9 +5,9 @@ import { fit } from './media'
 const { d } = Astro.props as { d: Demo }
 ---
 <section id="contact" class="overflow-hidden bg-(--accent) text-(--on-accent)">
-  <div class="mx-auto grid max-w-7xl gap-10 px-4 pt-24 sm:px-8 md:grid-cols-2 md:items-end">
+  <div class="mx-auto grid max-w-7xl gap-10 px-4 pt-24 sm:px-8 lg:grid-cols-[1fr_auto] lg:items-end">
     <h2 data-split class="font-(family-name:--display) text-6xl leading-[0.9] font-black tracking-tight uppercase sm:text-8xl" style={d.font === 'archivo' ? 'font-stretch:125%' : undefined}>{d.contact}</h2>
-    <div class="md:justify-self-end md:text-right">
+    <div class="lg:text-right">
       <p class="text-lg">Call or WhatsApp</p>
       <p class="font-(family-name:--display) text-4xl font-bold tracking-tight sm:text-5xl">{d.tel}</p>
     </div>

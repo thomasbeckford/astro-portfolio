@@ -1,0 +1,63 @@
+---
+// Live scores: a leaderboard per venue that moves as bays finish holes, beside photo 1 and a feed of the latest shot.
+// The scores are made up here and in motion.ts, which plays them on (pausable); a real site would read them from the
+// simulators. Without JS: the first venue's board, still.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+import { rng } from './jungle'
+const { d } = Astro.props as { d: Demo }
+const venues = (d.venues ?? []).slice(0, 4)
+const teams = d.teams ?? []
+const pic = photos(d.slug)[0]
+const r = rng(7)
+const par = (s: number) => (s < 0 ? `−${-s}` : s === 0 ? 'E' : `+${s}`) // motion.ts writes the same
+const boards = venues.map((v, i) =>
+  Array.from({ length: 6 }, (_, j) => ({ team: teams[(i * 3 + j) % teams.length], bay: j + 1, thru: 2 + Math.floor(r() * 6), score: Math.floor(r() * 7) - 4 }))
+    .sort((a, b) => a.score - b.score || b.thru - a.thru),
+)
+const cols = 'grid grid-cols-[1.75rem_1fr_3rem_3.5rem] items-center gap-x-3 sm:grid-cols-[2.5rem_1fr_4rem_4rem_5rem]'
+---
+<section id="live" data-live class="px-4 py-24 sm:px-8 sm:py-32">
+  <div class="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1fr_24rem] lg:items-start">
+    <div class="min-w-0">
+      <p class="flex items-center gap-2.5 font-(family-name:--display) text-sm font-black tracking-wide uppercase">
+        <span class="relative flex size-2.5"><span class="absolute inset-0 rounded-full bg-(--accent) motion-safe:animate-ping"></span><span class="relative size-2.5 rounded-full bg-(--accent)"></span></span>Live
+      </p>
+      <h2 data-split class="mt-4 font-(family-name:--display) text-[clamp(2.25rem,8vw,5.5rem)] leading-[0.9] font-black tracking-[-0.03em] uppercase">{d.intro.label}</h2>
+      <p class="mt-5 max-w-lg text-lg text-(--muted)">{d.intro.text}</p>
+      <div class="mt-10 flex flex-wrap items-center justify-between gap-4">
+        <div data-live-tabs role="tablist" aria-label="Venue" class="hidden flex-wrap gap-2">
+          {venues.map((v, i) => <button type="button" role="tab" id={`live-tab-${i}`} aria-controls={`live-${i}`} aria-selected={String(i === 0)} tabindex={i ? -1 : 0} class="rounded-full border border-(--fg)/25 px-4 py-2 text-sm font-semibold transition-colors hover:border-(--accent) aria-selected:border-(--accent) aria-selected:bg-(--accent) aria-selected:text-(--on-accent)">{v.name}</button>)}
+        </div>
+        <button type="button" data-live-pause aria-pressed="false" class="hidden items-center gap-2 text-sm font-semibold text-(--muted) hover:text-(--fg)"><span data-live-pause-label>Pause</span> scores</button>
+      </div>
+      {boards.map((rows, i) => (
+        <div id={`live-${i}`} data-live-board role="tabpanel" aria-labelledby={`live-tab-${i}`} hidden={i > 0} class="mt-6">
+          <p class:list={[cols, 'border-b border-(--fg)/20 pb-3 text-xs font-semibold tracking-widest text-(--muted) uppercase']}>
+            <span>Pos</span><span>Team</span><span class="hidden sm:block">Bay</span><span class="text-right">Thru</span><span class="text-right">Score</span>
+          </p>
+          <ol>
+            {rows.map((row, j) => (
+              <li data-live-row data-team={row.team} data-thru={row.thru} data-score={row.score} class:list={[cols, 'relative border-b border-(--fg)/10 py-4']}>
+                <span data-live-pos class="font-(family-name:--display) text-sm font-black text-(--muted)">{j + 1}</span>
+                <span class="min-w-0 truncate font-semibold sm:text-lg">{row.team}<span class="ml-2 text-sm font-normal text-(--muted) sm:hidden">Bay {row.bay}</span></span>
+                <span class="hidden text-(--muted) sm:block">{row.bay}</span>
+                <span data-live-thru class="text-right tabular-nums">{row.thru}</span>
+                <span data-live-score class:list={['rounded-md px-2 py-0.5 text-right font-(family-name:--display) font-black tabular-nums', row.score < 0 && 'text-(--accent)']}>{par(row.score)}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      ))}
+      <p class="mt-6 text-sm text-(--muted)">Example scores, nine holes, against par. On a real site they come straight from the simulators.</p>
+    </div>
+    <div class="relative overflow-hidden rounded-3xl lg:sticky lg:top-8">
+      {pic && <Image src={pic} alt="A simulator bay with the course on the big screen" widths={[500, 800, 1100]} sizes="(min-width: 1024px) 24rem, 100vw" class="aspect-[4/5] w-full object-cover" />}
+      <div class="absolute inset-x-3 bottom-3 rounded-2xl bg-(--bg)/85 p-4 backdrop-blur-md">
+        <p class="text-xs font-semibold tracking-widest text-(--muted) uppercase">Latest</p>
+        <p data-live-feed class="mt-1 font-semibold">{boards[0]?.[0]?.team} lead at {venues[0]?.name}</p>
+      </div>
+    </div>
+  </div>
+</section>

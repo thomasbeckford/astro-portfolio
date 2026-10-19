@@ -439,6 +439,14 @@
 .kit-marquee-rev { animation-direction: reverse; }
 @media (prefers-reduced-motion: reduce) { .kit-marquee { animation: none; } }
 @keyframes kit-marquee { to { translate: -50% 0; } }
+/* Golf demo's jungle (kit/Jungle, kit/Grass): leaves and grass sway gently. Leaves use `rotate`, not `transform`, so
+   GSAP's transforms on the same leaves add to it. */
+@media (prefers-reduced-motion: no-preference) {
+  .jungle-sway { animation: jungle-sway 7s ease-in-out infinite alternate; }
+  .grass-sway { transform-origin: bottom; animation: grass-sway 3.5s ease-in-out infinite alternate; }
+}
+@keyframes jungle-sway { from { rotate: -1.5deg; } to { rotate: 1.5deg; } }
+@keyframes grass-sway { from { transform: skewX(-4deg); } to { transform: skewX(4deg); } }
 
 /* Opening curtain on the example sites (kit/Curtain.astro): motion.ts steps it away; this lifts it anyway if the
    script never runs, and reduced motion never sees it. */

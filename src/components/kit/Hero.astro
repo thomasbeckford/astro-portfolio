@@ -2,14 +2,29 @@
 // Four openings: 'wordmark' (name across the full width over video), 'scale' (headline, then video that shrinks
 // into a card as you scroll), 'letters' (giant name rising letter by letter over a dark video), 'poster' (video
 // behind a giant name; scrolling shrinks the video to a card and sends the name up into the header), 'cover'
-// (graded full-bleed video, small copy top-left, service list and an extended wordmark along the bottom edge).
+// (graded full-bleed video, small copy top-left, service list and an extended wordmark along the bottom edge),
+// 'product' (short centred headline over a photo that opens out to full width as you scroll; photo 1, no video),
+// 'campaign' (full-bleed video, giant stacked headline bottom-left, two pill buttons), 'booking' (drawn jungle
+// that parts as you scroll, grass held at the bottom, headline and a booking ticket: venue, date, players; motion.ts answers it, since nothing here can really book).
 import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
 import Nav from './Nav.astro'
 import Vid from './Vid.astro'
-import { clip, fit } from './media'
+import Jungle from './Jungle.astro'
+import Grass from './Grass.astro'
+import { clip, fit, photos } from './media'
+// A photo per venue for the ticket's cards, named after it (Northern Quarter → venues/northern-quarter.jpg).
+const places = import.meta.glob<{ default: ImageMetadata }>('@/assets/templates/*/venues/*.jpg', { eager: true })
+const place = (name: string) => places[`/src/assets/templates/${d.slug}/venues/${name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}.jpg`]?.default
 const { d } = Astro.props as { d: Demo }
 const v = clip(d.slug, 'hero')
 const h = d.hero
+// booking: the headline's last word set huge, the rest above it
+const head = h.head?.split(' ') ?? []
+const last = head.pop() ?? ''
+const field = 'flex min-w-0 flex-col rounded-full px-5 py-2.5 text-[0.7rem] sm:px-6 sm:py-3.5 sm:text-xs font-semibold tracking-widest text-white/70 uppercase transition-colors hover:bg-white/5 focus-within:bg-white/10'
+const step = 'grid size-9 shrink-0 place-items-center rounded-full border border-white/25 text-lg font-bold text-white transition-colors hover:border-(--accent) hover:text-(--accent)'
+const input = 'mt-1 min-w-0 bg-transparent text-lg font-semibold sm:text-xl tracking-normal text-white normal-case outline-none'
 ---
 {h.variant === 'wordmark' && (
   <section id="top" class="relative isolate flex min-h-[100dvh] flex-col overflow-hidden">
@@ -112,6 +127,106 @@ const h = d.hero
       <h1 data-poster-mark data-letters data-delay="0.7" class="absolute inset-x-0 bottom-20 text-center md:bottom-[2vh] font-(family-name:--display) leading-[0.8] font-bold tracking-[-0.06em] whitespace-nowrap text-(--accent)" style={`font-size:${fit(d.mark, d.font, 32)}`}>
         <span>{d.mark}</span>
       </h1>
+    </div>
+  </section>
+)}
+{h.variant === 'product' && (
+  <section id="top" class="relative">
+    <Nav d={d} />
+    <div class="mx-auto max-w-4xl px-4 pt-36 pb-14 text-center sm:px-8 sm:pt-44">
+      <p class="font-medium text-(--accent)">{h.kicker}</p>
+      <h1 data-split class="mt-3 font-(family-name:--display) text-5xl leading-[1] font-semibold tracking-[-0.05em] text-balance sm:text-8xl">{h.head}</h1>
+      <p class="mx-auto mt-6 max-w-xl text-lg text-pretty text-(--muted) sm:text-xl">{h.lede}</p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+        <a href="#contact" class="rounded-full bg-(--accent) px-7 py-3.5 font-medium text-(--on-accent)">{h.cta}</a>
+        <a href="#services" class="font-medium text-(--accent) hover:underline">See what we fit ›</a>
+      </div>
+    </div>
+    {photos(d.slug)[0] && (
+      <div data-grow class="h-[70dvh] overflow-hidden sm:h-[90dvh]">
+        <Image src={photos(d.slug)[0]} alt="" widths={[800, 1400, 2000, 2400]} sizes="100vw" loading="eager" class="size-full object-cover" />
+      </div>
+    )}
+  </section>
+)}
+{h.variant === 'campaign' && (
+  <section id="top" class="relative isolate flex min-h-[100dvh] flex-col justify-end overflow-hidden px-4 pt-28 pb-24 text-white sm:px-8 sm:pb-12">
+    <Nav d={d} />
+    <Vid {...v} class="absolute inset-0 -z-20 size-full" />
+    <div class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/20 to-black/40"></div>
+    <p class="text-sm font-semibold tracking-[0.2em] text-(--accent) uppercase">{h.kicker}</p>
+    <h1 data-letters class="mt-4 max-w-[12ch] font-(family-name:--display) text-[19vw] leading-[0.84] uppercase sm:text-[12vw] lg:text-[10.5vw]">{h.head}</h1>
+    <div class="mt-8 flex flex-wrap items-end justify-between gap-8">
+      <p class="max-w-md text-lg text-white/85">{h.lede}</p>
+      <div class="flex flex-wrap gap-3">
+        <a href="#contact" class="rounded-full bg-white px-7 py-3.5 font-semibold text-black transition-colors hover:bg-(--accent)">{h.cta}</a>
+        <a href="#work" class="rounded-full border border-white/60 px-7 py-3.5 font-semibold transition-colors hover:bg-white hover:text-black">See the work</a>
+      </div>
+    </div>
+  </section>
+)}
+{h.variant === 'booking' && (
+  <section id="top" class="relative isolate flex min-h-[100dvh] flex-col overflow-hidden px-4 pb-24 text-white sm:px-8 lg:pb-10">
+    <header class="relative z-20 flex items-center justify-between gap-4 py-6">
+      <a href="#top" class="flex items-center gap-2.5 font-(family-name:--display) text-base font-black tracking-tight uppercase sm:text-xl"><span class="size-3.5 rounded-full bg-(--accent)"></span>{d.mark}</a>
+      <nav aria-label={`${d.name} menu`} class="hidden gap-10 text-base font-semibold lg:flex">
+        <a href="#live" class="hover:text-(--accent)">Live scores</a><a href="#tournaments" class="hover:text-(--accent)">Tournaments</a><a href="#menu" class="hover:text-(--accent)">Menu</a><a href="#venues" class="hover:text-(--accent)">Venues</a>
+      </nav>
+      <a href="#book" class="rounded-full bg-(--accent) px-6 py-3 text-base font-bold whitespace-nowrap text-(--on-accent)">{h.cta}</a>
+    </header>
+    <Jungle layer="back" />
+    <!-- The headline sits inside the jungle: the nearest leaves pass in front of it. -->
+    <div class="my-auto flex flex-col items-center pt-10 pb-8 text-center">
+      <p class="text-xs font-semibold tracking-[0.25em] text-white/80 uppercase sm:text-sm">{h.kicker}</p>
+      <h1 data-letters class="mt-6 font-(family-name:--display) leading-[0.8] font-black tracking-[-0.04em] uppercase">
+        <span class="block text-[clamp(1.75rem,6.5vw,5.5rem)]">{head.join(' ')}</span>
+        <span class="block text-(--accent)" style={`font-size:min(${fit(last, d.font)},32dvh)`}>{last}</span>
+      </h1>
+      <p class="mt-6 max-w-lg text-base text-white/80 sm:text-lg">{h.lede}</p>
+    </div>
+    <Jungle layer="front" />
+    <Grass />
+    <!-- Booking bar. Without JS it submits to the page itself, harmless, with a plain date and number field; motion.ts adds
+         day chips and the − + buttons, and answers it instead. -->
+    <div class="relative z-20 mx-auto w-full max-w-6xl">
+      <form id="book" data-book action="#venues" class="grid scroll-mt-6 gap-1 rounded-[2rem] border border-(--accent)/45 bg-(--bg)/85 p-2 shadow-[0_40px_90px_-30px_rgba(0,0,0,0.9),0_0_0_8px_color-mix(in_oklab,var(--accent)_10%,transparent)] [color-scheme:dark] backdrop-blur-xl lg:grid-cols-[1fr_auto_auto] lg:items-center">
+        <!-- Where first: every venue in sight, not behind a dropdown. "Near me" (motion.ts) sorts them by distance and picks the nearest. -->
+        <fieldset aria-labelledby="book-where" class="min-w-0 rounded-[1.5rem] border-b border-white/10 px-3 pt-3 pb-4 lg:col-span-3 sm:px-4">
+          <div class="flex items-center justify-between gap-3 px-2">
+            <span id="book-where" class="text-[0.7rem] font-semibold tracking-widest text-white/70 uppercase sm:text-xs">Where · {(d.venues ?? []).length} venues</span>
+            <button type="button" data-book-near hidden class="flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-bold text-(--accent) transition-colors hover:bg-white/5 disabled:opacity-60"><span aria-hidden="true" class="size-2 rounded-full bg-current shadow-[0_0_0_3px_color-mix(in_oklab,currentColor_25%,transparent)]"></span>Near me</button>
+          </div>
+          <div data-book-venues class="-mx-1 mt-1 flex snap-x gap-2 overflow-x-auto p-1 [scrollbar-width:none] lg:[&>label]:flex-[1_1_0]">
+            {(d.venues ?? []).map((x, i) => (
+              <label data-lat={x.lat} data-lon={x.lon} class="group relative isolate flex h-28 w-40 shrink-0 snap-start cursor-pointer flex-col justify-end overflow-hidden rounded-2xl px-4 pt-8 pb-3 text-white ring-1 ring-white/15 hover:ring-white/50 has-[:checked]:w-72 motion-safe:transition-[width,flex-grow,box-shadow] motion-safe:duration-500 motion-safe:ease-[cubic-bezier(0.16,1,0.3,1)] lg:w-auto lg:has-[:checked]:w-auto lg:h-32 lg:has-[:checked]:grow-[2.2] has-[:checked]:ring-3 has-[:checked]:ring-(--accent) has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-(--accent) lg:min-w-0">
+                {place(x.name) && <Image src={place(x.name)!} alt="" widths={[240, 480]} sizes="240px" class="absolute inset-0 -z-10 size-full object-cover brightness-75 transition-[transform,filter] duration-500 ease-out group-has-[:checked]:brightness-90 motion-safe:group-hover:scale-105 motion-safe:group-has-[:checked]:scale-105" />}
+                <span aria-hidden="true" class="absolute inset-0 -z-10 bg-linear-to-t from-black/85 via-black/40 to-transparent"></span>
+                <input type="radio" name="venue" value={x.name} checked={i === 0} class="peer sr-only" />
+                <span aria-hidden="true" class="absolute top-2.5 right-2.5 grid size-5 scale-0 place-items-center rounded-full bg-(--accent) text-xs font-black text-(--on-accent) peer-checked:scale-100 motion-safe:transition-transform motion-safe:duration-300">✓</span>
+                <span class="block font-(family-name:--display) text-base leading-tight font-black uppercase group-has-[:checked]:text-(--accent) lg:text-sm">{x.name}</span>
+                <span class="mt-0.5 block text-xs font-semibold whitespace-nowrap text-white/75">{x.city}<span data-book-dist></span></span>
+                <span class="grid grid-rows-[0fr] opacity-0 group-has-[:checked]:grid-rows-[1fr] group-has-[:checked]:opacity-100 motion-safe:transition-[grid-template-rows,opacity] motion-safe:duration-500"><span class="min-h-0 overflow-hidden"><span class="block truncate pt-1 text-xs text-white/90">{x.text}</span></span></span>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        <div role="group" aria-labelledby="book-when" class={field}>
+          <span id="book-when">When</span>
+          <div data-book-days class="mt-1.5 flex flex-wrap items-center gap-1.5">
+            <label data-book-other><span hidden>Other date</span><input type="date" name="date" required aria-label="Date" class={input} /></label>
+          </div>
+        </div>
+        <div role="group" aria-labelledby="book-players" class={field}>
+          <span id="book-players">Players</span>
+          <div class="mt-1.5 flex items-center gap-2">
+            <button type="button" data-step="-1" aria-label="One fewer player" hidden class={step}>−</button>
+            <input type="number" name="players" aria-label="Players" min="1" max="8" value="4" required inputmode="numeric" class:list={[input, 'w-10 text-center [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none']} />
+            <button type="button" data-step="1" aria-label="One more player" hidden class={step}>+</button>
+          </div>
+        </div>
+        <button class="rounded-full bg-(--accent) px-9 py-5 text-lg font-bold whitespace-nowrap text-(--on-accent) transition-transform active:scale-[0.98]">{h.cta} →</button>
+      </form>
+      <p data-book-note role="status" class="pt-3 text-center text-sm text-white/80 empty:p-0"></p>
     </div>
   </section>
 )}

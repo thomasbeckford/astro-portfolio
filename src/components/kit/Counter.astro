@@ -1,0 +1,27 @@
+---
+// A running count on a ticket: balls hit across every bay, on split-flap tiles that flip as it goes up. Made up (it
+// says so): a start and a rate, so the build and motion.ts work out the same number for any moment. motion.ts ticks
+// it (pausable), only while it's on screen. Without JS: the count at build time, still.
+import type { Demo } from '@/templates'
+const { d } = Astro.props as { d: Demo }
+const base = 38_412_906, from = Date.UTC(2026, 9, 1), every = 400 // one ball per 400 ms, from 1 Oct 2026
+const n = (base + Math.floor((Date.now() - from) / every)).toLocaleString('en-GB')
+const notch = 'radial-gradient(1.1rem at 0 0,#0000 98%,#000) top left,radial-gradient(1.1rem at 100% 0,#0000 98%,#000) top right,radial-gradient(1.1rem at 0 100%,#0000 98%,#000) bottom left,radial-gradient(1.1rem at 100% 100%,#0000 98%,#000) bottom right'
+---
+<section id="count" data-count={base} data-count-from={from} data-count-every={every} class="px-4 py-24 sm:px-8 sm:py-32">
+  <div class="mx-auto w-fit max-w-full -rotate-1 drop-shadow-[0_30px_40px_rgba(0,0,0,0.55)]">
+  <div class="bg-(--accent) p-2.5 text-(--on-accent) sm:p-3.5" style={`mask:${notch};mask-size:51% 51%;mask-repeat:no-repeat`}>
+    <div class="border-2 border-dashed border-(--on-accent)/35 px-5 py-8 text-center sm:px-12 sm:py-12">
+      <p class="font-(family-name:--display) text-[clamp(1.4rem,4vw,2.5rem)] leading-none font-black tracking-[-0.02em] uppercase">Balls hit at {d.name}</p>
+      <p class="mt-6 sm:mt-8">
+        <span data-count-text class="sr-only">{n}</span>
+        <span data-count-tiles aria-hidden="true" class="flex justify-center gap-1 font-sans text-[clamp(2.1rem,8.5vw,6.5rem)] leading-none font-black tabular-nums sm:gap-1.5 [perspective:400px]">
+          {[...n].map((ch) => ch === ',' ? <span class="w-[0.3em] self-end">,</span> : <span class="relative grid h-[1.3em] w-[0.78em] place-items-center overflow-hidden rounded-[0.12em] bg-[linear-gradient(#1b4129_50%,#0b1d12_50%)] text-(--fg) shadow-[inset_0_-0.06em_0_#0006] after:absolute after:inset-x-0 after:top-1/2 after:h-px after:bg-black/70"><span>{ch}</span></span>)}
+        </span>
+      </p>
+      <p class="mt-5 text-sm font-bold sm:mt-6 sm:text-base"><span data-count-since>So far</span> · every bay, every venue</p>
+    </div>
+  </div>
+  </div>
+  <p class="mx-auto mt-6 max-w-md text-center text-sm text-(--muted)">Example count. On a real site it adds up the shots from every simulator. <button type="button" data-count-pause hidden class="font-semibold underline underline-offset-4 hover:text-(--fg)">Pause</button></p>
+</section>

@@ -1,0 +1,27 @@
+---
+// Recent work as a sideways rail you swipe or step through with the arrows (motion.ts wires them). Photos 3..8.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import { photos } from './media'
+const { d } = Astro.props as { d: Demo }
+const pics = photos(d.slug).slice(2)
+const items = (d.projects ?? []).filter((_, i) => pics[i])
+const btn = 'grid size-12 place-items-center rounded-full border border-(--fg)/25 text-xl transition-colors hover:bg-(--fg) hover:text-(--bg)'
+---
+<section id="work" data-rail aria-label="Recent work" class="py-24 sm:py-32">
+  <div class="flex items-end justify-between gap-6 px-4 sm:px-8">
+    <h2 data-split class="font-(family-name:--display) text-6xl leading-[0.85] uppercase sm:text-9xl">Latest<br /><span class="text-(--accent)">builds</span></h2>
+    <div data-rail-buttons class="hidden gap-3">
+      <button type="button" data-rail-prev aria-label="Previous" class={btn}>←</button>
+      <button type="button" data-rail-next aria-label="Next" class={btn}>→</button>
+    </div>
+  </div>
+  <ul data-rail-track data-lenis-prevent-horizontal tabindex="0" aria-label="Recent work, scroll sideways" class="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4 [scrollbar-width:none] sm:scroll-px-8 sm:px-8">
+    {items.map((p, i) => (
+      <li class="w-[80vw] shrink-0 snap-start sm:w-[45vw] lg:w-[30vw]">
+        <div class="aspect-[4/5] overflow-hidden bg-(--panel)"><Image src={pics[i]} alt="" widths={[500, 800, 1200]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 80vw" class="size-full object-cover" /></div>
+        <p class="mt-4 flex justify-between gap-4 text-sm"><span class="font-semibold">{p.title}</span><span class="text-(--muted)">{p.kind}</span></p>
+      </li>
+    ))}
+  </ul>
+</section>
