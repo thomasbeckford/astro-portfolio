@@ -23,8 +23,6 @@ const quote = "Hi Thomas, I'd like a quote for a website for my business.\n\nBus
 const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Website quote')}&body=${encodeURIComponent(quote)}`
 const whatsapp = wa(quote)
 const [, ...extras] = services
-// The editing panels I set up, with what each is good at.
-const cms = [['Payload', 'Open source, self-hosted'], ['Sanity', 'Live, shared editing'], ['Contentstack', 'Enterprise, many sites'], ['WordPress', 'Headless: the editor you know']]
 // What the 'Bigger jobs' section lists: title, what it is, what it's built with.
 const builds = [
   ['Web apps', 'Bookings, payments, customer logins and dashboards.', 'Next.js · TanStack Start · Stripe'],
@@ -120,30 +118,19 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         )}
       </section>
 
-      <!-- The CMS options as giant type with one big way to get in touch, the three steps beside them, the add-ons as a quiet list. -->
+      <!-- The three steps as giant type with one big way to get in touch, the steps themselves beside them, the add-ons as a quiet list. -->
       <section id="services" class="scroll-mt-20 px-4 py-24 sm:px-8 sm:py-32">
         <div class="mx-auto max-w-[96rem]">
         <div class="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
           <div>
-            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Edit it yourself</p>
-            <h2 data-split class:list={[display, 'mt-4 text-6xl leading-[0.9] sm:text-8xl']}>You edit it. <span class="text-accent">I keep it fast.</span></h2>
-            <p class="mt-6 max-w-md text-lg text-pretty text-muted">Change your words, photos and prices yourself. Your site runs on the CMS that fits the job.</p>
-            <ul class="mt-10 divide-y divide-line border-y border-line">
-              {cms.map(([n, t]) => (
-                <li class="grid gap-1.5 py-4 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-6">
-                  <span class:list={[display, 'text-5xl leading-none sm:text-6xl']}>{n}</span>
-                  <span class="font-mono text-xs tracking-[0.15em] text-muted uppercase">{t}</span>
-                </li>
-              ))}
-            </ul>
-            <a href={whatsapp} target="_blank" rel="noopener" class="btn mt-10 min-h-20 w-full justify-between rounded-2xl bg-whatsapp px-7 text-xl text-[#1f2737] shadow-xl shadow-whatsapp/20 hover:shadow-whatsapp/40 sm:text-2xl">
+            <h2 data-split class:list={[display, 'text-6xl leading-[0.9] sm:text-8xl']}>Three steps. <span class="text-muted">You only do the first one.</span></h2>
+            <a href={whatsapp} target="_blank" rel="noopener" class="btn mt-12 min-h-20 w-full justify-between rounded-2xl bg-whatsapp px-7 text-xl text-[#1f2737] shadow-xl shadow-whatsapp/20 hover:shadow-whatsapp/40 sm:text-2xl">
               <span class="flex items-center gap-3"><svg viewBox="0 0 24 24" class="size-8" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>WhatsApp me</span>
               <span class="text-sm font-medium max-sm:hidden">One message, no forms</span>
             </a>
           </div>
           <div>
-            <h2 data-split class:list={[display, 'text-6xl leading-[0.9] sm:text-8xl']}>Three steps. <span class="text-muted">You only do the first one.</span></h2>
-            <ol class="mt-10 divide-y divide-line border-y border-line">
+            <ol class="divide-y divide-line border-y border-line">
               {steps.map((s) => (
                 <li class="grid grid-cols-[auto_1fr] gap-6 py-6">
                   <span aria-hidden="true" class:list={[display, 'text-6xl leading-none text-accent']}>{s.n}</span>
@@ -174,7 +161,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
                 </li>
               ))}
             </ol>
-            <p class="mt-4 text-sm text-pretty text-muted">Built with Payload CMS. The animation is an example site. Estancia La Josefina runs on Payload too. Rather just message me? That is the Care plan.</p>
+            <p class="mt-4 text-sm text-pretty text-muted">Built with Payload CMS, or Sanity, Contentstack or headless WordPress if the job needs it. The animation is an example site. Estancia La Josefina runs on Payload too. Rather just message me? That is the Care plan.</p>
           </div>
         </div>
 

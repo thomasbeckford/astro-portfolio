@@ -11,7 +11,7 @@ export interface Demo {
   mark: string // the giant wordmark
   tel: string
   look: string[] // tags on the home's #sites card
-  font: 'archivo' | 'anton' | 'geist' | 'shrikhand'
+  font: 'archivo' | 'anton' | 'geist' | 'oswald' | 'shoulders'
   colors: { bg: string; fg: string; muted: string; accent: string; onAccent: string; panel: string; alt: string }
   hero: { variant: 'wordmark' | 'scale' | 'letters' | 'poster' | 'cover' | 'product' | 'campaign' | 'booking'; kicker: string; head?: string; lede: string; cta: string }
   marquee?: string[]
@@ -35,7 +35,8 @@ export interface Demo {
   contact: string
   sections: Section[]
   sentence?: boolean // headings in sentence case instead of the kit's capitals
-  cookies?: boolean // a cookie banner that looks the part and sets nothing (kit/Cookies)
+  page?: 'games' | 'hotel' // a page of its own (components/demos) instead of the kit's hero and sections
+  cookies?: true | string // a cookie banner that looks the part and sets nothing (kit/Cookies); a string is its heading
   curtain?: boolean // opening grid of blocks (kit/Curtain); defaults to on with the poster hero only
 }
 
@@ -47,7 +48,7 @@ export const demos: Demo[] = [
     mark: 'Overgrown',
     tel: '07700 900420',
     look: ['Booking by venue', 'Find your nearest', 'Live scores', 'Price per player', 'Tournaments', 'Menu by venue'],
-    font: 'shrikhand',
+    font: 'oswald',
     colors: { bg: '#0b1d12', fg: '#eef2e2', muted: '#9fb5a2', accent: '#ffb627', onAccent: '#0b1d12', panel: '#12301d', alt: '#eef2e2' },
     hero: { variant: 'booking', kicker: 'Golf simulators · Jungle bar · Kitchen', head: 'Into the rough', lede: 'Simulator bays hidden in a jungle of real plants, with a kitchen and a long bar. No clubs, no experience and no dress code needed.', cta: 'Find a bay' },
     intro: { label: 'Live from the bays', text: 'Every bay keeps score on screen, and the scores land here as they’re played.' },
@@ -111,6 +112,63 @@ export const demos: Demo[] = [
     cookies: true,
   },
   {
+    slug: 'hotel',
+    trade: 'Hotel group',
+    name: 'Latchkey Hotels',
+    mark: 'Latchkey',
+    tel: '07700 900421',
+    look: ['Price calendar', 'Map of hotels', 'Room plans', 'Door code by text', 'Light'],
+    font: 'geist',
+    colors: { bg: '#eef0ec', fg: '#16201c', muted: '#56615b', accent: '#2147c9', onAccent: '#ffffff', panel: '#e1e5df', alt: '#16201c' },
+    hero: { variant: 'booking', kicker: 'Small hotels in seven cities', head: 'Wake up somewhere new', lede: 'Each one in an old building that used to be something else, in the part of town you’d want to walk around. Breakfast is on us.', cta: 'Find a room' },
+    intro: { label: 'A key, not a lobby', text: 'No queue at a desk. Your door code comes by text the morning you arrive, and someone’s always downstairs if you want them.' },
+    venues: [
+      { name: 'Bloomsbury', city: 'London', text: 'A row of Georgian townhouses, knocked through.', has: ['Garden', 'Bar'], lat: 51.5226, lon: -0.125 },
+      { name: 'Old Town', city: 'Edinburgh', text: 'A printworks off the Royal Mile.', has: ['Bar', 'Reading room'], lat: 55.9496, lon: -3.191 },
+      { name: 'Jordaan', city: 'Amsterdam', text: 'Three canal houses side by side.', has: ['Bikes', 'Canal view'], lat: 52.3756, lon: 4.8833 },
+      { name: 'Vesterbro', city: 'Copenhagen', text: 'A meatpacking hall, now rooms and a bakery.', has: ['Bakery', 'Bikes', 'Sauna'], lat: 55.6698, lon: 12.548 },
+      { name: 'Le Marais', city: 'Paris', text: 'A hat maker’s workshop round a courtyard.', has: ['Courtyard', 'Bar'], lat: 48.859, lon: 2.362 },
+      { name: 'Gràcia', city: 'Barcelona', text: 'An old cinema, with a pool on the roof.', has: ['Roof pool', 'Bar'], lat: 41.4036, lon: 2.1567 },
+      { name: 'Alfama', city: 'Lisbon', text: 'A tiled merchant’s house above the river.', has: ['Roof terrace', 'River view'], lat: 38.7114, lon: -9.13 },
+    ],
+    services: { variant: 'rows', label: 'Rooms', items: [{ title: 'Snug', text: '' }, { title: 'Classic', text: '' }, { title: 'Corner suite', text: '' }] },
+    band: 'Stay another night',
+    steps: [],
+    areas: ['London', 'Edinburgh', 'Amsterdam', 'Copenhagen', 'Paris', 'Barcelona', 'Lisbon'],
+    contact: 'Bring everyone',
+    sections: [],
+    page: 'hotel',
+    cookies: 'Cookies before you check in?',
+  },
+  {
+    slug: 'games',
+    trade: 'Games bar',
+    name: 'Double Out Games Club',
+    mark: 'Double Out',
+    tel: '07700 900422',
+    look: ['Dartboard you can throw at', 'Game picker', 'Oche availability', 'Party builder', 'Dark'],
+    font: 'shoulders',
+    colors: { bg: '#0f1115', fg: '#f3f1ea', muted: '#9b9ea6', accent: '#ff5a36', onAccent: '#0f1115', panel: '#181b21', alt: '#f3f1ea' },
+    hero: { variant: 'booking', kicker: 'Darts · Shuffleboard · Ping pong · Karaoke', head: 'Step up to the oche', lede: 'Darts that keep the score for you, more games under one roof, a kitchen and a long bar. Come with friends, leave with a rivalry.', cta: 'Book an oche' },
+    intro: { label: 'Pick your game', text: 'Seven ways to settle it, from a straight 501 to a karaoke booth.' },
+    venues: [
+      { name: 'Borough', city: 'London', text: 'Under the railway, two minutes from the market.', has: ['Shuffleboard', 'Karaoke'], lat: 51.5035, lon: -0.0911 },
+      { name: 'Camden', city: 'London', text: 'An old piano factory by the canal.', has: ['Ping pong'], lat: 51.539, lon: -0.1426 },
+      { name: 'Deansgate', city: 'Manchester', text: 'Our biggest, with a stage for league finals.', has: ['Shuffleboard', 'Karaoke'], lat: 53.4794, lon: -2.249 },
+      { name: 'Digbeth', city: 'Birmingham', text: 'A custard factory’s old boiler room.', has: ['Ping pong', 'Karaoke'], lat: 52.4751, lon: -1.8826 },
+      { name: 'Ropewalks', city: 'Liverpool', text: 'Three floors of a warehouse, games on every one.', has: ['Shuffleboard', 'Ping pong'], lat: 53.401, lon: -2.98 },
+      { name: 'Quayside', city: 'Newcastle', text: 'On the river, under the bridges.', has: ['Shuffleboard'], lat: 54.969, lon: -1.606 },
+    ],
+    services: { variant: 'rows', label: 'Games', items: [{ title: '501', text: '' }, { title: 'Killer', text: '' }, { title: 'Shanghai', text: '' }] },
+    band: 'Treble or nothing',
+    steps: [],
+    areas: ['London', 'Manchester', 'Birmingham', 'Liverpool', 'Newcastle'],
+    contact: 'Bring the office',
+    sections: [],
+    page: 'games',
+    cookies: 'Cookies before the first leg?',
+  },
+  {
     slug: 'electrician',
     trade: 'Electrician',
     name: 'Bright Spark Electrical',
@@ -141,37 +199,6 @@ export const demos: Demo[] = [
     areas: ['Bromley', 'Beckenham', 'Orpington', 'Chislehurst', 'West Wickham', 'Hayes'],
     contact: 'Got a job?',
     sections: ['marquee', 'intro', 'services', 'band', 'steps', 'areas', 'contact'],
-  },
-  {
-    slug: 'plumber',
-    trade: 'Plumber',
-    name: 'Dave’s Plumbing',
-    mark: 'Dave’s',
-    tel: '07700 900412',
-    look: ['Clean', 'Calm', 'Card stack'],
-    font: 'geist',
-    colors: { bg: '#f4f6fb', fg: '#0d1b3e', muted: '#55607a', accent: '#1d4ed8', onAccent: '#ffffff', panel: '#ffffff', alt: '#22d3ee' },
-    hero: { variant: 'scale', kicker: 'Gas Safe registered · Bromley', head: 'Leak? Boiler down? We’re on our way.', lede: 'Emergency call-outs, boilers and bathrooms across Bromley. Price agreed before we start.', cta: 'Get a fixed price' },
-    intro: { label: 'How we work', text: 'We tell you the price on the phone, turn up when we said we would, and leave the place cleaner than we found it.' },
-    services: {
-      variant: 'stack',
-      label: 'Services',
-      items: [
-        { title: 'Emergency call-outs', text: 'Burst pipe or no hot water? Day or night, seven days a week.', points: ['Price agreed on the phone', 'Water off and safe first', 'Proper fix, not a patch'] },
-        { title: 'Boilers', text: 'Repairs, yearly services and new boilers fitted, with the warranty registered for you.', points: ['Repairs and yearly services', 'New boilers fitted', 'Warranty registered for you'] },
-        { title: 'Bathrooms', text: 'From a new tap to the whole room, planned with you and finished on the date we agreed.', points: ['From one tap to the whole room', 'One team, start to finish', 'Finished on the agreed date'] },
-        { title: 'Leaks and blockages', text: 'Found, fixed and explained, so it doesn’t come back.', points: ['Found without ripping things up', 'Fixed and explained', 'Left clean and dry'] },
-      ],
-    },
-    band: 'Water where it should be.',
-    steps: [
-      { title: 'Call or message', text: 'Tell us what’s wrong. A photo helps.' },
-      { title: 'Price agreed', text: 'Before we pick up a spanner.' },
-      { title: 'Fixed, tidied', text: 'We test it with you and clean up.' },
-    ],
-    areas: ['Bromley', 'Beckenham', 'Penge', 'Sydenham', 'Catford', 'Eltham'],
-    contact: 'Need a plumber today?',
-    sections: ['intro', 'services', 'band', 'steps', 'areas', 'contact'],
   },
   {
     slug: 'roofer',
@@ -315,44 +342,6 @@ export const demos: Demo[] = [
     sections: ['intro', 'gallery', 'services', 'band', 'steps', 'areas', 'contact'],
   },
   {
-    slug: 'kitchen',
-    trade: 'Kitchen fitter',
-    name: 'Quiet Kitchen Co.',
-    mark: 'Quiet',
-    tel: '07700 900418',
-    look: ['Minimal', 'Bright', 'Product feel'],
-    font: 'geist',
-    colors: { bg: '#f4f5f7', fg: '#141518', muted: '#5f6368', accent: '#0b63ce', onAccent: '#ffffff', panel: '#ffffff', alt: '#141518' },
-    sentence: true,
-    hero: { variant: 'product', kicker: 'Kitchen fitter · Bromley', head: 'The kitchen. Finally right.', lede: 'Planned around how you cook, fitted by one small team, finished so every drawer closes the same way.', cta: 'Book a home visit' },
-    intro: { label: 'Small things you use every day.', text: 'A kitchen is a thousand little moves a week. We sweat the ones you’ll notice.' },
-    tiles: [
-      { title: 'Worktops', text: 'Templated in your kitchen, cut to fit the walls you actually have.' },
-      { title: 'Drawers', text: 'Soft-close and deep enough for the big pans.' },
-      { title: 'Handles', text: 'Chosen with you, set at the same height on every door.' },
-      { title: 'Light', text: 'Pendants and under-cabinet strips planned with the layout, not after it.' },
-    ],
-    services: {
-      variant: 'rows',
-      label: 'What we fit',
-      items: [
-        { title: 'Full kitchens', text: 'Planned with you, supplied and fitted, from the first sketch to the last plinth.' },
-        { title: 'Worktops', text: 'Quartz, laminate or solid wood, templated and fitted to the millimetre.' },
-        { title: 'Refits', text: 'Keep the layout, change the doors, tops and handles.' },
-        { title: 'Fitting only', text: 'Already bought your kitchen? We fit it, with the plumber and electrician we always work with.' },
-      ],
-    },
-    band: 'Fitted to the millimetre.',
-    steps: [
-      { title: 'We visit and measure', text: 'An hour at your place. We measure everything and ask how you cook.' },
-      { title: 'You see it first', text: 'A drawing and a fixed price before anything is ordered.' },
-      { title: 'Fitted, then tidied', text: 'One team from start to finish. Floors swept, boxes gone.' },
-    ],
-    areas: ['Bromley', 'Beckenham', 'Chislehurst', 'Shortlands', 'Bickley', 'West Wickham'],
-    contact: 'Let’s plan your kitchen',
-    sections: ['tiles', 'services', 'pinned', 'areas', 'contact'],
-  },
-  {
     slug: 'builder',
     trade: 'Builder',
     name: 'Ironside Build',
@@ -396,3 +385,37 @@ export const demos: Demo[] = [
     sections: ['split', 'services', 'rail', 'steps', 'areas', 'contact'],
   },
 ]
+
+
+// Not listed in demos (no page): the home's lead and dashboard animations (LeadDemo, DashDemo) still show Dave’s.
+export const plumber: Demo = {
+  slug: 'plumber',
+  trade: 'Plumber',
+  name: 'Dave’s Plumbing',
+  mark: 'Dave’s',
+  tel: '07700 900412',
+  look: ['Clean', 'Calm', 'Card stack'],
+  font: 'geist',
+  colors: { bg: '#f4f6fb', fg: '#0d1b3e', muted: '#55607a', accent: '#1d4ed8', onAccent: '#ffffff', panel: '#ffffff', alt: '#22d3ee' },
+  hero: { variant: 'scale', kicker: 'Gas Safe registered · Bromley', head: 'Leak? Boiler down? We’re on our way.', lede: 'Emergency call-outs, boilers and bathrooms across Bromley. Price agreed before we start.', cta: 'Get a fixed price' },
+  intro: { label: 'How we work', text: 'We tell you the price on the phone, turn up when we said we would, and leave the place cleaner than we found it.' },
+  services: {
+    variant: 'stack',
+    label: 'Services',
+    items: [
+      { title: 'Emergency call-outs', text: 'Burst pipe or no hot water? Day or night, seven days a week.', points: ['Price agreed on the phone', 'Water off and safe first', 'Proper fix, not a patch'] },
+      { title: 'Boilers', text: 'Repairs, yearly services and new boilers fitted, with the warranty registered for you.', points: ['Repairs and yearly services', 'New boilers fitted', 'Warranty registered for you'] },
+      { title: 'Bathrooms', text: 'From a new tap to the whole room, planned with you and finished on the date we agreed.', points: ['From one tap to the whole room', 'One team, start to finish', 'Finished on the agreed date'] },
+      { title: 'Leaks and blockages', text: 'Found, fixed and explained, so it doesn’t come back.', points: ['Found without ripping things up', 'Fixed and explained', 'Left clean and dry'] },
+    ],
+  },
+  band: 'Water where it should be.',
+  steps: [
+    { title: 'Call or message', text: 'Tell us what’s wrong. A photo helps.' },
+    { title: 'Price agreed', text: 'Before we pick up a spanner.' },
+    { title: 'Fixed, tidied', text: 'We test it with you and clean up.' },
+  ],
+  areas: ['Bromley', 'Beckenham', 'Penge', 'Sydenham', 'Catford', 'Eltham'],
+  contact: 'Need a plumber today?',
+  sections: ['intro', 'services', 'band', 'steps', 'areas', 'contact'],
+}

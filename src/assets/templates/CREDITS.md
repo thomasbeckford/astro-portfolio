@@ -15,17 +15,6 @@ Video files are in `public/templates/<slug>/` and photos in `src/assets/template
 | 3.jpg | https://www.pexels.com/photo/hand-holding-a-wire-clip-pliers-6412541/ | Tymur Khakimov | Pexels License |
 | 4.jpg | https://www.pexels.com/photo/close-up-of-wires-in-outlets-7937305/ | Pavel Danilyuk | Pexels License |
 
-## Plumber
-
-| File | Source | Author | Licence |
-|---|---|---|---|
-| hero.mp4 / hero.webm / hero.jpg / card.* | https://www.pexels.com/video/man-fixing-the-faucet-on-the-kitchen-sink-7584858/ | Stepan SK | Pexels License |
-| band.mp4 / band.webm / band.jpg | https://www.pexels.com/video/a-person-doing-plumbing-7584762/ | Stepan SK | Pexels License |
-| 1.jpg | https://www.pexels.com/photo/plumber-installs-pipe-fittings-6419128/ | Anıl Karakaya | Pexels License |
-| 2.jpg | https://www.pexels.com/photo/professional-plumber-installing-a-radiator-pipe-29226620/ | Sergei Starostin | Pexels License |
-| 3.jpg | https://www.pexels.com/photo/steel-underground-heating-manifolds-7937299/ | Pavel Danilyuk | Pexels License |
-| 4.jpg | https://www.pexels.com/photo/close-up-of-pipes-14845870/ | Sonny Sixteen | Pexels License |
-
 ## Roofer
 
 | File | Source | Author | Licence |
@@ -95,19 +84,6 @@ Video files are in `public/templates/<slug>/` and photos in `src/assets/template
 | trailer.mp4 / trailer.webm / trailer.jpg (0–6s) | https://www.pexels.com/video/rock-band-concert-857173/ | Vimeo (Pexels upload) | Pexels License |
 | trailer.mp4 / trailer.webm (6–13s) | https://www.pexels.com/video/crowd-concert-hands-26744501/ | Cristian Geza | Pexels License |
 
-## Kitchen fitter
-
-| File | Source | Author | Licence |
-|---|---|---|---|
-| 1.jpg | https://www.pexels.com/photo/modern-furniture-in-spacious-minimalist-kitchen-7005291/ | Max Vakhtbovych | Pexels License |
-| 2.jpg | https://www.pexels.com/photo/marble-counter-top-on-a-cabinet-19866407/ | Lisa Anna | Pexels License |
-| 3.jpg | https://www.pexels.com/photo/modern-kitchen-drawer-with-utensils-and-marble-counter-38311093/ | Bilguun Gantumur | Pexels License |
-| 4.jpg | https://www.pexels.com/photo/black-horizontal-handle-on-a-white-drawer-4194847/ | Kaboompics.com | Pexels License |
-| 5.jpg | https://www.pexels.com/photo/a-shot-of-kitchen-interior-10223859/ | Ron Lach | Pexels License |
-| 6.jpg | https://www.pexels.com/photo/man-inspecting-kitchen-in-modern-apartment-34558043/ | HONG SON | Pexels License |
-| 7.jpg | https://www.pexels.com/photo/an-interior-of-a-modern-kitchen-counter-7045356/ | Max Vakhtbovych | Pexels License |
-| 8.jpg | https://www.pexels.com/photo/man-adjusting-modern-kitchen-cabinet-shelf-interior-34558042/ | HONG SON | Pexels License |
-
 ## Builder
 
 | File | Source | Author | Licence |
@@ -169,3 +145,46 @@ Video files are in `public/templates/<slug>/` and photos in `src/assets/template
 | menu/alcohol-free-lager.jpg | https://www.pexels.com/photo/close-up-shot-of-bottles-of-beer-5537952/ | cottonbro studio | Pexels License (cropped) |
 | menu/zero-g-t.jpg | https://www.pexels.com/photo/close-up-of-a-glass-with-a-cold-cocktail-standing-on-a-table-16550820/ | Amar Preciado | Pexels License (cropped) |
 | menu/homemade-lemonade.jpg | https://www.pexels.com/photo/lemon-juice-on-a-clear-glass-with-drinking-straw-4134388/ | İbrahim Hakkı Uçman | Pexels License (cropped) |
+
+## Hotel group
+
+| File | Source | Author | Licence |
+|---|---|---|---|
+| hero.mp4 / hero.webm / hero.jpg | https://www.pexels.com/video/faceless-person-opening-a-window-curtain-5854057/ | cottonbro studio | Pexels License (trimmed) |
+| band.mp4 / band.webm / band.jpg | https://www.pexels.com/video/a-person-pouring-hot-coffee-into-a-ceramic-cup-11412552/ | Everett Bumstead | Pexels License (trimmed) |
+| 1.jpg | https://www.pexels.com/photo/modern-furnished-bedroom-with-large-bed-and-striped-curtains-6580214/ | Max Vakhtbovych | Pexels License |
+| 2.jpg | https://www.pexels.com/photo/cozy-bed-with-morning-light-and-shadows-31145681/ | Letícia Alvares | Pexels License |
+| 3.jpg | https://www.pexels.com/photo/breakfast-table-setting-in-a-hotel-room-6466281/ | cottonbro studio | Pexels License |
+| 4.jpg | https://www.pexels.com/photo/a-couple-dating-on-the-rooftop-4399870/ | Tiago Alvar | Pexels License |
+| 5.jpg | https://www.pexels.com/photo/urban-street-with-bicycles-and-classic-architecture-36149244/ | Cara Denison | Pexels License |
+| 6.jpg | https://www.pexels.com/photo/decoration-of-tables-for-celebration-19986483/ | Jonathan Borba | Pexels License |
+| 7.jpg | https://www.pexels.com/photo/hotel-lobby-with-flowers-in-vases-and-candles-17001827/ | Matheus Bertelli | Pexels License |
+| 8.jpg | https://www.pexels.com/photo/white-bathtub-inside-a-bathroom-8146150/ | Max Vakhtbovych | Pexels License |
+| venues/bloomsbury.jpg | https://www.pexels.com/photo/colorful-georgian-terraced-houses-in-london-30683430/ | AXP Photography | Pexels License |
+| venues/old-town.jpg | https://www.pexels.com/photo/street-scene-on-edinburgh-s-historic-royal-mile-37058090/ | Oleksiy Yeshtokyn | Pexels License |
+| venues/jordaan.jpg | https://www.pexels.com/photo/buildings-near-a-body-of-water-3817790/ | Volker Meyer | Pexels License |
+| venues/alfama.jpg | https://www.pexels.com/photo/cityscape-of-lisbon-26288655/ | Guilherme Marques | Pexels License |
+| venues/gracia.jpg | https://www.pexels.com/photo/symmetrical-view-of-an-alley-between-residential-buildings-in-the-gothic-quarter-in-barcelona-spain-5983563/ | Samuel Sweet | Pexels License |
+| venues/vesterbro.jpg | https://www.pexels.com/photo/historic-yellow-houses-in-copenhagen-denmark-30225599/ | Anastasia Haritonov | Pexels License |
+| venues/le-marais.jpg | https://www.pexels.com/photo/charming-parisian-street-scene-in-le-marais-32566682/ | James Wilson | Pexels License |
+
+## Games bar
+
+| File | Source | Author | Licence |
+|---|---|---|---|
+| hero.mp4 / hero.webm / hero.jpg | https://www.pexels.com/video/friends-throwing-darts-together-8757821/ | Kevin Malik | Pexels License (trimmed) |
+| band.mp4 / band.webm / band.jpg | https://www.pexels.com/video/teens-playing-air-hockey-5780952/ | cottonbro studio | Pexels License (trimmed) |
+| 1.jpg | https://www.pexels.com/photo/a-man-throwing-a-dart-8762620/ | Kevin Malik | Pexels License (cropped) |
+| 2.jpg | https://www.pexels.com/photo/close-up-shot-of-a-table-football-5453906/ | Tima Miroshnichenko | Pexels License |
+| 3.jpg | https://www.pexels.com/photo/delicious-cheeseburgers-with-french-fries-36750270/ | Mohamed Olwy | Pexels License |
+| 4.jpg | https://www.pexels.com/photo/colorful-cocktails-on-elegant-bar-counter-36630828/ | Mohamed Olwy | Pexels License |
+| 5.jpg | https://www.pexels.com/photo/men-celebrating-at-a-bar-3851632/ | Pressmaster | Pexels License |
+| 6.jpg | https://www.pexels.com/photo/people-on-concert-5192307/ | Maor Attias | Pexels License |
+| 7.jpg | https://www.pexels.com/photo/man-pouring-beer-in-glass-5858067/ | Pavel Danilyuk | Pexels License |
+| 8.jpg | https://www.pexels.com/photo/vibrant-retro-arcade-joystick-and-buttons-close-up-29702648/ | Dan Butler | Pexels License |
+| venues/borough.jpg | https://www.pexels.com/photo/industrial-warehouse-fronts-in-london-archway-37327562/ | Airam Dato-on | Pexels License |
+| venues/camden.jpg | https://www.pexels.com/photo/cozy-rustic-bar-interior-with-colorful-stools-34104246/ | zona .exe123ph | Pexels License |
+| venues/deansgate.jpg | https://www.pexels.com/photo/illuminated-city-at-night-14957247/ | Miguel Saddi Vitorino | Pexels License |
+| venues/digbeth.jpg | https://www.pexels.com/photo/interior-design-of-a-bar-and-restaurant-5863513/ | Rachel Claire | Pexels License |
+| venues/ropewalks.jpg | https://www.pexels.com/photo/night-view-of-liverpool-s-royal-albert-dock-30841290/ | Dominik Gryzbon | Pexels License |
+| venues/quayside.jpg | https://www.pexels.com/photo/tyne-bridge-and-swing-bridge-12918223/ | Daniel Smyth | Pexels License |

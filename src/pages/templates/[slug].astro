@@ -3,7 +3,8 @@
 // name could match a real firm's in search. The home's #sites grid is where they are listed.
 import '@fontsource/anton'
 import '@fontsource-variable/archivo/wdth.css'
-import '@fontsource/shrikhand'
+import '@fontsource-variable/oswald'
+import '@fontsource-variable/big-shoulders-display'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Hero from '@/components/kit/Hero.astro'
 import Marquee from '@/components/kit/Marquee.astro'
@@ -33,12 +34,14 @@ import Cookies from '@/components/kit/Cookies.astro'
 import DemoPill from '@/components/kit/DemoPill.astro'
 import { site } from '@/site'
 import { demos, type Demo } from '@/templates'
+import Games from '@/components/demos/Games.astro'
+import Hotel from '@/components/demos/Hotel.astro'
 
 export const getStaticPaths = () => demos.map((d) => ({ params: { slug: d.slug }, props: { d } }))
 const { d } = Astro.props as { d: Demo }
-const fonts = { archivo: "'Archivo Variable'", anton: "'Anton'", geist: "'Geist Variable'", shrikhand: "'Shrikhand'" }
+const fonts = { archivo: "'Archivo Variable'", anton: "'Anton'", geist: "'Geist Variable'", oswald: "'Oswald Variable'", shoulders: "'Big Shoulders Display Variable'" }
 const c = d.colors
-const theme = `--bg:${c.bg};--fg:${c.fg};--muted:${c.muted};--accent:${c.accent};--on-accent:${c.onAccent};--panel:${c.panel};--alt:${c.alt};--display:${fonts[d.font]},system-ui,sans-serif${d.font === 'shrikhand' ? ';font-synthesis-weight:none' : ''}` // Shrikhand has one weight; a faked bold smears it
+const theme = `--bg:${c.bg};--fg:${c.fg};--muted:${c.muted};--accent:${c.accent};--on-accent:${c.onAccent};--panel:${c.panel};--alt:${c.alt};--display:${fonts[d.font]},system-ui,sans-serif`
 const vars = `${theme};background:${c.bg}`
 ---
 
@@ -53,7 +56,7 @@ const vars = `${theme};background:${c.bg}`
     @keyframes unhide { to { visibility: visible } }
   </style>
   <div id="main" tabindex="-1" class:list={['overflow-x-clip bg-(--bg) outline-none text-(--fg)', d.sentence && '[&_.uppercase]:normal-case']} style={vars}>
-    <Hero d={d} />
+    {d.page === 'games' ? <Games d={d} /> : d.page === 'hotel' ? <Hotel d={d} /> : <Hero d={d} />}
     {d.sections.map((s) => (
       s === 'marquee' && d.marquee ? <Marquee items={d.marquee} /> :
       s === 'intro' ? <Intro d={d} /> :
@@ -80,7 +83,7 @@ const vars = `${theme};background:${c.bg}`
     ))}
   </div>
   {(d.curtain ?? d.hero.variant === 'poster') && <Curtain />}
-  {d.cookies && <Cookies style={theme} />}
+  {d.cookies && <Cookies style={theme} title={d.cookies === true ? undefined : d.cookies} />}
   <DemoPill />
   <!-- Overscroll shows the page's own colour, not tebeck's paper. -->
   <style is:inline set:html={`html,body{background:${c.bg}}`}></style>

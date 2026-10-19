@@ -2,10 +2,9 @@
 // Enquiry alerts, as an animation (the n8n flow running on tebeck.dev itself): on an example site someone taps WhatsApp,
 // the phone pings, the enquiry lands in the sheet, three days on a reminder comes, and it's marked Won. motion.ts runs
 // the timeline while on screen; without motion or JS it rests on the sheet with the ping showing. Sized in em off the stage.
-import { demos } from '@/templates'
+import { plumber as d } from '@/templates'
 import Icon from '@/components/Icon.astro'
 
-const d = demos.find((x) => x.slug === 'plumber') ?? demos[0]
 const css = `--s-bg:${d.colors.bg};--s-fg:${d.colors.fg};--s-accent:${d.colors.accent};--s-on:${d.colors.onAccent}`
 // Example rows, older enquiries above the new one. Codes are what ends each message, so a chat matches its row.
 const rows = [['Mon 09:12', '#R2QD', 'Facebook', 'Email', 'Won'], ['Tue 14:40', '#8MXA', 'Google', 'WhatsApp', 'Lost'], ['Wed 08:31', '#T4HN', 'Google', 'Email', 'Won']]

@@ -2,7 +2,7 @@
 // A cookie banner as the business would have it: equal Accept and Reject, and switches per kind. It looks the part and
 // sets nothing; any choice puts it away (motion.ts). Shown by JS a moment after load, so without JS there's none.
 // Outside #main (it's fixed), so it takes the page's colour vars as `style`.
-const { style } = Astro.props as { style: string }
+const { style, title = 'Cookies with your round?' } = Astro.props as { style: string; title?: string }
 const kinds = [
   { name: 'Essential', text: 'Keep the site working and your booking going.', fixed: true },
   { name: 'Analytics', text: 'Tell us which pages get read, without your name on it.' },
@@ -11,7 +11,7 @@ const kinds = [
 const btn = 'rounded-full px-4 py-2.5 text-sm font-bold transition-colors'
 ---
 <section id="cookies" aria-labelledby="cookies-title" hidden {style} data-lenis-prevent class="fixed inset-x-3 bottom-20 z-50 max-h-[calc(100dvh-6rem)] overflow-y-auto rounded-3xl border border-(--fg)/15 bg-(--panel)/95 p-5 text-(--fg) shadow-[0_20px_60px_#0009] backdrop-blur sm:right-auto sm:bottom-5 sm:left-5 sm:max-w-sm sm:p-6">
-  <h2 id="cookies-title" class="font-(family-name:--display) text-xl">Cookies with your round?</h2>
+  <h2 id="cookies-title" class="font-(family-name:--display) text-xl">{title}</h2>
   <p class="mt-2 text-sm text-(--muted)">Some keep the site working. With your OK, others help us see what’s popular and show you our offers elsewhere.</p>
   <div id="cookies-prefs" hidden class="mt-4 divide-y divide-(--fg)/10 border-y border-(--fg)/10">
     {kinds.map((k) => (

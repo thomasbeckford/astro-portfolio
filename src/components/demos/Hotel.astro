@@ -1,0 +1,395 @@
+---
+// The hotel group's own page, nothing shared with the golf kit: a two-month price calendar, a line map of the seven
+// hotels, room plans side by side, the walk to the bakery, the door code by text and breakfast by hotel. Picking a
+// hotel anywhere picks it everywhere. Made-up business: prices, minutes and rooms are examples and say so.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import type { ImageMetadata } from 'astro'
+import Vid from '@/components/kit/Vid.astro'
+import { clip, fit, photos } from '@/components/kit/media'
+const { d } = Astro.props as { d: Demo }
+const pic = photos(d.slug)
+const venues = d.venues ?? []
+const places = import.meta.glob<{ default: ImageMetadata }>('@/assets/templates/hotel/venues/*.jpg', { eager: true })
+const place = (name: string) => places[`/src/assets/templates/hotel/venues/${name.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-')}.jpg`]?.default
+
+// Per hotel: a Classic room's usual night (example), the neighbourhood, the walk to three places and breakfast.
+const more: Record<string, { base: number; rooms: number; area: string; walk: [number, number, number]; breakfast: string[] }> = {
+  Bloomsbury: { base: 189, rooms: 34, area: 'Garden squares, bookshops and the big museums, ten minutes from the West End.', walk: [2, 6, 9], breakfast: ['Crumpets with salted butter', 'Bacon roll with brown sauce', 'Porridge with stewed fruit'] },
+  'Old Town': { base: 149, rooms: 22, area: 'Steep closes off the Royal Mile, the castle at one end and the palace at the other.', walk: [3, 5, 8], breakfast: ['Porridge with heather honey', 'Tattie scones and fried eggs', 'Kippers on toast'] },
+  Jordaan: { base: 179, rooms: 18, area: 'Canals, brown cafés and markets on the square, the whole city by bike.', walk: [1, 12, 14], breakfast: ['Rye bread with aged Gouda', 'Uitsmijter: eggs on bread with ham and cheese', 'Hagelslag on buttered bread'] },
+  Vesterbro: { base: 169, rooms: 40, area: 'The old meatpacking district, now restaurants and bars, five minutes from the station.', walk: [0, 11, 5], breakfast: ['Cardamom buns from the bakery downstairs', 'Rye bread with cheese and jam', 'Soft-boiled eggs'] },
+  'Le Marais': { base: 199, rooms: 26, area: 'Narrow streets, small galleries and falafel queues, the river at the bottom of the road.', walk: [2, 7, 6], breakfast: ['Croissants and pain au chocolat', 'Tartine with salted butter and jam', 'Herb omelette'] },
+  'Gràcia': { base: 159, rooms: 30, area: 'Small squares and bars, a village inside the city, the hills above it.', walk: [2, 15, 4], breakfast: ['Pa amb tomàquet with jamón', 'Tortilla de patatas', 'Fresh orange juice'] },
+  Alfama: { base: 129, rooms: 20, area: 'Steep lanes, trams and fado at night, the river below every window.', walk: [3, 8, 12], breakfast: ['Pastéis de nata', 'Tosta mista', 'Galão, the milky coffee'] },
+}
+const hotels = venues.map((v) => ({ ...v, ...more[v.name], pic: place(v.name) }))
+const always = ['Eggs any way', 'Fruit and yoghurt', 'Coffee, tea and juice']
+
+// The line map: an equirectangular projection squeezed by cos(48°), so Europe keeps roughly its shape.
+const lon = venues.map((v) => v.lon), lat = venues.map((v) => v.lat)
+const [x0, x1, y0, y1] = [Math.min(...lon) - 2.5, Math.max(...lon) + 2.5, Math.min(...lat) - 1.6, Math.max(...lat) + 1.6]
+const k = Math.cos((48 * Math.PI) / 180), W = 600, H = Math.round((W * (y1 - y0)) / ((x1 - x0) * k))
+const xy = (v: { lat: number; lon: number }) => [((v.lon - x0) / (x1 - x0)) * W, ((y1 - v.lat) / (y1 - y0)) * H].map((n) => +n.toFixed(1))
+const by = (city: string) => xy(venues.find((v) => v.city === city)!)
+const lines = [['Edinburgh', 'London', 'Paris', 'Barcelona', 'Lisbon'], ['London', 'Amsterdam', 'Copenhagen']].map((l) => l.map((c) => by(c).join(' ')).join(' L'))
+const grid = { lon: Array.from({ length: 6 }, (_, i) => -10 + i * 5), lat: Array.from({ length: 4 }, (_, i) => 40 + i * 5) }
+
+// Rooms, drawn to scale: 1 m = 24 units. Boxes in metres from the top left: bath, bed, sofa; windows as wall spans.
+const M = 24
+const rooms = [
+  { name: 'Snug', price: 129, m2: 15, bed: 'Double, 140 cm', view: 'Courtyard', sleeps: 2, pic: pic[0], w: 4, h: 3.8, bath: [2.4, 0, 1.6, 1.6], bedBox: [0, 1.1, 1.4, 2], sofa: null, windows: [['b', 1.4, 2.8]], door: [1.3, 0] },
+  { name: 'Classic', price: 169, m2: 21, bed: 'King, 160 cm', view: 'The street', sleeps: 2, pic: pic[1], w: 5, h: 4.2, bath: [3.2, 0, 1.8, 1.8], bedBox: [0, 1.2, 1.6, 2], sofa: null, windows: [['b', 0.8, 2.0], ['b', 3.0, 4.2]], door: [2.1, 0] },
+  { name: 'Corner suite', price: 249, m2: 34, bed: 'King, plus a sofa bed', view: 'Two sides, on the corner', sleeps: 4, pic: pic[7], w: 6.8, h: 5, bath: [4.6, 0, 2.2, 2], bedBox: [0, 0.4, 1.6, 2], sofa: [0.3, 3.9, 2.2, 0.9], windows: [['b', 3.2, 5.6], ['l', 2.6, 4.6]], door: [3.5, 0] },
+] as const
+const P = 14 // padding round each plan
+const widest = Math.max(...rooms.map((r) => r.w)) * M + P * 2 // plans share one scale, so smaller rooms draw smaller
+
+const label = 'flex min-w-0 flex-col gap-1.5 text-sm font-medium text-(--fg)/70'
+const input = 'w-full min-w-0 rounded-xl border border-(--fg)/15 bg-white/60 px-4 py-3 text-base text-(--fg) outline-none transition-colors placeholder:text-(--fg)/35 focus:border-(--accent)'
+const chip = 'shrink-0 rounded-full border border-(--fg)/15 px-4 py-2 text-sm font-medium transition-colors hover:border-(--fg)/50 aria-pressed:border-(--fg) aria-pressed:bg-(--fg) aria-pressed:text-(--bg)'
+const h2 = 'text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.95] font-semibold tracking-[-0.045em] text-balance'
+---
+<header class="px-4 pt-5 sm:px-8">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between gap-6">
+    <a href="#top" class="flex items-center gap-2 text-xl font-semibold tracking-[-0.04em]"><svg viewBox="0 0 20 20" class="size-5 text-(--accent)" aria-hidden="true"><circle cx="7" cy="10" r="5" fill="none" stroke="currentColor" stroke-width="2.5" /><path d="M12 10h7M16 10v3.5M19 10v2.5" stroke="currentColor" stroke-width="2.5" /></svg>{d.mark}</a>
+    <ul class="hidden gap-7 text-sm font-medium text-(--muted) md:flex">
+      {[['#hotels', 'Hotels'], ['#rooms', 'Rooms'], ['#street', 'Our street'], ['#arrive', 'Arriving'], ['#breakfast', 'Breakfast']].map(([h, t]) => <li><a href={h} class="hover:text-(--fg)">{t}</a></li>)}
+    </ul>
+    <a href="#top" class="rounded-full bg-(--fg) px-5 py-2.5 text-sm font-medium text-(--bg)">{d.hero.cta}</a>
+  </nav>
+</header>
+
+<section id="top" class="px-4 pt-14 pb-24 sm:px-8 lg:pt-20">
+  <div class="mx-auto max-w-7xl">
+    <div class="grid gap-8 lg:grid-cols-[1fr_24rem] lg:items-end">
+      <h1 class="text-[clamp(3.25rem,9vw,8.5rem)] leading-[0.88] font-semibold tracking-[-0.055em] text-balance">{d.hero.head}</h1>
+      <div class="lg:pb-3">
+        <p class="text-sm font-medium text-(--accent)">{d.hero.kicker}</p>
+        <p class="mt-3 text-lg text-pretty text-(--muted)">{d.hero.lede}</p>
+      </div>
+    </div>
+    <div class="mt-12 grid gap-4 lg:grid-cols-[1fr_minmax(0,44rem)]">
+      <div class="relative order-2 min-h-72 overflow-hidden rounded-[1.75rem] lg:order-1">
+        <Vid {...clip(d.slug, 'hero')} class="absolute inset-0 h-full w-full" />
+      </div>
+      <div data-cal class="order-1 min-w-0 rounded-[1.75rem] bg-white/70 p-5 shadow-[0_30px_80px_-40px_#16201c55] sm:p-7 lg:order-2">
+        <div class="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Hotel">{hotels.map((h, i) => <button type="button" data-hotel={i} data-in="cal" aria-pressed={String(i === 0)} class={chip}>{h.city}</button>)}</div>
+        <div class="mt-5 flex items-center justify-between gap-4">
+          <p class="text-sm text-(--muted)">A Classic room for two, breakfast in. <span data-cal-hint class="text-(--fg)">Pick your check-in.</span></p>
+          <div class="flex shrink-0 gap-1">
+            <button type="button" data-cal-move="-1" aria-label="Earlier months" class="grid size-9 place-items-center rounded-full border border-(--fg)/15 hover:border-(--fg)/50 disabled:opacity-30">←</button>
+            <button type="button" data-cal-move="1" aria-label="Later months" class="grid size-9 place-items-center rounded-full border border-(--fg)/15 hover:border-(--fg)/50 disabled:opacity-30">→</button>
+          </div>
+        </div>
+        <div data-cal-months class="mt-4 grid min-h-[19rem] gap-6 sm:grid-cols-2"><p class="text-(--muted)">Prices by night show here.</p></div>
+        <div class="mt-5 flex flex-wrap items-center justify-between gap-4 border-t border-(--fg)/10 pt-5">
+          <p data-cal-sum aria-live="polite" class="text-(--muted)">Example prices, in pounds, per night.</p>
+          <button type="button" data-cal-hold disabled class="rounded-full bg-(--accent) px-6 py-3 font-medium text-(--on-accent) transition-opacity disabled:opacity-40">Hold these dates</button>
+        </div>
+        <p data-cal-note role="status" class="mt-3 text-sm text-(--muted) empty:hidden"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="hotels" class="bg-(--fg) px-4 py-28 text-(--bg) sm:px-8 sm:py-36">
+  <div class="mx-auto max-w-7xl">
+    <h2 data-split class={h2}>Seven hotels, one line</h2>
+    <p class="mt-5 max-w-md text-(--bg)/65">Tap a city to look inside. Every one is a building that used to be something else.</p>
+    <div class="mt-12 grid gap-8 lg:grid-cols-[1fr_28rem] lg:items-start">
+      <div class="relative mx-auto w-full max-w-[34rem]">
+        <svg viewBox={`0 0 ${W} ${H}`} class="w-full" aria-hidden="true">
+          {grid.lon.map((g) => { const x = ((g - x0) / (x1 - x0)) * W; return x > 0 && x < W && <line x1={x} x2={x} y1="0" y2={H} stroke="currentColor" stroke-opacity="0.08" /> })}
+          {grid.lat.map((g) => { const y = ((y1 - g) / (y1 - y0)) * H; return y > 0 && y < H && <line x1="0" x2={W} y1={y} y2={y} stroke="currentColor" stroke-opacity="0.08" /> })}
+          {lines.map((l) => <path d={`M${l}`} fill="none" stroke="var(--accent)" stroke-width="5" stroke-linejoin="round" stroke-linecap="round" />)}
+        </svg>
+        {hotels.map((h, i) => { const [x, y] = xy(h); const left = x > W * 0.75; return (
+          <button type="button" data-hotel={i} data-in="map" aria-pressed={String(i === 0)} class:list={['group absolute flex -translate-y-1/2 items-center gap-2 whitespace-nowrap', left ? 'flex-row-reverse' : '']} style={left ? `right:${(100 - (x / W) * 100).toFixed(2)}%;top:${((y / H) * 100).toFixed(2)}%;margin-right:-0.6875rem` : `left:${((x / W) * 100).toFixed(2)}%;top:${((y / H) * 100).toFixed(2)}%;margin-left:-0.6875rem`}>
+            <span class="size-[1.375rem] rounded-full border-[5px] border-(--accent) bg-(--fg) transition-transform group-hover:scale-125 group-aria-pressed:scale-125 group-aria-pressed:bg-(--bg)"></span>
+            <span class="rounded-full px-2 py-0.5 text-sm font-medium group-aria-pressed:bg-(--bg) group-aria-pressed:text-(--fg) sm:text-base">{h.city}</span>
+          </button>
+        ) })}
+      </div>
+      {hotels.map((h, i) => (
+        <article data-hotel-panel={i} hidden={i !== 0} class="overflow-hidden rounded-[1.75rem] bg-(--bg) text-(--fg)">
+          {h.pic && <Image src={h.pic} alt={`A street in ${h.city}`} widths={[480, 900]} sizes="(min-width: 1024px) 28rem, 100vw" class="aspect-[16/10] w-full object-cover" />}
+          <div class="p-6 sm:p-7">
+            <p class="text-sm font-medium text-(--accent)">{h.city}</p>
+            <h3 class="mt-1 text-3xl font-semibold tracking-[-0.04em]">Latchkey {h.name}</h3>
+            <dl class="mt-5 grid gap-4 text-sm">
+              <div><dt class="text-(--muted)">The building</dt><dd class="mt-0.5 text-base">{h.text} {h.rooms} rooms.</dd></div>
+              <div><dt class="text-(--muted)">The neighbourhood</dt><dd class="mt-0.5 text-base">{h.area}</dd></div>
+            </dl>
+            <ul class="mt-5 flex flex-wrap gap-2">{h.has.map((x) => <li class="rounded-full bg-(--panel) px-3 py-1 text-sm">{x}</li>)}</ul>
+            <a href="#top" data-hotel={i} data-in="panel" class="mt-6 inline-block font-medium text-(--accent) underline underline-offset-4">Prices at {h.name} ↑</a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section id="rooms" data-rooms class="px-4 py-28 sm:px-8 sm:py-36">
+  <div class="mx-auto max-w-7xl">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <div>
+        <h2 data-split class={h2}>Three rooms, drawn to scale</h2>
+        <p class="mt-5 max-w-md text-(--muted)">The same three in every hotel, give or take a wonky wall. Example prices, a night for two, breakfast in.</p>
+      </div>
+      <div class="flex rounded-full bg-(--panel) p-1 text-sm font-medium" role="group" aria-label="Units">
+        {['m²', 'ft²'].map((u, i) => <button type="button" data-unit={u} aria-pressed={String(!i)} class="rounded-full px-4 py-1.5 aria-pressed:bg-(--fg) aria-pressed:text-(--bg)">{u}</button>)}
+      </div>
+    </div>
+    <div class="mt-12 grid gap-4 md:grid-cols-3">
+      {rooms.map((r) => { const vw = r.w * M + P * 2, vh = r.h * M + P * 2 + 22; const at = (n: number) => P + n * M; return (
+        <article data-rise class="flex flex-col rounded-[1.75rem] bg-white/70 p-5 sm:p-6">
+          <div class="flex items-baseline justify-between gap-4">
+            <h3 class="text-2xl font-semibold tracking-[-0.04em]">{r.name}</h3>
+            <p class="text-(--muted)"><span class="text-xl font-semibold text-(--fg)">£{r.price}</span> a night</p>
+          </div>
+          <svg viewBox={`0 0 ${vw} ${vh}`} class="mt-5" style={`width:${((vw / widest) * 100).toFixed(1)}%`} role="img" aria-label={`Plan of the ${r.name}: ${r.w} by ${r.h} metres`}>
+            <defs><pattern id={`tile-${r.m2}`} width="6" height="6" patternUnits="userSpaceOnUse"><path d="M0 6L6 0" stroke="var(--muted)" stroke-opacity="0.35" /></pattern></defs>
+            <rect x={P} y={P} width={r.w * M} height={r.h * M} fill="var(--bg)" stroke="var(--fg)" stroke-width="4" />
+            <rect x={at(r.bath[0])} y={at(r.bath[1])} width={r.bath[2] * M} height={r.bath[3] * M} fill={`url(#tile-${r.m2})`} stroke="var(--fg)" stroke-width="2" />
+            <text x={at(r.bath[0] + r.bath[2] / 2)} y={at(r.bath[1] + r.bath[3] / 2)} dy="0.35em" text-anchor="middle" font-size="10" fill="var(--muted)">Bath</text>
+            <rect x={at(r.bedBox[0]) + 3} y={at(r.bedBox[1])} width={r.bedBox[2] * M} height={r.bedBox[3] * M} rx="4" fill="var(--panel)" stroke="var(--fg)" stroke-width="1.5" />
+            <rect x={at(r.bedBox[0]) + 7} y={at(r.bedBox[1]) + 4} width={(r.bedBox[2] * M) / 2 - 6} height="12" rx="3" fill="var(--bg)" stroke="var(--fg)" />
+            <rect x={at(r.bedBox[0]) + 3 + (r.bedBox[2] * M) / 2} y={at(r.bedBox[1]) + 4} width={(r.bedBox[2] * M) / 2 - 6} height="12" rx="3" fill="var(--bg)" stroke="var(--fg)" />
+            {r.sofa && <rect x={at(r.sofa[0])} y={at(r.sofa[1])} width={r.sofa[2] * M} height={r.sofa[3] * M} rx="6" fill="var(--panel)" stroke="var(--fg)" stroke-width="1.5" />}
+            {r.windows.map(([side, a, b]) => side === 'b'
+              ? <line x1={at(a)} x2={at(b)} y1={at(r.h)} y2={at(r.h)} stroke="var(--accent)" stroke-width="6" />
+              : <line x1={P} x2={P} y1={at(a)} y2={at(b)} stroke="var(--accent)" stroke-width="6" />)}
+            <line x1={at(r.door[0])} x2={at(r.door[0]) + 0.85 * M} y1={P} y2={P} stroke="var(--bg)" stroke-width="5" />
+            <path d={`M${at(r.door[0])} ${P}v${0.85 * M}a${0.85 * M} ${0.85 * M} 0 0 0 ${0.85 * M} ${-0.85 * M}`} fill="none" stroke="var(--fg)" stroke-width="1.2" />
+            <line x1={P} x2={P + M} y1={vh - 8} y2={vh - 8} stroke="var(--fg)" stroke-width="2" />
+            <text x={P + M + 6} y={vh - 8} dy="0.35em" font-size="10" fill="var(--muted)">1 m</text>
+            <text x={vw - P} y={vh - 8} dy="0.35em" text-anchor="end" font-size="10" fill="var(--accent)">Window</text>
+          </svg>
+          <dl class="mt-5 divide-y divide-(--fg)/10 border-t border-(--fg)/10 text-sm">
+            {[['Size', <span data-area={r.m2}>{r.m2} m²</span>], ['Bed', r.bed], ['View', r.view], ['Sleeps', String(r.sleeps)]].map(([k, v]) => <div class="flex justify-between gap-4 py-2.5"><dt class="text-(--muted)">{k}</dt><dd class="text-right font-medium">{v}</dd></div>)}
+          </dl>
+          {r.pic && <Image src={r.pic} alt={`Inside a ${r.name} room`} widths={[400, 800]} sizes="(min-width: 768px) 26rem, 100vw" class="mt-5 aspect-[3/2] w-full rounded-2xl object-cover" />}
+        </article>
+      ) })}
+    </div>
+  </div>
+</section>
+
+<section id="street" data-street class="bg-(--panel) px-4 py-28 sm:px-8 sm:py-36">
+  <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
+    <div class="min-w-0">
+      <h2 data-split class={h2}>Our street</h2>
+      <p class="mt-5 max-w-md text-(--muted)">How far you walk for the three things you’ll want first. Example times, at an easy pace.</p>
+      <div class="mt-8 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Hotel">{hotels.map((h, i) => <button type="button" data-hotel={i} data-in="street" aria-pressed={String(i === 0)} class={chip}>{h.city}</button>)}</div>
+      <ul class="mt-10 space-y-7">
+        {['Bakery', 'Museum', 'Station'].map((p, j) => (
+          <li>
+            <p class="flex items-baseline justify-between gap-4"><span class="text-lg font-medium">{p}</span><span class="text-(--muted)"><span data-walk={j} class="text-2xl font-semibold text-(--fg) tabular-nums">{hotels[0].walk[j] || 'Downstairs'}</span><span data-walk-unit={j}>{hotels[0].walk[j] ? ' min' : ''}</span></span></p>
+            <div class="relative mt-2 h-2 rounded-full bg-(--fg)/10"><span data-walk-bar={j} class="absolute inset-y-0 left-0 rounded-full bg-(--accent) transition-[width] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] motion-reduce:transition-none" style={`width:${Math.max(3, (hotels[0].walk[j] / 15) * 100)}%`}></span></div>
+          </li>
+        ))}
+      </ul>
+      <p class="mt-4 flex justify-between text-xs text-(--muted)"><span>Front door</span><span>15 min</span></p>
+    </div>
+    {pic[4] && <Image src={pic[4]} alt="Bikes outside one of the hotels, free to borrow" widths={[600, 1000, 1400]} sizes="(min-width: 1024px) 40rem, 100vw" data-parallax class="aspect-[4/3] w-full rounded-[1.75rem] object-cover" />}
+  </div>
+</section>
+
+<section id="arrive" data-arrive class="px-4 py-28 sm:px-8 sm:py-36">
+  <div class="mx-auto grid max-w-7xl gap-14 lg:grid-cols-[1fr_22rem_1fr] lg:items-center">
+    <div>
+      <p class="text-sm font-medium text-(--accent)">{d.intro.label}</p>
+      <h2 data-split class:list={[h2, 'mt-3']}>Check in from your phone</h2>
+      <p class="mt-5 max-w-md text-(--muted)">{d.intro.text}</p>
+      <button type="button" data-arrive-again class="mt-8 rounded-full border border-(--fg)/20 px-5 py-2.5 text-sm font-medium hover:border-(--fg)/60">Play it again</button>
+    </div>
+    <div data-phone class="mx-auto w-full max-w-[20rem] rounded-[3rem] bg-(--fg) p-3 shadow-[0_40px_80px_-30px_#16201c80]">
+      <div class="flex h-[34rem] flex-col rounded-[2.4rem] bg-(--bg) px-4 pt-4 pb-5" aria-live="polite">
+        <div class="mx-auto h-6 w-24 rounded-full bg-(--fg)"></div>
+        <p class="mt-4 text-center text-xs text-(--muted)">Latchkey · Today 8:02am</p>
+        <div class="mt-4 flex flex-1 flex-col gap-2 text-sm">
+          <p data-msg class="max-w-[85%] rounded-2xl rounded-bl-md bg-white px-3.5 py-2.5">Morning! Room 12 at Latchkey Jordaan is ready from 3pm.</p>
+          <p data-msg class="max-w-[85%] rounded-2xl rounded-bl-md bg-white px-3.5 py-2.5">Your door code, for the front door and your room:</p>
+          <p data-msg class="max-w-[85%] rounded-2xl rounded-bl-md bg-white px-3.5 py-3"><span data-code class="block text-3xl font-semibold tracking-[0.3em] tabular-nums">4817</span></p>
+          <p data-msg class="ml-auto max-w-[85%] rounded-2xl rounded-br-md bg-(--accent) px-3.5 py-2.5 text-(--on-accent)">Can we drop bags at noon?</p>
+          <p data-msg class="max-w-[85%] rounded-2xl rounded-bl-md bg-white px-3.5 py-2.5">Of course. Someone’s downstairs till 10pm.</p>
+        </div>
+        <div data-door class="mt-3 flex items-center justify-between rounded-2xl bg-(--panel) px-4 py-3 text-sm font-medium transition-colors data-[open]:bg-(--accent) data-[open]:text-(--on-accent)">
+          <span>Front door</span><span data-door-text>Locked</span>
+        </div>
+      </div>
+    </div>
+    <ol class="space-y-8">
+      {[['8am', 'Your code by text', 'One code for the front door and your room, the morning you arrive.'], ['From 3pm', 'Walk straight in', 'Type it in at the door. No desk, no queue, no forms.'], ['Any time', 'Someone downstairs', 'Ask for a map, a table or a taxi. They live round the corner.']].map(([t, h, p], i) => (
+        <li data-rise class="grid grid-cols-[3rem_1fr] gap-4">
+          <span class="grid size-12 place-items-center rounded-full border border-(--fg)/15 text-lg font-semibold">{i + 1}</span>
+          <div><p class="text-sm text-(--accent)">{t}</p><h3 class="text-xl font-semibold tracking-[-0.03em]">{h}</h3><p class="mt-1 text-(--muted)">{p}</p></div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<section aria-label="Breakfast till noon" class="relative isolate flex h-[70dvh] min-h-[24rem] items-end overflow-hidden px-4 pb-12 sm:px-8 sm:pb-16">
+  <div class="absolute inset-0 -z-10 overflow-hidden"><Vid {...clip(d.slug, 'band')} data-parallax class="h-[124%] w-full" /></div>
+  <div class="absolute inset-0 -z-10 bg-linear-to-t from-black/60 to-transparent"></div>
+  <p data-split class="mx-auto w-full max-w-7xl text-[clamp(3rem,10vw,8rem)] leading-[0.9] font-semibold tracking-[-0.05em] text-white">Breakfast till noon</p>
+</section>
+
+<section id="breakfast" data-breakfast class="px-4 py-28 sm:px-8 sm:py-36">
+  <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1.1fr_1fr]">
+    <div class="min-w-0">
+      <h2 data-split class={h2}>Something from each city</h2>
+      <p class="mt-5 max-w-md text-(--muted)">The same eggs and coffee everywhere, then three things from wherever you woke up. Always in the price.</p>
+      <div class="mt-8 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Hotel">{hotels.map((h, i) => <button type="button" data-hotel={i} data-in="breakfast" aria-pressed={String(i === 0)} class={chip}>{h.city}</button>)}</div>
+      {hotels.map((h, i) => (
+        <div data-breakfast-panel={i} hidden={i !== 0} class="mt-8">
+          <p class="text-sm font-medium text-(--accent)">From {h.city}</p>
+          <ul class="mt-3 divide-y divide-(--fg)/10 border-y border-(--fg)/10">{h.breakfast.map((x) => <li class="py-4 text-xl font-medium tracking-[-0.02em]">{x}</li>)}</ul>
+        </div>
+      ))}
+      <p class="mt-8 text-sm font-medium text-(--muted)">Every hotel</p>
+      <ul class="mt-3 flex flex-wrap gap-2">{always.map((x) => <li class="rounded-full bg-(--panel) px-4 py-2">{x}</li>)}</ul>
+    </div>
+    {pic[2] && <Image src={pic[2]} alt="Breakfast on a tray: pastries, orange juice and coffee" widths={[600, 1000, 1400]} sizes="(min-width: 1024px) 36rem, 100vw" class="aspect-[4/5] w-full rounded-[1.75rem] object-cover lg:aspect-auto lg:h-full" />}
+  </div>
+</section>
+
+<section id="contact" class="relative isolate overflow-hidden px-4 pt-32 pb-28 sm:px-8 sm:pt-44">
+  {pic[5] && <div class="absolute inset-0 -z-10 overflow-hidden"><Image src={pic[5]} alt="" widths={[800, 1400, 2000]} sizes="100vw" data-parallax class="h-[124%] w-full object-cover" /></div>}
+  <div class="absolute inset-0 -z-10 bg-linear-to-b from-(--bg) via-(--bg)/55 to-(--bg)/90"></div>
+  <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_minmax(0,34rem)] lg:items-end">
+    <div>
+      <p class="text-sm font-medium text-(--accent)">Weddings and group stays</p>
+      <h2 data-split class="mt-3 text-[clamp(3rem,10vw,7.5rem)] leading-[0.9] font-semibold tracking-[-0.055em]">{d.contact}</h2>
+      <p class="mt-6 max-w-lg text-lg">A wedding, a team trip or the whole family. Tell us the dates and how many of you, and we’ll hold the rooms.</p>
+    </div>
+    <form data-enquiry method="dialog" class="grid gap-4 rounded-[1.75rem] bg-(--bg)/90 p-5 backdrop-blur-xl sm:grid-cols-2 sm:p-7">
+      <label class={label}>Hotel<select name="venue" class={input}>{hotels.map((h) => <option value={h.name}>{h.city}, {h.name}</option>)}</select></label>
+      <label class={label}>What for<select name="type" class={input}>{['Wedding', 'Team trip', 'Group stay', 'Something else'].map((t) => <option>{t}</option>)}</select></label>
+      <label class={label}>Arriving<input type="date" name="date" required class={input} /></label>
+      <label class={label}>Guests<input type="number" name="guests" min="2" max="80" value="12" required inputmode="numeric" class={input} /></label>
+      <label class={label}>Name<input name="name" autocomplete="name" required class={input} /></label>
+      <label class={label}>Email<input type="email" name="email" autocomplete="email" required class={input} /></label>
+      <label class:list={[label, 'sm:col-span-2']}>Anything else<textarea name="message" rows="3" placeholder="Nights, rooms, a dinner" class:list={[input, 'resize-y']}></textarea></label>
+      <button class="rounded-full bg-(--accent) px-8 py-4 text-lg font-medium text-(--on-accent) transition-transform active:scale-[0.98] sm:col-span-2">Send enquiry →</button>
+      <p data-enquiry-note role="status" class="text-center text-sm text-(--fg)/80 sm:col-span-2"></p>
+    </form>
+  </div>
+</section>
+
+<footer class="overflow-hidden px-4 pt-20 sm:px-8">
+  <ul class="mx-auto grid max-w-7xl grid-cols-2 gap-8 sm:grid-cols-4 lg:grid-cols-7">
+    {hotels.map((h) => <li><p class="text-sm text-(--muted)">{h.city}</p><p class="mt-1 font-medium">{h.name}</p></li>)}
+  </ul>
+  <p class="mx-auto mt-12 max-w-7xl text-sm text-(--muted)">{d.tel} · Check in from 3pm, out by 11am, Sundays till 2pm</p>
+  <p aria-hidden="true" class="mt-10 translate-y-[18%] text-center leading-[0.8] font-semibold tracking-[-0.06em] whitespace-nowrap text-(--accent)" style={`font-size:${fit(d.mark, d.font)}`}>{d.mark}</p>
+</footer>
+
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+  function $<T extends Element = HTMLElement>(sel: string, root: ParentNode = document) { return root.querySelector<T>(sel)! }
+  function $$<T extends Element = HTMLElement>(sel: string, root: ParentNode = document) { return [...root.querySelectorAll<T>(sel)] }
+  const base = [189, 149, 179, 169, 199, 159, 129] // a Classic night per hotel, same order as the page (example prices)
+  let hotel = 0
+
+  // One hotel at a time, picked from any section.
+  const setHotel = (i: number) => {
+    hotel = i
+    $$('[data-hotel][aria-pressed]').forEach((b) => b.setAttribute('aria-pressed', String(+b.dataset.hotel! === i)))
+    $$('[data-hotel-panel]').forEach((p) => p.hidden = +p.dataset.hotelPanel! !== i)
+    $$('[data-breakfast-panel]').forEach((p) => p.hidden = +p.dataset.breakfastPanel! !== i)
+    street(i)
+    // Keep the dates unless the new hotel is full on one of them.
+    if (from && night(from) === null) from = to = null
+    if (from && to && nights(from, to).some((x) => night(x) === null)) to = null
+    draw()
+  }
+  $$('[data-hotel]').forEach((b) => b.addEventListener('click', () => setHotel(+b.dataset.hotel!)))
+
+  // Price calendar: two months from this one, a price on every night (made up from a hash, dearer at weekends),
+  // a few sold out. First tap is check-in, second is check-out.
+  const cal = $('[data-cal]'), months = $('[data-cal-months]', cal)
+  const hash = (s: string) => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return (h >>> 0) % 100 }
+  const today = new Date(); today.setHours(0, 0, 0, 0)
+  let shift = 0, from: Date | null = null, to: Date | null = null
+  const night = (t: Date) => {
+    const h = hash(`${hotel}${t.toDateString()}`)
+    if (h < 7) return null
+    return base[hotel] + ([5, 6].includes(t.getDay()) ? 40 : 0) + Math.round((h % 5) * 6 - 12)
+  }
+  const day = (t: Date, n: number) => { const x = new Date(t); x.setDate(x.getDate() + n); return x }
+  const nights = (a: Date, b: Date) => { const out: Date[] = []; for (let t = a; t < b; t = day(t, 1)) out.push(t); return out }
+  const draw = () => {
+    months.innerHTML = [0, 1].map((m) => {
+      const first = new Date(today.getFullYear(), today.getMonth() + shift + m, 1)
+      const lead = (first.getDay() + 6) % 7, len = new Date(first.getFullYear(), first.getMonth() + 1, 0).getDate()
+      const cells = Array.from({ length: lead }, () => '<span></span>').concat(Array.from({ length: len }, (_, i) => {
+        const t = new Date(first.getFullYear(), first.getMonth(), i + 1), p = night(t), past = t < today
+        const end = (from && +t === +from) || (to && +t === +to), inside = from && to && t > from && t < to
+        const off = past || (p === null && !(from && !to && t > from))
+        const cls = end ? 'bg-(--accent) text-(--on-accent)' : inside ? 'bg-(--accent)/12' : off ? 'opacity-30' : 'hover:bg-(--fg)/8'
+        const label = `${t.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long' })}, ${p === null ? 'sold out' : `£${p}`}${from && +t === +from ? ', check-in' : to && +t === +to ? ', check-out' : ''}`
+        return `<button type="button" data-date="${+t}" ${off ? 'disabled' : ''} aria-label="${label}" class="flex aspect-square flex-col items-center justify-center rounded-lg text-sm leading-tight transition-colors ${cls}"><span class="font-medium">${i + 1}</span><span class="text-[0.625rem] ${end ? '' : 'text-(--muted)'}">${past ? '' : p === null ? 'full' : `£${p}`}</span></button>`
+      }))
+      return `<div><p class="mb-2 font-semibold tracking-[-0.02em]">${first.toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })}</p><div class="grid grid-cols-7 gap-0.5 text-center"><span class="pb-1 text-[0.6875rem] text-(--muted)">M</span><span class="pb-1 text-[0.6875rem] text-(--muted)">T</span><span class="pb-1 text-[0.6875rem] text-(--muted)">W</span><span class="pb-1 text-[0.6875rem] text-(--muted)">T</span><span class="pb-1 text-[0.6875rem] text-(--muted)">F</span><span class="pb-1 text-[0.6875rem] text-(--muted)">S</span><span class="pb-1 text-[0.6875rem] text-(--muted)">S</span>${cells.join('')}</div></div>`
+    }).join('')
+    $<HTMLButtonElement>('[data-cal-move="-1"]', cal).disabled = shift === 0
+    $<HTMLButtonElement>('[data-cal-move="1"]', cal).disabled = shift >= 10
+    const hint = $('[data-cal-hint]', cal), sum = $('[data-cal-sum]', cal), hold = $<HTMLButtonElement>('[data-cal-hold]', cal)
+    hold.disabled = !(from && to)
+    $('[data-cal-note]', cal).textContent = ''
+    if (!from) { hint.textContent = 'Pick your check-in.'; sum.textContent = 'Example prices, in pounds, per night.'; return }
+    if (!to) { hint.textContent = 'Now your check-out.'; sum.textContent = `From ${from.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}`; return }
+    const n = nights(from, to), total = n.reduce((s, t) => s + night(t)!, 0)
+    hint.textContent = 'Tap a date to start again.'
+    sum.innerHTML = `<span class="text-2xl font-semibold text-(--fg)">£${total.toLocaleString('en-GB')}</span> for ${n.length} night${n.length > 1 ? 's' : ''} (example), ${from.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })} to ${to.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' })}`
+  }
+  months.addEventListener('click', (e) => {
+    const b = (e.target as Element).closest<HTMLButtonElement>('[data-date]')
+    if (!b) return
+    const t = new Date(+b.dataset.date!)
+    if (!from || to || t <= from) { from = night(t) === null ? null : t; to = null }
+    else if (nights(from, t).some((x) => night(x) === null)) { from = night(t) === null ? null : t; to = null; draw(); months.querySelector<HTMLButtonElement>(`[data-date="${+t}"]`)?.focus(); $('[data-cal-note]', cal).textContent = 'One of those nights is full. Pick dates either side of it.'; return }
+    else to = t
+    draw()
+    months.querySelector<HTMLButtonElement>(`[data-date="${+t}"]`)?.focus() // the redraw replaced the button that had focus
+  })
+  $$('[data-cal-move]', cal).forEach((b) => b.addEventListener('click', () => { shift = Math.max(0, shift + +b.dataset.calMove!); draw() }))
+  $('[data-cal-hold]', cal).addEventListener('click', () => {
+    $('[data-cal-note]', cal).textContent = 'This is an example site, so nothing gets held. On a real one, you’d pay here and get your door code by text.'
+  })
+
+  // Our street: the walking bars follow the hotel.
+  const minutes = [[2, 6, 9], [3, 5, 8], [1, 12, 14], [0, 11, 5], [2, 7, 6], [2, 15, 4], [3, 8, 12]]
+  const street = (i: number) => minutes[i].forEach((m, j) => {
+    $(`[data-walk="${j}"]`).textContent = m ? String(m) : 'Downstairs'
+    $(`[data-walk-unit="${j}"]`).textContent = m ? ' min' : ''
+    $(`[data-walk-bar="${j}"]`).style.width = `${Math.max(3, (m / 15) * 100)}%`
+  })
+
+  // Rooms in m² or ft².
+  $$('[data-unit]').forEach((b, _, all) => b.addEventListener('click', () => {
+    all.forEach((x) => x.setAttribute('aria-pressed', String(x === b)))
+    $$('[data-area]').forEach((a) => a.textContent = b.dataset.unit === 'm²' ? `${a.dataset.area} m²` : `${Math.round(+a.dataset.area! * 10.764)} ft²`)
+  }))
+
+  // Arriving: the texts come in one by one and the door opens, once when it scrolls into view, again on request.
+  const arrive = $('[data-arrive]'), msgs = $$('[data-msg]', arrive), door = $('[data-door]', arrive), code = $('[data-code]', arrive)
+  let opened = 0
+  const play = () => {
+    if (reduced) return
+    clearTimeout(opened)
+    door.removeAttribute('data-open'); $('[data-door-text]', door).textContent = 'Locked'
+    msgs.forEach((m, i) => m.animate([{ opacity: 0, transform: 'translateY(0.75rem) scale(0.96)' }, { opacity: 1, transform: 'none' }], { duration: 420, delay: 300 + i * 650, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'backwards' }))
+    code.animate([{ letterSpacing: '1em', opacity: 0 }, { letterSpacing: '0.3em', opacity: 1 }], { duration: 700, delay: 300 + 2 * 650 + 200, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', fill: 'backwards' })
+    opened = setTimeout(() => { door.setAttribute('data-open', ''); $('[data-door-text]', door).textContent = 'Unlocked' }, 300 + msgs.length * 650 + 300)
+  }
+  if (reduced) { door.setAttribute('data-open', ''); $('[data-door-text]', door).textContent = 'Unlocked'; $('[data-arrive-again]', arrive).hidden = true }
+  else msgs.forEach((m) => m.style.opacity = '0') // hidden till the phone shows, then play() brings them in
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { msgs.forEach((m) => m.style.opacity = ''); play(); o.disconnect() } }, { threshold: 0.5 }).observe($('[data-phone]', arrive))
+  $('[data-arrive-again]', arrive).addEventListener('click', play)
+
+  setHotel(0)
+</script>

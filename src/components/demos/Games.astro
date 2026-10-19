@@ -1,0 +1,485 @@
+---
+// The games bar's own page, nothing shared with the golf kit: a dartboard you can throw at, a game picker, a grid of
+// free oches, a party builder, the week's hall of fame and the week's events. Made-up business, so every score and
+// price here is an example and says so. Interactivity is the script at the bottom; motion.ts adds the reveals.
+import type { Demo } from '@/templates'
+import { Image } from 'astro:assets'
+import Vid from '@/components/kit/Vid.astro'
+import { clip, fit, photos } from '@/components/kit/media'
+const { d } = Astro.props as { d: Demo }
+const pic = photos(d.slug)
+const venues = d.venues ?? []
+const cities = [...new Set(venues.map((v) => v.city))]
+const display = 'font-(family-name:--display) font-black uppercase'
+
+// The board: regulation proportions (mm from the centre), numbers clockwise from the top.
+const order = [20, 1, 18, 4, 13, 6, 10, 15, 2, 17, 3, 19, 7, 16, 8, 11, 14, 9, 12, 5]
+const pt = (r: number, a: number) => [r * Math.sin((a * Math.PI) / 180), -r * Math.cos((a * Math.PI) / 180)].map((n) => +n.toFixed(2))
+const sector = (r1: number, r2: number, a1: number, a2: number) => {
+  const [x1, y1] = pt(r2, a1), [x2, y2] = pt(r2, a2), [x3, y3] = pt(r1, a2), [x4, y4] = pt(r1, a1)
+  return `M${x1} ${y1}A${r2} ${r2} 0 0 1 ${x2} ${y2}L${x3} ${y3}A${r1} ${r1} 0 0 0 ${x4} ${y4}Z`
+}
+const rings: [number, number, 'single' | 'ring'][] = [[15.9, 99, 'single'], [99, 107, 'ring'], [107, 162, 'single'], [162, 170, 'ring']]
+const segs = order.flatMap((_, i) => rings.map(([r1, r2, k]) => ({ d: sector(r1, r2, i * 18 - 9, i * 18 + 9), fill: k === 'single' ? (i % 2 ? '#e8e2d2' : '#17191e') : i % 2 ? '#1f8f63' : 'var(--accent)' })))
+
+const games = [
+  { name: '501', kind: 'Darts', big: '501', players: '1 to 8, or teams', takes: '20 to 40 min', rules: ['Everyone starts on 501 and counts down, three darts a turn.', 'Finish on exactly zero, and the last dart has to be a double.', 'Go past zero, or leave yourself on one, and the turn doesn’t count.'] },
+  { name: 'Killer', kind: 'Darts', big: '3 lives', players: '3 to 10', takes: '15 to 25 min', rules: ['Throw with your other hand to get your number.', 'Hit your own double and you become a killer.', 'Then hit everyone else’s double to take their lives. Last one standing wins.'] },
+  { name: 'Around the clock', kind: 'Darts', big: '1 → 20', players: '1 to 8', takes: '10 to 20 min', rules: ['Hit the 1, then the 2, all the way round to 20, in order.', 'A double moves you on two, a treble three.', 'First to finish on the bull wins.'] },
+  { name: 'Shanghai', kind: 'Darts', big: '1 → 7', players: '2 to 8', takes: '15 min', rules: ['Seven rounds: 1s in the first, 2s in the second, up to 7s.', 'Only that round’s number scores, everything else is zero.', 'Hit its single, double and treble in one turn and you win on the spot.'] },
+  { name: 'Shuffleboard', kind: 'Table', big: 'To 15', players: '2 to 4', takes: '20 min', rules: ['Take turns sliding four weights each down the table.', 'Where they stop scores 1, 2 or 3, and 4 if one hangs over the end.', 'Only whoever’s furthest down scores that round. First to 15 wins.'] },
+  { name: 'Ping pong', kind: 'Table', big: 'To 11', players: '2 to 4', takes: '15 to 30 min', rules: ['First to 11 points, and you have to win by two.', 'Serve swaps every two points.', 'Best of three, or winner stays on.'] },
+  { name: 'Karaoke', kind: 'Booth', big: 'Booth', players: '2 to 12', takes: '1 or 2 hours', rules: ['A booth of your own, door shut, mics up.', 'Pick songs from the screen and queue as many as you like.', 'Scores on screen if you want a winner, off if you don’t.'] },
+].map((g) => ({ ...g, where: g.kind === 'Darts' ? 'Every venue' : venues.filter((v) => v.has.includes(g.name)).map((v) => v.name).join(', ') }))
+
+// Oches per venue for the availability grid (example numbers), and the hours it shows.
+const oches: Record<string, number> = { Borough: 8, Camden: 6, Deansgate: 8, Digbeth: 7, Ropewalks: 8, Quayside: 5 }
+const hours = Array.from({ length: 12 }, (_, i) => 12 + i)
+const clock = (h: number) => `${h % 12 || 12}${h < 12 || h === 24 ? 'am' : 'pm'}`
+
+const extras = [
+  { key: 'food', name: 'Food', text: 'Sharing boards and fries brought to the oche.', each: 16, pic: pic[2] },
+  { key: 'drinks', name: 'Drinks', text: 'Two drinks each, poured as you arrive.', each: 12, pic: pic[3] },
+  { key: 'host', name: 'A host', text: 'Runs a tournament for your group, trophy included.', flat: 90, pic: pic[6] },
+]
+
+const fame = [
+  { title: 'Best checkout', unit: '', rows: [[161, 'The Checkouts', 'Borough'], [156, 'Treble Makers', 'Deansgate'], [141, 'Bust Again', 'Digbeth'], [132, 'Flights of Fancy', 'Camden'], [121, 'Pint and Point', 'Ropewalks']] },
+  { title: 'Most 180s', unit: '× 180', rows: [[9, 'Arrows Away', 'Deansgate'], [7, 'The Maximums', 'Borough'], [6, 'Board Stiff', 'Quayside'], [5, 'Double Trouble', 'Camden'], [4, 'The Leg Ends', 'Digbeth']] },
+  { title: 'Killer streak', unit: 'wins', rows: [[7, 'Oche Dokey', 'Ropewalks'], [5, 'Mad House', 'Borough'], [4, 'Shanghai Squad', 'Deansgate'], [4, 'Tops and Tails', 'Camden'], [3, 'The Bullseyes', 'Quayside']] },
+] as const
+
+// Weekly events, day 1 = Monday. Hours as decimals for placing them on the calendar (2pm to midnight).
+const week = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+const events = [
+  { day: 1, from: 19.5, to: 22, title: '501 league', text: 'Teams of four, eight weeks, one cup.' },
+  { day: 2, from: 18, to: 20, title: 'Darts for beginners', text: 'A coach on two oches. Free with any booking.' },
+  { day: 3, from: 20, to: 22, title: 'Killer night', text: 'Last one standing wins a bar tab.' },
+  { day: 4, from: 21, to: 23.5, title: 'Karaoke battle', text: 'Booth against booth, the bar votes.' },
+  { day: 5, from: 19, to: 21, title: 'Shuffleboard doubles', text: 'Pairs, first to 15. Sign up at the bar.' },
+  { day: 6, from: 15, to: 17, title: 'Round the clock race', text: 'Walk in, one go each, fastest wins.' },
+  { day: 7, from: 15, to: 18, title: 'Ping pong ladder', text: 'Beat whoever’s above you and take their spot.' },
+  { day: 7, from: 19, to: 21, title: 'Shanghai showdown', text: 'Seven rounds, one board, sudden death.' },
+]
+const time = (h: number) => `${Math.floor(h) % 12 || 12}${h % 1 ? ':30' : ''}${h < 12 || h >= 24 ? 'am' : 'pm'}`
+const span = [14, 24]
+
+const label = 'flex min-w-0 flex-col gap-1.5 text-xs font-semibold tracking-widest text-(--fg)/70 uppercase'
+const input = 'w-full min-w-0 rounded-xl border border-(--fg)/15 bg-(--fg)/5 px-4 py-3 text-base font-medium tracking-normal text-(--fg) normal-case outline-none transition-colors placeholder:text-(--fg)/35 focus:border-(--accent)'
+const chip = 'shrink-0 rounded-full border border-(--fg)/20 px-4 py-2 text-sm font-semibold transition-colors hover:border-(--fg) aria-pressed:border-(--accent) aria-pressed:bg-(--accent) aria-pressed:text-(--on-accent)'
+---
+<header class="px-4 pt-5 sm:px-8">
+  <nav class="mx-auto flex max-w-7xl items-center justify-between gap-6">
+    <a href="#top" class={`${display} text-2xl tracking-wide`}>{d.mark}</a>
+    <ul class="hidden gap-7 text-sm font-semibold text-(--muted) md:flex">
+      {[['#games', 'Games'], ['#oches', 'Oches'], ['#parties', 'Parties'], ['#fame', 'Hall of fame'], ['#whats-on', 'What’s on']].map(([h, t]) => <li><a href={h} class="hover:text-(--fg)">{t}</a></li>)}
+    </ul>
+    <a href="#oches" class="rounded-full bg-(--accent) px-5 py-2.5 text-sm font-bold text-(--on-accent)">{d.hero.cta}</a>
+  </nav>
+</header>
+
+<section id="top" class="px-4 pt-10 pb-24 sm:px-8 lg:pt-16">
+  <div class="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[1fr_minmax(0,34rem)]">
+    <div>
+      <p class="text-sm font-semibold tracking-widest text-(--accent) uppercase">{d.hero.kicker}</p>
+      <h1 class={`${display} mt-5 text-[clamp(4rem,12vw,10.5rem)] leading-[0.8] tracking-[-0.01em]`}>{d.hero.head}</h1>
+      <p class="mt-8 max-w-md text-lg text-pretty text-(--muted)">{d.hero.lede}</p>
+      <p class="mt-8 hidden text-sm font-semibold text-(--fg) lg:block">Have a throw. Click the board →</p>
+    </div>
+    <div data-board data-order={JSON.stringify(order)} class="mx-auto w-full max-w-[34rem]">
+      <svg viewBox="-228 -228 456 456" class="w-full cursor-crosshair touch-manipulation select-none" aria-hidden="true">
+        <circle r="226" fill="#08090b" />
+        <circle r="226" fill="none" stroke="var(--fg)" stroke-opacity="0.08" stroke-width="2" />
+        {order.map((n, i) => { const [x, y] = pt(198, i * 18); return <text x={x} y={y} dy="0.35em" text-anchor="middle" font-size="26" fill="var(--fg)" class="font-(family-name:--display) font-bold">{n}</text> })}
+        {segs.map((s) => <path d={s.d} fill={s.fill} stroke="#8d8f96" stroke-opacity="0.55" stroke-width="0.8" />)}
+        <circle r="15.9" fill="#1f8f63" stroke="#8d8f96" stroke-opacity="0.55" stroke-width="0.8" />
+        <circle r="6.35" fill="var(--accent)" stroke="#8d8f96" stroke-opacity="0.55" stroke-width="0.8" />
+        <g data-darts></g>
+      </svg>
+      <div class="mt-4 grid grid-cols-[1fr_1fr_1fr_auto] gap-2">
+        {[0, 1, 2].map((i) => <p data-dart={i} class="rounded-xl border border-(--fg)/15 px-3 py-2"><span class="block text-[0.6875rem] font-semibold tracking-widest text-(--muted) uppercase">Dart {i + 1}</span><span data-dart-text class={`${display} text-xl`}>–</span></p>)}
+        <p class="rounded-xl bg-(--accent) px-4 py-2 text-(--on-accent)"><span class="block text-[0.6875rem] font-semibold tracking-widest uppercase opacity-75">Total</span><span data-total class={`${display} text-xl tabular-nums`}>0</span></p>
+      </div>
+      <div class="mt-3 flex items-center justify-between gap-4">
+        <p data-call role="status" class="text-sm text-(--muted)">Three darts. Aim anywhere.</p>
+        <button type="button" data-throw class="shrink-0 rounded-full border border-(--fg)/25 px-4 py-2 text-sm font-semibold hover:border-(--fg)">Throw for me</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section aria-label={d.band} class="relative isolate mx-4 flex h-[60dvh] min-h-[22rem] items-end overflow-hidden rounded-[2rem] p-6 sm:mx-8 sm:p-10">
+  <div class="absolute inset-0 -z-10 overflow-hidden"><Vid {...clip(d.slug, 'hero')} data-parallax class="h-[124%] w-full" /></div>
+  <div class="absolute inset-0 -z-10 bg-linear-to-t from-black/70 to-transparent"></div>
+  <p data-split class={`${display} text-[clamp(3rem,10vw,8rem)] leading-[0.85] text-white`}>{d.band}</p>
+</section>
+
+<section id="games" class="px-4 py-28 sm:px-8 sm:py-36">
+  <div class="mx-auto max-w-7xl">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <h2 data-split class={`${display} text-[clamp(3rem,9vw,7rem)] leading-[0.85]`}>{d.intro.label}</h2>
+      <p class="max-w-sm text-(--muted)">{d.intro.text}</p>
+    </div>
+    <div class="mt-12 grid gap-6 lg:grid-cols-[18rem_1fr]">
+      <div role="tablist" aria-label="Games" data-game-tabs class="-mx-4 flex gap-2 overflow-x-auto px-4 pb-2 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0">
+        {games.map((g, i) => (
+          <button type="button" role="tab" id={`game-tab-${i}`} aria-controls={`game-${i}`} aria-selected={String(i === 0)} tabindex={i ? -1 : 0} class="group flex shrink-0 items-center justify-between gap-4 rounded-2xl border border-(--fg)/10 px-5 py-4 text-left transition-colors hover:border-(--fg)/40 aria-selected:border-(--accent) aria-selected:bg-(--accent) aria-selected:text-(--on-accent)">
+            <span class={`${display} text-2xl`}>{g.name}</span>
+            <span class="text-xs font-semibold tracking-widest uppercase opacity-60">{g.kind}</span>
+          </button>
+        ))}
+      </div>
+      <div class="rounded-[2rem] bg-(--panel)">
+        {games.map((g, i) => (
+          <article id={`game-${i}`} role="tabpanel" aria-labelledby={`game-tab-${i}`} hidden={i !== 0} class="grid gap-10 p-6 sm:p-10 xl:grid-cols-[1fr_15rem]">
+            <div>
+              <p class={`${display} text-[clamp(4rem,10vw,8rem)] leading-[0.8] text-(--accent)`}>{g.big}</p>
+              <h3 class={`${display} mt-6 text-3xl`}>{g.name}</h3>
+              <ol class="mt-6 space-y-4">
+                {g.rules.map((r, j) => <li class="grid grid-cols-[2rem_1fr] gap-3 text-lg"><span class={`${display} text-(--muted)`}>{j + 1}</span><span>{r}</span></li>)}
+              </ol>
+            </div>
+            <dl class="grid content-start gap-5 border-t border-(--fg)/10 pt-6 xl:border-t-0 xl:border-l xl:pt-0 xl:pl-8">
+              {[['Players', g.players], ['Takes', g.takes], ['Where', g.where]].map(([k, v]) => <div><dt class="text-xs font-semibold tracking-widest text-(--muted) uppercase">{k}</dt><dd class="mt-1 text-lg font-semibold">{v}</dd></div>)}
+            </dl>
+          </article>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="oches" data-oches data-oches-count={JSON.stringify(oches)} class="bg-(--panel) px-4 py-28 sm:px-8 sm:py-36">
+  <div class="mx-auto max-w-7xl">
+    <h2 data-split class={`${display} text-[clamp(3rem,9vw,7rem)] leading-[0.85]`}>Find a free oche</h2>
+    <p class="mt-5 max-w-lg text-(--muted)">Pick a venue and a day, then tap a free hour. £24 an hour before 5pm, £40 till 10pm, £32 after. Example availability and prices.</p>
+    <div class="mt-10 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Venue">
+      {venues.map((v, i) => <button type="button" data-venue={v.name} aria-pressed={String(i === 0)} class={chip}>{v.name}<span class="ml-1.5 font-normal opacity-60">{v.city}</span></button>)}
+    </div>
+    <div data-days class="mt-3 -mx-4 hidden gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Day"></div>
+    <div class="mt-8 grid gap-6 xl:grid-cols-[1fr_22rem]">
+      <div tabindex="0" role="region" aria-label="Free oches by hour" class="overflow-x-auto rounded-2xl border border-(--fg)/10 bg-(--bg) p-3 focus-visible:outline-2 focus-visible:outline-(--accent) sm:p-5">
+        <table class="w-full min-w-[44rem] border-separate border-spacing-1 text-sm">
+          <thead><tr><th class="w-20"></th>{hours.map((h) => <th scope="col" class="pb-1 text-xs font-semibold text-(--muted)">{clock(h)}</th>)}</tr></thead>
+          <tbody data-grid>
+            {Array.from({ length: 8 }, (_, o) => (
+              <tr data-row={o + 1}>
+                <th scope="row" class="pr-2 text-left text-xs font-semibold tracking-widest whitespace-nowrap text-(--muted) uppercase">Oche {o + 1}</th>
+                {hours.map((h) => <td><button type="button" data-oche={o + 1} data-hour={h} aria-label={`Oche ${o + 1}, ${clock(h)}`} class="block h-9 w-full rounded-md bg-(--fg)/10 transition-colors hover:bg-(--fg)/30 disabled:cursor-not-allowed disabled:bg-[repeating-linear-gradient(135deg,transparent_0_4px,color-mix(in_srgb,var(--fg)_14%,transparent)_4px_6px)] aria-pressed:bg-(--accent)"></button></td>)}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <p class="mt-4 flex flex-wrap gap-x-6 gap-y-2 text-xs text-(--muted)">
+          <span class="flex items-center gap-2"><span class="size-3 rounded-sm bg-(--fg)/10"></span>Free</span>
+          <span class="flex items-center gap-2"><span class="size-3 rounded-sm bg-[repeating-linear-gradient(135deg,transparent_0_2px,color-mix(in_srgb,var(--fg)_30%,transparent)_2px_3px)]"></span>Taken</span>
+          <span class="flex items-center gap-2"><span class="size-3 rounded-sm bg-(--accent)"></span>Yours</span>
+        </p>
+      </div>
+      <aside data-pick aria-live="polite" class="flex flex-col rounded-2xl border border-(--fg)/10 bg-(--bg) p-6">
+        <p class="text-xs font-semibold tracking-widest text-(--muted) uppercase">Your booking</p>
+        <p data-pick-empty class="mt-4 text-(--muted)">Tap a free hour on the grid.</p>
+        <div data-pick-full hidden class="mt-4 flex flex-1 flex-col">
+          <p data-pick-where class={`${display} text-3xl leading-none`}></p>
+          <p data-pick-when class="mt-2 text-(--muted)"></p>
+          <div class="mt-6 grid grid-cols-2 gap-3">
+            <label class={label}>Hours<select data-pick-hours class={input}></select></label>
+            <label class={label}>Players<select data-pick-players class={input}>{[2, 3, 4, 5, 6, 7, 8].map((n) => <option selected={n === 4}>{n}</option>)}</select></label>
+          </div>
+          <p class="mt-6 flex items-baseline justify-between border-t border-(--fg)/10 pt-4"><span class="text-(--muted)">Oche</span><span data-pick-price class={`${display} text-3xl`}></span></p>
+          <p data-pick-each class="text-right text-sm text-(--muted)"></p>
+          <button type="button" data-pick-book class="mt-6 rounded-full bg-(--accent) px-6 py-3.5 font-bold text-(--on-accent) transition-transform active:scale-[0.98]">Book this oche</button>
+          <p data-pick-note role="status" class="mt-3 text-sm text-(--muted)"></p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="parties" data-party class="px-4 py-28 sm:px-8 sm:py-36">
+  <div class="mx-auto max-w-7xl">
+    <h2 data-split class={`${display} text-[clamp(3rem,9vw,7rem)] leading-[0.85]`}>Build your party</h2>
+    <p class="mt-5 max-w-lg text-(--muted)">How many of you, how long, and what comes with it. One oche for every eight people. Example prices.</p>
+    <div class="mt-12 grid gap-8 lg:grid-cols-[1fr_24rem]">
+      <div class="grid gap-8">
+        <div class="grid gap-6 sm:grid-cols-[1fr_auto] sm:items-end">
+          <label class="block">
+            <span class="text-xs font-semibold tracking-widest text-(--muted) uppercase">People</span>
+            <span data-party-count class={`${display} block text-[clamp(4rem,10vw,7rem)] leading-none tabular-nums`}>16</span>
+            <input data-party-people type="range" min="6" max="60" value="16" class="mt-3 w-full accent-(--accent)" aria-label="People" />
+          </label>
+          <fieldset class="flex gap-2"><legend class="mb-2 text-xs font-semibold tracking-widest text-(--muted) uppercase">Hours</legend>
+            {[2, 3].map((h) => <label class="cursor-pointer"><input type="radio" name="party-hours" value={h} checked={h === 2} class="peer sr-only" /><span class="block rounded-full border border-(--fg)/20 px-5 py-2.5 font-semibold peer-checked:border-(--accent) peer-checked:bg-(--accent) peer-checked:text-(--on-accent) peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-(--accent)">{h} hours</span></label>)}
+          </fieldset>
+        </div>
+        <div class="grid gap-4 sm:grid-cols-3">
+          {extras.map((x) => (
+            <label class="group relative cursor-pointer overflow-hidden rounded-2xl border border-(--fg)/10 bg-(--panel) transition-colors has-checked:border-(--accent) has-focus-visible:outline-2 has-focus-visible:outline-(--accent)">
+              <input type="checkbox" data-extra={x.key} data-name={x.name} data-each={x.each ?? 0} data-flat={x.flat ?? 0} checked={x.key === 'food'} class="peer sr-only" />
+              {x.pic && <Image src={x.pic} alt="" widths={[400, 800]} sizes="(min-width: 640px) 18rem, 100vw" class="aspect-[4/3] w-full object-cover opacity-60 transition-opacity group-has-checked:opacity-100" />}
+              <span class="absolute top-3 right-3 grid size-8 place-items-center rounded-full border-2 border-white/80 bg-black/40 text-white peer-checked:border-(--accent) peer-checked:bg-(--accent) peer-checked:text-(--on-accent)"><span class="hidden text-sm font-black group-has-checked:block">✓</span></span>
+              <span class="block p-5">
+                <span class={`${display} block text-2xl`}>{x.name}</span>
+                <span class="mt-1 block text-sm text-(--muted)">{x.text}</span>
+                <span class="mt-3 block font-semibold">{x.each ? `£${x.each} a head` : `£${x.flat} for the night`}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </div>
+      <aside class="rounded-2xl bg-(--fg) p-6 text-(--bg) lg:sticky lg:top-6 lg:self-start">
+        <p class="text-xs font-semibold tracking-widest uppercase opacity-60">Your night</p>
+        <ul data-party-lines class="mt-4 divide-y divide-(--bg)/15 text-sm"></ul>
+        <p class="mt-4 flex items-baseline justify-between border-t-2 border-(--bg) pt-4"><span class="font-semibold">Total</span><span data-party-total class={`${display} text-4xl tabular-nums`}></span></p>
+        <p data-party-each class="text-right text-sm opacity-60"></p>
+        <a href="#contact" data-party-ask class="mt-6 block rounded-full bg-(--accent) px-6 py-3.5 text-center font-bold text-(--on-accent)">Ask about a date</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section id="fame" class="bg-(--accent) px-4 py-28 text-(--on-accent) sm:px-8 sm:py-36">
+  <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[22rem_1fr]">
+    <div>
+      <p class="text-sm font-semibold tracking-widest uppercase">Hall of fame · this week</p>
+      <h2 data-split class={`${display} mt-4 text-[clamp(3rem,9vw,6.5rem)] leading-[0.85]`}>Top of the oche</h2>
+      {pic[0] && <Image src={pic[0]} alt="A player celebrating a good throw" widths={[400, 800]} sizes="22rem" class="mt-8 aspect-[4/5] w-full rounded-2xl object-cover" />}
+      <p class="mt-4 text-sm opacity-75">Example scores. On a real site they come off the scoring screens every night.</p>
+    </div>
+    <div class="grid gap-10 md:grid-cols-3 md:gap-6">
+      {fame.map((f) => (
+        <div data-rise>
+          <h3 class="border-b-2 border-(--on-accent) pb-3 text-sm font-bold tracking-widest uppercase">{f.title}</h3>
+          <p class={`${display} mt-5 text-[clamp(5rem,9vw,8rem)] leading-[0.8] tabular-nums`}>{f.rows[0][0]}</p>
+          <p class="mt-2 font-semibold">{f.rows[0][1]} <span class="font-normal opacity-70">· {f.rows[0][2]}{f.unit && ` · ${f.unit}`}</span></p>
+          <ol class="mt-6 divide-y divide-(--on-accent)/20 border-t border-(--on-accent)/20 text-sm">
+            {f.rows.slice(1).map((r, i) => <li class="grid grid-cols-[1.5rem_1fr_auto] gap-2 py-2.5"><span class="opacity-60">{i + 2}</span><span>{r[1]} <span class="opacity-60">· {r[2]}</span></span><span class={`${display} text-lg leading-none tabular-nums`}>{r[0]}</span></li>)}
+          </ol>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<section id="whats-on" class="px-4 py-28 sm:px-8 sm:py-36">
+  <div class="mx-auto max-w-7xl">
+    <div class="flex flex-wrap items-end justify-between gap-6">
+      <h2 data-split class={`${display} text-[clamp(3rem,9vw,7rem)] leading-[0.85]`}>What’s on</h2>
+      <p class="max-w-sm text-(--muted)">Every week, at every venue. Free to enter with an oche booked.</p>
+    </div>
+    <div class="mt-12 hidden grid-cols-[3.5rem_repeat(7,1fr)] gap-x-2 md:grid">
+      <div></div>
+      {week.map((w, i) => <p data-weekday={i + 1} class="rounded-t-xl px-2 pb-3 text-center text-xs font-bold tracking-widest text-(--muted) uppercase data-[today]:text-(--accent)">{w.slice(0, 3)}</p>)}
+      <div class="relative h-[34rem]">
+        {Array.from({ length: span[1] - span[0] + 1 }, (_, i) => <span class="absolute right-2 -translate-y-1/2 text-xs text-(--muted)" style={`top:${(i / (span[1] - span[0])) * 100}%`}>{time(span[0] + i)}</span>)}
+      </div>
+      {week.map((_, i) => (
+        <div data-weekday={i + 1} class="relative h-[34rem] rounded-b-xl border-t border-(--fg)/10 bg-[repeating-linear-gradient(to_bottom,color-mix(in_srgb,var(--fg)_6%,transparent)_0_1px,transparent_1px_3.4rem)] data-[today]:bg-(--fg)/5">
+          {events.filter((e) => e.day === i + 1).map((e) => (
+            <article class="absolute inset-x-1 overflow-hidden rounded-xl border-l-4 border-(--accent) bg-(--panel) p-2.5" style={`top:${((e.from - span[0]) / (span[1] - span[0])) * 100}%;height:${((e.to - e.from) / (span[1] - span[0])) * 100}%`}>
+              <p class="text-[0.6875rem] font-semibold text-(--accent)">{time(e.from)}</p>
+              <h3 class={`${display} text-lg leading-none`}>{e.title}</h3>
+              <p class="mt-1 text-xs text-(--muted)">{e.text}</p>
+            </article>
+          ))}
+        </div>
+      ))}
+    </div>
+    <ol class="mt-10 divide-y divide-(--fg)/10 border-y border-(--fg)/10 md:hidden">
+      {events.map((e) => (
+        <li class="grid grid-cols-[4.5rem_1fr] gap-4 py-4">
+          <p class="text-xs font-bold tracking-widest text-(--muted) uppercase">{week[e.day - 1].slice(0, 3)}<span class="block font-semibold tracking-normal text-(--accent) normal-case">{time(e.from)}</span></p>
+          <div><h3 class={`${display} text-xl leading-none`}>{e.title}</h3><p class="mt-1 text-sm text-(--muted)">{e.text}</p></div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<section id="contact" class="relative isolate overflow-hidden px-4 pt-32 pb-28 sm:px-8 sm:pt-44">
+  {pic[4] && <div class="absolute inset-0 -z-10 overflow-hidden"><Image src={pic[4]} alt="" widths={[800, 1400, 2000]} sizes="100vw" data-parallax class="h-[124%] w-full object-cover" /></div>}
+  <div class="absolute inset-0 -z-10 bg-linear-to-b from-(--bg) via-(--bg)/60 to-(--bg)/90"></div>
+  <div class="mx-auto grid max-w-7xl gap-12 lg:grid-cols-[1fr_minmax(0,34rem)] lg:items-end">
+    <div>
+      <p class="text-sm font-semibold tracking-widest text-(--accent) uppercase">Parties and team socials</p>
+      <h2 data-split class={`${display} mt-4 text-[clamp(3rem,12vw,9rem)] leading-[0.85]`}>{d.contact}</h2>
+      <p class="mt-6 max-w-lg text-lg text-(--fg)/85">Birthdays, Christmas dos and whole-office takeovers. Tell us the date and the headcount, and a host sorts the oches, the food and the games.</p>
+    </div>
+    <form data-enquiry method="dialog" class="grid gap-4 rounded-[2rem] border border-(--fg)/15 bg-(--bg)/85 p-5 [color-scheme:dark] backdrop-blur-xl sm:grid-cols-2 sm:p-7">
+      <label class={label}>Venue
+        <select name="venue" class={input}>{cities.map((c) => <optgroup label={c}>{venues.filter((v) => v.city === c).map((v) => <option>{v.name}</option>)}</optgroup>)}</select>
+      </label>
+      <label class={label}>Type of event
+        <select name="type" class={input}>{['Birthday', 'Work party', 'Christmas do', 'Stag or hen', 'Something else'].map((t) => <option>{t}</option>)}</select>
+      </label>
+      <label class={label}>Date<input type="date" name="date" required class={input} /></label>
+      <label class={label}>Guests<input type="number" name="guests" min="2" max="200" value="16" required inputmode="numeric" class={input} /></label>
+      <label class={label}>Name<input name="name" autocomplete="name" required class={input} /></label>
+      <label class={label}>Email<input type="email" name="email" autocomplete="email" required class={input} /></label>
+      <label class:list={[label, 'sm:col-span-2']}>Anything else<textarea name="message" rows="3" placeholder="Food, drinks, a time, a theme" class:list={[input, 'resize-y']}></textarea></label>
+      <button class="rounded-full bg-(--accent) px-8 py-4 text-lg font-bold text-(--on-accent) transition-transform active:scale-[0.98] sm:col-span-2">Send enquiry →</button>
+      <p data-enquiry-note role="status" class="text-center text-sm text-(--fg)/80 sm:col-span-2"></p>
+    </form>
+  </div>
+</section>
+
+<footer class="overflow-hidden px-4 pt-20 sm:px-8">
+  <div class="mx-auto grid max-w-7xl grid-cols-2 gap-8 sm:grid-cols-3 lg:grid-cols-6">
+    {venues.map((v) => (
+      <div>
+        <p class="text-xs font-bold tracking-widest text-(--accent) uppercase">{v.city}</p>
+        <p class="mt-2 font-semibold">{v.name}</p>
+        <p class="mt-1 text-sm text-(--muted)">{v.text}</p>
+      </div>
+    ))}
+  </div>
+  <p class="mx-auto mt-12 max-w-7xl text-sm text-(--muted)">{d.tel} · Over 18s after 8pm</p>
+  <p aria-hidden="true" class={`${display} mt-10 translate-y-[14%] text-center leading-[0.8] whitespace-nowrap text-(--accent)`} style={`font-size:${fit(d.mark, d.font)}`}>{d.mark}</p>
+</footer>
+
+<script>
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
+  const $ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => root.querySelector<T & Element>(sel)! as T
+  const $$ = <T extends Element = HTMLElement>(sel: string, root: ParentNode = document) => [...root.querySelectorAll<T & Element>(sel)] as T[]
+
+  // The board: a click is where you aim, the dart lands a little off it, and the score is wherever it landed.
+  const board = $('[data-board]')
+  const order: number[] = JSON.parse(board.dataset.order!)
+  const svg = $<SVGSVGElement>('svg', board), darts = $<SVGGElement>('[data-darts]', board)
+  const call = $('[data-call]', board), total = $('[data-total]', board)
+  const slots = $$('[data-dart]', board)
+  let turn: number[] = []
+  const score = (x: number, y: number): [number, string] => {
+    const r = Math.hypot(x, y)
+    if (r <= 6.35) return [50, 'Bull']
+    if (r <= 15.9) return [25, 'Outer bull']
+    if (r > 170) return [0, 'Off the board']
+    const n = order[Math.floor((((Math.atan2(x, -y) * 180) / Math.PI + 369) % 360) / 18)]
+    if (r >= 99 && r <= 107) return [n * 3, `Treble ${n}`]
+    if (r >= 162) return [n * 2, `Double ${n}`]
+    return [n, `${n}`]
+  }
+  const throwAt = (ax: number, ay: number) => {
+    if (turn.length === 3) { turn = []; darts.replaceChildren(); slots.forEach((s) => $('[data-dart-text]', s).textContent = '–') }
+    const a = Math.random() * Math.PI * 2, off = Math.sqrt(Math.random()) * 9
+    const x = ax + Math.cos(a) * off, y = ay + Math.sin(a) * off
+    const [points, name] = score(x, y)
+    turn.push(points)
+    const g = document.createElementNS('http://www.w3.org/2000/svg', 'g')
+    g.setAttribute('transform', `translate(${x.toFixed(1)} ${y.toFixed(1)})`)
+    g.innerHTML = '<line x1="0" y1="0" x2="16" y2="-16" stroke="#f3f1ea" stroke-width="3" stroke-linecap="round"/><path d="M14 -14 L30 -22 L22 -14 L30 -6 Z" fill="var(--accent)" stroke="#0f1115" stroke-width="1"/><circle r="2.6" fill="#0f1115" stroke="#f3f1ea" stroke-width="1.2"/>'
+    darts.append(g)
+    if (!reduced) g.animate([{ transform: `translate(${x + 40}px, ${y - 60}px) scale(1.8)`, opacity: 0 }, { transform: `translate(${x}px, ${y}px)`, opacity: 1 }], { duration: 260, easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)' })
+    $('[data-dart-text]', slots[turn.length - 1]).textContent = points ? name.replace('Treble ', 'T').replace('Double ', 'D').replace('Outer bull', '25') : 'Miss'
+    const sum = turn.reduce((s, n) => s + n, 0)
+    total.textContent = String(sum)
+    call.textContent = turn.length < 3
+      ? `${name}${points && name !== `${points}` ? `, ${points}` : ''}. ${3 - turn.length} to go.`
+      : sum === 180 ? 'One hundred and eighty!' : sum === 26 ? '26: bed and breakfast.' : sum >= 100 ? `Ton${sum > 100 ? ' plus' : ''}! ${sum}. Throw again for a new turn.` : `${sum} that turn. Throw again for a new turn.`
+  }
+  svg.addEventListener('click', (e) => {
+    const p = new DOMPoint(e.clientX, e.clientY).matrixTransform(svg.getScreenCTM()!.inverse())
+    if (Math.hypot(p.x, p.y) <= 226) throwAt(p.x, p.y)
+  })
+  $('[data-throw]', board).addEventListener('click', () => throwAt(0, -103))
+
+  // Game picker: tabs, arrow keys move along either way.
+  const tabs = $$<HTMLButtonElement>('[data-game-tabs] [role=tab]')
+  const pickGame = (i: number, focus = false) => {
+    tabs.forEach((t, j) => { t.setAttribute('aria-selected', String(i === j)); t.tabIndex = i === j ? 0 : -1; document.getElementById(t.getAttribute('aria-controls')!)!.hidden = i !== j })
+    if (focus) tabs[i].focus()
+    const panel = document.getElementById(tabs[i].getAttribute('aria-controls')!)!
+    if (!reduced) panel.animate([{ opacity: 0, transform: 'translateY(0.75rem)' }, { opacity: 1, transform: 'none' }], { duration: 380, easing: 'cubic-bezier(0.16, 1, 0.3, 1)' })
+  }
+  tabs.forEach((t, i) => {
+    t.addEventListener('click', () => pickGame(i))
+    t.addEventListener('keydown', (e) => { const k = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[e.key]; const to = e.key === 'Home' ? 0 : e.key === 'End' ? tabs.length - 1 : k ? (i + k + tabs.length) % tabs.length : -1; if (to >= 0) { e.preventDefault(); pickGame(to, true) } })
+  })
+
+  // Free oches: taken hours are made up from a hash of venue, day, oche and hour, busier in the evening and at weekends.
+  const oches = $('[data-oches]')
+  const counts: Record<string, number> = JSON.parse(oches.dataset.ochesCount!)
+  const rate = (h: number) => (h < 17 ? 24 : h < 22 ? 40 : 32)
+  const clock = (h: number) => `${h % 12 || 12}${h < 12 || h === 24 ? 'am' : 'pm'}`
+  const hash = (s: string) => { let h = 2166136261; for (const c of s) h = Math.imul(h ^ c.charCodeAt(0), 16777619); return (h >>> 0) % 100 }
+  const days = Array.from({ length: 7 }, (_, i) => { const t = new Date(); t.setDate(t.getDate() + i); return t })
+  const dayName = (t: Date, i: number) => (i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : t.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' }))
+  const daysBox = $('[data-days]', oches)
+  daysBox.classList.replace('hidden', 'flex')
+  let venue = $('[data-venue]', oches).dataset.venue!, day = new Date().getHours() >= 22 ? 1 : 0 // late at night, today is all but gone
+  daysBox.innerHTML = days.map((t, i) => `<button type="button" data-day="${i}" aria-pressed="${i === day}" class="${$('[data-venue]', oches).className}">${dayName(t, i)}</button>`).join('')
+  let pick: { oche: number; hour: number } | null = null
+  const cells = $$<HTMLButtonElement>('[data-grid] button', oches)
+  const taken = (o: number, h: number) => {
+    const t = days[day], weekend = [0, 5, 6].includes(t.getDay())
+    if (day === 0 && h <= new Date().getHours()) return true // already started today
+    const busy = (h >= 18 ? 55 : h >= 16 ? 35 : 15) + (weekend ? 20 : 0)
+    return hash(`${venue}${t.toDateString()}${o}${h}`) < busy
+  }
+  const run = (o: number, h: number) => { let n = 0; while (n < 3 && h + n <= 23 && !taken(o, h + n)) n++; return n }
+  const hoursSel = $<HTMLSelectElement>('[data-pick-hours]', oches), playersSel = $<HTMLSelectElement>('[data-pick-players]', oches)
+  const paint = () => {
+    $$('[data-row]', oches).forEach((r) => r.hidden = +r.dataset.row! > counts[venue])
+    const len = pick ? +hoursSel.value : 0
+    cells.forEach((c) => {
+      const o = +c.dataset.oche!, h = +c.dataset.hour!, off = taken(o, h)
+      c.disabled = off
+      const mine = !!pick && pick.oche === o && h >= pick.hour && h < pick.hour + len
+      c.setAttribute('aria-pressed', String(mine))
+      c.setAttribute('aria-label', `Oche ${o}, ${clock(h)}, ${off ? 'taken' : mine ? 'your booking' : 'free'}`)
+    })
+    $('[data-pick-empty]', oches).hidden = !!pick
+    $('[data-pick-full]', oches).hidden = !pick
+    if (!pick) return
+    const price = Array.from({ length: len }, (_, i) => rate(pick!.hour + i)).reduce((s, n) => s + n, 0)
+    $('[data-pick-where]', oches).textContent = `Oche ${pick.oche}, ${venue}`
+    $('[data-pick-when]', oches).textContent = `${dayName(days[day], day)}, ${clock(pick.hour)} to ${clock(pick.hour + len)}`
+    $('[data-pick-price]', oches).textContent = `£${price}`
+    $('[data-pick-each]', oches).textContent = `£${(price / +playersSel.value).toFixed(2)} each for ${playersSel.value}`
+  }
+  const choose = (o: number, h: number) => {
+    const n = run(o, h)
+    pick = { oche: o, hour: h }
+    hoursSel.innerHTML = Array.from({ length: n }, (_, i) => `<option value="${i + 1}" ${i + 1 === Math.min(2, n) ? 'selected' : ''}>${i + 1} hour${i ? 's' : ''}</option>`).join('')
+    $('[data-pick-note]', oches).textContent = ''
+    paint()
+  }
+  cells.forEach((c) => c.addEventListener('click', () => choose(+c.dataset.oche!, +c.dataset.hour!)))
+  const press = (btns: HTMLElement[], on: HTMLElement) => btns.forEach((b) => b.setAttribute('aria-pressed', String(b === on)))
+  $$('[data-venue]', oches).forEach((b, _, all) => b.addEventListener('click', () => { venue = b.dataset.venue!; pick = null; press(all, b); paint() }))
+  $$('[data-day]', oches).forEach((b, _, all) => b.addEventListener('click', () => { day = +b.dataset.day!; pick = null; press(all, b); paint() }))
+  hoursSel.addEventListener('change', paint)
+  playersSel.addEventListener('change', paint)
+  $('[data-pick-book]', oches).addEventListener('click', () => {
+    $('[data-pick-note]', oches).textContent = `This is an example site, so nothing gets booked. On a real one, oche ${pick!.oche} at ${venue} would be held for you and paid here.`
+  })
+  paint()
+
+  // Party builder: one oche per eight people at the peak rate, plus whatever's ticked.
+  const party = $('[data-party]')
+  const people = $<HTMLInputElement>('[data-party-people]', party)
+  const money = (n: number) => `£${n.toLocaleString('en-GB')}`
+  const sumUp = () => {
+    const n = +people.value, h = +$<HTMLInputElement>('[name=party-hours]:checked', party).value, o = Math.ceil(n / 8)
+    const lines: [string, number][] = [[`${o} oche${o > 1 ? 's' : ''} for ${h} hours`, o * h * 40]]
+    $$<HTMLInputElement>('[data-extra]', party).filter((x) => x.checked).forEach((x) => {
+      const name = x.dataset.name!
+      lines.push(+x.dataset.each! ? [`${name}, ${n} × £${x.dataset.each}`, n * +x.dataset.each!] : [name, +x.dataset.flat!])
+    })
+    const sum = lines.reduce((s, [, v]) => s + v, 0)
+    $('[data-party-count]', party).textContent = String(n)
+    $('[data-party-lines]', party).innerHTML = lines.map(([k, v]) => `<li class="flex justify-between gap-4 py-2.5"><span>${k}</span><span class="font-semibold tabular-nums">${money(v)}</span></li>`).join('')
+    $('[data-party-total]', party).textContent = money(sum)
+    $('[data-party-each]', party).textContent = `${money(Math.round(sum / n))} a head`
+  }
+  party.addEventListener('input', sumUp)
+  sumUp()
+  $('[data-party-ask]', party).addEventListener('click', () => {
+    const form = $<HTMLFormElement>('form[data-enquiry]')
+    form.guests.value = people.value
+    if (!form.message.value.trim()) form.message.value = $$('[data-party-lines] li > span:first-child', party).map((s) => s.textContent).join(', ')
+  })
+
+  // What's on: today's column stands out.
+  $$(`[data-weekday="${(new Date().getDay() + 6) % 7 + 1}"]`).forEach((el) => el.setAttribute('data-today', ''))
+</script>
