@@ -178,9 +178,9 @@ const input = 'mt-1 min-w-0 bg-transparent text-lg font-semibold sm:text-xl trac
     <!-- The headline sits inside the jungle: the nearest leaves pass in front of it. -->
     <div class="my-auto flex flex-col items-center pt-10 pb-8 text-center">
       <p class="text-xs font-semibold tracking-[0.25em] text-white/80 uppercase sm:text-sm">{h.kicker}</p>
-      <h1 data-letters class="mt-6 font-(family-name:--display) leading-[0.8] font-black tracking-[-0.04em] uppercase">
+      <h1 data-letters class="mt-6 font-(family-name:--display) leading-[0.95] font-black tracking-[-0.02em] uppercase">
         <span class="block text-[clamp(1.75rem,6.5vw,5.5rem)]">{head.join(' ')}</span>
-        <span class="block text-(--accent)" style={`font-size:min(${fit(last, d.font)},32dvh)`}>{last}</span>
+        <span class="block text-(--accent)" style={`font-size:min(${fit(last, d.font, 20)},24dvh)`}>{last}</span>
       </h1>
       <p class="mt-6 max-w-lg text-base text-white/80 sm:text-lg">{h.lede}</p>
     </div>

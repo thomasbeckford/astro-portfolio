@@ -38,7 +38,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
   dark
   schema={[{ '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }]}
   title={`Websites for UK tradespeople, from £${site.priceFrom} | ${site.name}`}
-  description={`Websites for tradespeople and small businesses across the UK, built by ${site.name}, a London developer. From £${site.priceFrom}, free hosting, no deposit: you pay once you're happy. Edit it yourself or let me look after it.`}
+  description={`Websites for tradespeople, hospitality and small businesses across the UK, built by ${site.name}, a London developer. From £${site.priceFrom}, free hosting, no deposit: you pay once you're happy. Edit it yourself or let me look after it.`}
 >
   <!-- With motion, hold the headline back until SplitText has cut it, so it never flashes whole first.
        The style below unhides it after 2.5s no matter what, so a failed script can't leave it blank. -->
@@ -97,7 +97,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             </div>
           </div>
           <div data-intro-copy class="mt-8 grid gap-6 border-t border-line pt-6 md:grid-cols-[1fr_auto] md:items-center">
-            <p class="max-w-lg text-lg text-pretty text-muted">Websites for UK small businesses. Fixed price, live in {site.turnaround}, and you pay once you’re happy. Want to change the words and photos yourself? Add your own <a href="#edit-it-yourself" class="text-fg underline underline-offset-4">editing panel</a>.</p>
+            <p class="max-w-lg text-lg text-pretty text-muted">Websites for UK small businesses, from trades to pubs, hotels and venues. Fixed price, live in {site.turnaround}, and you pay once you’re happy. Want to change the words and photos yourself? Add your own <a href="#edit-it-yourself" class="text-fg underline underline-offset-4">editing panel</a>.</p>
             <div class="flex flex-wrap gap-3">
               <a href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Get a free quote<Icon name="arrow" class="size-4" /></a>
               <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
@@ -109,7 +109,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
       <!-- The six template sites (live ones are on /work): a grid of looping scroll-throughs (recorded from each site). -->
       <section id="sites" aria-labelledby="sites-title" class="scroll-mt-20 px-4 pt-32 sm:px-8">
         <h2 id="sites-title" data-split class:list={[display, 'text-[15vw] leading-[0.9] sm:text-[9.5vw]']}><span class="block">Pick a look.</span> <span class="block text-accent">Make it yours.</span></h2>
-        <p class="mt-6 max-w-md text-lg text-muted">Full websites, each with its own look. Open one and have a look around.</p>
+        <p class="mt-6 max-w-md text-lg text-muted">Full websites, each with its own look, for trades and for hospitality: bars, hotels and venues, with bookings built in. Open one and have a look around.</p>
         <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
           {home.map((c) => <WorkCard c={c} />)}
         </ul>

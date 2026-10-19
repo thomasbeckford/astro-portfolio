@@ -49,7 +49,7 @@ export const demos: Demo[] = [
     tel: '07700 900420',
     look: ['Booking by venue', 'Find your nearest', 'Live scores', 'Price per player', 'Tournaments', 'Menu by venue'],
     font: 'oswald',
-    colors: { bg: '#0b1d12', fg: '#eef2e2', muted: '#9fb5a2', accent: '#ffb627', onAccent: '#0b1d12', panel: '#12301d', alt: '#eef2e2' },
+    colors: { bg: '#0b1d12', fg: '#eef2e2', muted: '#9fb5a2', accent: '#5ec8f2', onAccent: '#0b1d12', panel: '#12301d', alt: '#eef2e2' },
     hero: { variant: 'booking', kicker: 'Golf simulators · Jungle bar · Kitchen', head: 'Into the rough', lede: 'Simulator bays hidden in a jungle of real plants, with a kitchen and a long bar. No clubs, no experience and no dress code needed.', cta: 'Find a bay' },
     intro: { label: 'Live from the bays', text: 'Every bay keeps score on screen, and the scores land here as they’re played.' },
     teams: ['The Mulligans', 'Bunker Mentality', 'Tee Party', 'Sand Trappers', 'Birdie Brains', 'The Back Nine', 'Rough Diamonds', 'Grip It and Sip It', 'Lost Balls', 'Chip Happens', 'Par for the Course', 'The Fairway Fiends', 'Tee Total', 'Putt Pirates', 'Wedge Issue', 'Slice Squad'],
