@@ -82,7 +82,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
           <div class="relative grid content-center gap-4">
             <div class="relative z-10 lg:pointer-events-none">
               <p data-intro-copy class="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-white/[0.05] px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
-                <span class="rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-on-accent">£{site.priceFrom}</span>
+                <span class="rounded-full bg-fill px-2 py-0.5 text-xs font-semibold text-on-accent">£{site.priceFrom}</span>
                 Fixed price <span class="text-muted">· pay when you’re happy</span>
               </p>
               <h1 data-letters class:list={[display, 'mt-6 text-[14.5vw] leading-[0.9] sm:text-[13vw] lg:text-[10vw]']}>
@@ -237,7 +237,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             {faqs.map(([q, a]) => (
               <details name="faq" class="faq group">
                 <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-lg font-semibold text-pretty transition-colors hover:text-accent group-open:text-accent [&::-webkit-details-marker]:hidden">
-                  <span class="transition-transform duration-300 group-hover:translate-x-1.5 group-open:translate-x-1.5">{q}</span><span aria-hidden="true" class="grid size-8 shrink-0 place-items-center rounded-full text-2xl leading-none text-muted ring-1 ring-line transition duration-300 group-hover:ring-accent group-open:rotate-45 group-open:bg-accent group-open:text-on-accent group-open:ring-accent">+</span>
+                  <span class="transition-transform duration-300 group-hover:translate-x-1.5 group-open:translate-x-1.5">{q}</span><span aria-hidden="true" class="grid size-8 shrink-0 place-items-center rounded-full text-2xl leading-none text-muted ring-1 ring-line transition duration-300 group-hover:ring-accent group-open:rotate-45 group-open:bg-fill group-open:text-on-accent group-open:ring-accent">+</span>
                 </summary>
                 <p class="max-w-2xl pb-6 text-pretty text-muted">{a}</p>
               </details>
@@ -297,7 +297,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
 
   <!-- Site preview: the example opens over the page instead of leaving it. -->
   <dialog id="preview" data-lenis-prevent aria-labelledby="preview-title" class="m-auto size-full max-h-none max-w-none bg-transparent p-0 backdrop:bg-black/80 backdrop:backdrop-blur-sm sm:h-[min(78dvh,760px)] sm:w-[min(1100px,calc(100vw-4rem))]">
-    <div class="flex size-full flex-col overflow-hidden bg-accent text-on-accent sm:rounded-[1.75rem] sm:p-2 sm:pt-0 sm:shadow-[0_0_90px_-20px] sm:shadow-accent/50">
+    <div class="flex size-full flex-col overflow-hidden bg-fill text-on-accent sm:rounded-[1.75rem] sm:p-2 sm:pt-0 sm:shadow-[0_0_90px_-20px] sm:shadow-accent/50">
       <div class="flex items-center justify-between gap-3 py-2 pr-1 pl-4 text-sm sm:pl-3">
         <p id="preview-title" data-preview-title class="min-w-0 font-semibold text-ellipsis whitespace-nowrap overflow-hidden"></p>
         <div class="flex shrink-0 items-center gap-1">

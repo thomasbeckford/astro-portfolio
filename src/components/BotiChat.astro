@@ -30,7 +30,7 @@ const starters = ['Get me a price', 'Do I own the domain?', 'How long does it ta
         <p class="mt-4 text-xl font-bold">Hiya! How can I help?</p>
         <p class="mt-1 text-sm text-muted">Ask me anything. I know Thomas's prices.</p>
         <div class="mt-6 flex flex-wrap justify-center gap-2">
-          {starters.map((s) => <button type="button" data-say={s} class="min-h-11 rounded-xl bg-fg/[0.05] px-4 text-sm font-medium ring-1 ring-fg/15 transition ring-inset hover:bg-accent hover:text-on-accent">{s}</button>)}
+          {starters.map((s) => <button type="button" data-say={s} class="min-h-11 rounded-xl bg-fg/[0.05] px-4 text-sm font-medium ring-1 ring-fg/15 transition ring-inset hover:bg-fill hover:text-on-accent">{s}</button>)}
         </div>
       </div>
     </div>
@@ -102,13 +102,13 @@ const starters = ['Get me a price', 'Do I own the domain?', 'How long does it ta
     return el
   }
   const bubble = (who: 'bot' | 'me', text: string) =>
-    row(who, Object.assign(document.createElement('p'), { textContent: text, className: `max-w-[80%] px-3.5 py-3 text-pretty ${who === 'me' ? 'rounded-[16px_4px_16px_16px] bg-accent text-on-accent' : 'rounded-[4px_16px_16px_16px] bg-fg/[0.06] ring-1 ring-line'}` }))
+    row(who, Object.assign(document.createElement('p'), { textContent: text, className: `max-w-[80%] px-3.5 py-3 text-pretty ${who === 'me' ? 'rounded-[16px_4px_16px_16px] bg-fill text-on-accent' : 'rounded-[4px_16px_16px_16px] bg-fg/[0.06] ring-1 ring-line'}` }))
 
   const chips = (list: string[]) => {
     const wrap = document.createElement('div')
     wrap.className = 'bubble-in flex flex-wrap justify-end gap-2 pl-9'
     wrap.dataset.chips = ''
-    for (const s of list) wrap.append(Object.assign(document.createElement('button'), { type: 'button', textContent: s, className: 'min-h-11 rounded-xl bg-fg/[0.05] px-3.5 text-sm font-medium ring-1 ring-fg/15 ring-inset transition hover:bg-accent hover:text-on-accent', onclick: () => (wrap.remove(), send(s)) }))
+    for (const s of list) wrap.append(Object.assign(document.createElement('button'), { type: 'button', textContent: s, className: 'min-h-11 rounded-xl bg-fg/[0.05] px-3.5 text-sm font-medium ring-1 ring-fg/15 ring-inset transition hover:bg-fill hover:text-on-accent', onclick: () => (wrap.remove(), send(s)) }))
     log.append(wrap)
     log.scrollTop = log.scrollHeight
   }
