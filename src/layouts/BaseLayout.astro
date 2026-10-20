@@ -161,10 +161,11 @@ const jsonLd = {
             if (!a || /^\/(privacy|cv)\b/.test(location.pathname)) return
             const channel = a.protocol === 'mailto:' ? 'email' : 'whatsapp'
             a.href = tagged(a.href, channel === 'email' ? 'body' : 'text')
-            if (sent || type === 'contextmenu') return
+            // Only the live site reports: local dev and Vercel previews would put test taps in the Sheet.
+            if (sent || type === 'contextmenu' || location.hostname.replace(/^www\./, '') !== 'tebeck.dev') return
             sent = true
             const gclid = quiet ? '' : (query.get('gclid') ?? '').slice(0, 200)
-            navigator.sendBeacon(leadHook, new URLSearchParams({ code, ref, channel, gclid, page: location.pathname }))
+            navigator.sendBeacon(leadHook, new URLSearchParams({ code, ref, channel, gclid, page: location.pathname, device: matchMedia('(pointer: coarse)').matches ? 'mobile' : 'desktop' }))
           },
           true,
         )
