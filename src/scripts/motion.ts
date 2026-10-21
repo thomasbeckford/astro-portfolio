@@ -381,14 +381,28 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
         .to(card.querySelector('[data-dim]'), { opacity: 0.45, ease: 'none' }, 0)
     })
   })
-  // League cup: the draw fills in from both ends toward the final, which lands last.
+  // League cup: the tournament plays itself out from both ends. Each round's cards land, the scores count up,
+  // the losers fade and the winners light, then the lines grow toward the next round. The final lands last and glows.
   all('[data-cup]').forEach((cup) => {
-    const tl = gsap.timeline({ scrollTrigger: { trigger: cup, start: 'top 75%' } })
-    cup.querySelectorAll<HTMLElement>('[data-cup-col]').forEach((col) => {
-      const far = Number(col.dataset.cupCol), side = Number(col.dataset.side)
-      if (far) tl.from(col.children, { opacity: 0, x: -side * 40, duration: 0.7, ease: 'expo.out', stagger: 0.06 }, (3 - far) * 0.22)
-      else tl.from(col.children, { opacity: 0, scale: 0.85, duration: 0.9, ease: 'back.out(2)' }, 1.1)
-    })
+    const tl = gsap.timeline({ scrollTrigger: { trigger: cup, start: 'top 70%' } })
+    const fg = getComputedStyle(cup).color, fmt = (n: number) => (n < 0 ? `−${-n}` : n === 0 ? 'E' : `+${n}`)
+    for (let far = 3; far >= 0; far--) {
+      const at = (3 - far) * 1.1
+      cup.querySelectorAll<HTMLElement>(`[data-cup-col="${far}"]`).forEach((col) => {
+        const side = Number(col.dataset.side), games = col.querySelectorAll('[data-cup-game]')
+        if (!far) return void tl.from(games, { opacity: 0, scale: 0.85, duration: 0.9, ease: 'back.out(2)' }, at)
+          .fromTo(games, { boxShadow: '0 0 0px -10px var(--accent)' }, { boxShadow: '0 0 60px -6px var(--accent)', duration: 1.2, ease: 'sine.inOut', repeat: 4, yoyo: true }, at + 0.9)
+        tl.from(games, { opacity: 0, x: -side * 40, duration: 0.6, ease: 'expo.out', stagger: 0.05 }, at)
+        col.querySelectorAll<HTMLElement>('[data-score]').forEach((el) => {
+          const n = { v: 0 }
+          cleanups.push(() => void (el.textContent = fmt(Number(el.dataset.score))))
+          tl.to(n, { v: Number(el.dataset.score), duration: 0.5, ease: 'power2.out', onUpdate: () => void (el.textContent = fmt(Math.round(n.v))) }, at + 0.3)
+        })
+        tl.from(col.querySelectorAll('[data-cup-side="lose"]'), { opacity: 1, duration: 0.4 }, at + 0.8)
+          .from(col.querySelectorAll('[data-cup-side="win"]'), { color: fg, duration: 0.4 }, at + 0.8)
+          .fromTo(col.querySelectorAll('[data-cup-pair]'), { '--draw': 0 }, { '--draw': 1, duration: 0.4, ease: 'power2.inOut' }, at + 0.9)
+      })
+    }
   })
   // Images and cards fading up as they arrive.
   all('[data-rise]').forEach((el) => {

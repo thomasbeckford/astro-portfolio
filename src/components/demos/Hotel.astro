@@ -74,7 +74,7 @@ const h2 = 'text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.95] font-semibold tracki
         <Vid {...clip(d.slug, 'hero')} class="absolute inset-0 h-full w-full" />
       </div>
       <div data-cal class="order-1 min-w-0 rounded-[1.75rem] bg-white/70 p-5 shadow-[0_30px_80px_-40px_#16201c55] sm:p-7 lg:order-2">
-        <div class="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Hotel">{hotels.map((h, i) => <button type="button" data-hotel={i} data-in="cal" aria-pressed={String(i === 0)} class={chip}>{h.city}</button>)}</div>
+        <div class="-mx-5 flex gap-2 overflow-x-auto px-5 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Hotel">{hotels.map((h, i) => <button type="button" data-hotel={i} data-in="cal" aria-pressed={String(i === 0)} class={chip}>{h.city}</button>)}</div>
         <div class="mt-5 flex items-center justify-between gap-4">
           <p class="text-sm text-(--muted)">A Classic room for two, breakfast in. <span data-cal-hint class="text-(--fg)">Pick your check-in.</span></p>
           <div class="flex shrink-0 gap-1">
@@ -181,7 +181,7 @@ const h2 = 'text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.95] font-semibold tracki
     <div class="min-w-0">
       <h2 data-split class={h2}>Our street</h2>
       <p class="mt-5 max-w-md text-(--muted)">How far you walk for the three things you’ll want first. Example times, at an easy pace.</p>
-      <div class="mt-8 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Hotel">{hotels.map((h, i) => <button type="button" data-hotel={i} data-in="street" aria-pressed={String(i === 0)} class={chip}>{h.city}</button>)}</div>
+      <div class="mt-8 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Hotel">{hotels.map((h, i) => <button type="button" data-hotel={i} data-in="street" aria-pressed={String(i === 0)} class={chip}>{h.city}</button>)}</div>
       <ul class="mt-10 space-y-7">
         {['Bakery', 'Museum', 'Station'].map((p, j) => (
           <li>
@@ -242,7 +242,7 @@ const h2 = 'text-[clamp(2.5rem,6vw,4.75rem)] leading-[0.95] font-semibold tracki
     <div class="min-w-0">
       <h2 data-split class={h2}>Something from each city</h2>
       <p class="mt-5 max-w-md text-(--muted)">The same eggs and coffee everywhere, then three things from wherever you woke up. Always in the price.</p>
-      <div class="mt-8 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1" role="group" aria-label="Hotel">{hotels.map((h, i) => <button type="button" data-hotel={i} data-in="breakfast" aria-pressed={String(i === 0)} class={chip}>{h.city}</button>)}</div>
+      <div class="mt-8 -mx-4 flex gap-2 overflow-x-auto px-4 pb-1 [scrollbar-width:none] sm:mx-0 sm:flex-wrap sm:px-0" role="group" aria-label="Hotel">{hotels.map((h, i) => <button type="button" data-hotel={i} data-in="breakfast" aria-pressed={String(i === 0)} class={chip}>{h.city}</button>)}</div>
       {hotels.map((h, i) => (
         <div data-breakfast-panel={i} hidden={i !== 0} class="mt-8">
           <p class="text-sm font-medium text-(--accent)">From {h.city}</p>

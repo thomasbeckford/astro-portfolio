@@ -30,10 +30,11 @@ const cols: { name: string; side: 'l' | 'r' | 'c'; games: Game[] }[] = [
 ]
 const won = (g: Game, i: number) => g[0].score !== undefined && g[1].score !== undefined && g[i].score! < g[1 - i].score!
 // Bracket lines, drawn by each pair of games toward the next round (gap-x-6, so the line runs 0.75rem + 0.75rem).
-const line = 'after:absolute after:border-(--fg)/25 before:absolute before:top-1/2 before:border-t before:border-(--fg)/25'
+// --draw lets motion.ts grow them out of the cards (pseudo-elements can't be tweened); without JS it stays 1.
+const line = 'after:absolute after:border-(--fg)/25 after:scale-y-(--draw,1) before:absolute before:top-1/2 before:border-t before:border-(--fg)/25 before:scale-x-(--draw,1)'
 const lines = {
-  l: { 2: 'after:inset-y-1/4 after:-right-3 after:w-3 after:rounded-r-lg after:border-y after:border-r before:-right-6 before:w-3', 1: 'before:-right-6 before:w-6' },
-  r: { 2: 'after:inset-y-1/4 after:-left-3 after:w-3 after:rounded-l-lg after:border-y after:border-l before:-left-6 before:w-3', 1: 'before:-left-6 before:w-6' },
+  l: { 2: 'before:origin-left after:inset-y-1/4 after:-right-3 after:w-3 after:rounded-r-lg after:border-y after:border-r before:-right-6 before:w-3', 1: 'before:origin-left before:-right-6 before:w-6' },
+  r: { 2: 'before:origin-right after:inset-y-1/4 after:-left-3 after:w-3 after:rounded-l-lg after:border-y after:border-l before:-left-6 before:w-3', 1: 'before:origin-right before:-left-6 before:w-6' },
 }
 ---
 <section id="tournaments" class="px-4 py-24 sm:px-8 sm:py-32">
@@ -60,19 +61,19 @@ const lines = {
       <h3 class="font-(family-name:--display) text-[clamp(1.75rem,5vw,3.25rem)] leading-none font-black tracking-[-0.03em] uppercase">The league cup</h3>
       <p class="text-sm text-(--muted)">Example draw and scores, against par.</p>
     </div>
-    <div tabindex="0" role="region" aria-label="League cup draw" class="mt-8 overflow-x-auto rounded-xl pb-4 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--accent)">
-      <div data-cup class="grid min-w-[72rem] grid-cols-7 gap-x-6">
+    <div tabindex="0" role="region" aria-label="League cup draw" data-lenis-prevent-horizontal class="-mx-4 mt-8 snap-x snap-mandatory scroll-px-4 overflow-x-auto px-4 pb-4 [scrollbar-color:var(--accent)_transparent] [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--accent) sm:-mx-8 sm:scroll-px-8 sm:px-8 sm:[scrollbar-width:thin] xl:mx-0 xl:overflow-visible xl:px-0">
+      <div data-cup class="grid w-max grid-cols-[repeat(7,11rem)] gap-x-6 xl:w-auto xl:grid-cols-7">
         {cols.map((c, ci) => <h4 id={`cup-${ci}`} class:list={['text-xs font-semibold tracking-widest uppercase', c.side === 'c' ? 'text-center text-(--accent)' : 'text-(--muted)', c.side === 'r' && 'text-right']}>{c.name}</h4>)}
         {cols.map((c, ci) => (
-          <div data-cup-col={Math.abs(ci - 3)} data-side={ci < 3 ? 1 : -1} role="group" aria-labelledby={`cup-${ci}`} class="mt-4 flex min-h-[30rem] flex-col">
+          <div data-cup-col={Math.abs(ci - 3)} data-side={ci < 3 ? 1 : -1} role="group" aria-labelledby={`cup-${ci}`} class="mt-4 flex min-h-[30rem] snap-start flex-col">
             {Array.from({ length: Math.ceil(c.games.length / 2) }, (_, p) => c.games.slice(p * 2, p * 2 + 2)).map((pair) => (
-              <ul class:list={['relative flex flex-1 flex-col justify-around', c.side !== 'c' && [line, lines[c.side][pair.length as 1 | 2]]]}>
+              <ul data-cup-pair class:list={['relative flex flex-1 flex-col justify-around', c.side !== 'c' && [line, lines[c.side][pair.length as 1 | 2]]]}>
                 {pair.map((g) => (
-                  <li class:list={['my-2 rounded-xl border bg-(--panel) text-xs xl:text-[0.8125rem]', c.side === 'c' ? 'border-(--accent) shadow-[0_0_40px_-10px_var(--accent)]' : 'border-(--fg)/15']}>
+                  <li data-cup-game class:list={['my-2 rounded-xl border bg-(--panel) text-xs xl:text-[0.8125rem]', c.side === 'c' ? 'border-(--accent) shadow-[0_0_40px_-10px_var(--accent)]' : 'border-(--fg)/15']}>
                     {g.map((side, i) => (
-                      <p class:list={['flex items-center justify-between gap-2 px-3 py-2.5', i && 'border-t border-(--fg)/10', won(g, i) ? 'font-bold text-(--accent)' : side.score !== undefined && 'text-(--muted)']}>
+                      <p data-cup-side={won(g, i) ? 'win' : side.score !== undefined ? 'lose' : undefined} class:list={['flex items-center justify-between gap-2 px-3 py-2.5', i && 'border-t border-(--fg)/10', won(g, i) ? 'font-bold text-(--accent)' : side.score !== undefined && 'opacity-55']}>
                         <span class="line-clamp-2 leading-tight" title={side.team}>{side.team ?? 'To be decided'}</span>
-                        <span class="font-(family-name:--display) text-xs font-black tabular-nums">{par(side.score) || (side.team ? 'Next' : '')}</span>
+                        <span data-score={side.score} class="font-(family-name:--display) text-xs font-black tabular-nums">{par(side.score) || (side.team ? 'Next' : '')}</span>
                       </p>
                     ))}
                   </li>
