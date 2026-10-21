@@ -9,7 +9,6 @@ export const site = {
   github: 'https://github.com/thomasbeckford',
   // Google Business Profile, by its Knowledge Graph id (the share.google link is only a redirect).
   gbp: 'https://www.google.com/search?kgmid=/g/11z_lwyx_k',
-  priceFrom: 399,
   turnaround: 'about a week',
   years: '10+',
   phone: '+44 7917 628713',
@@ -26,21 +25,17 @@ export const whatsapp = (text: string) => `https://wa.me/${site.phone.replace(/\
 
 // Hosting is on Thomas, for every site. The domain he buys too, registered in the client's name, and they pay him back at cost.
 // 🤔 Host on a plan that allows commercial use (Vercel Hobby doesn't).
-export const carePrice = 19
 // One-off add-on: a Payload CMS panel so the client edits words, photos and prices; Thomas keeps design and structure.
 // 🤔 Payload needs a server and a database: check it still fits free hosting before selling it.
-export const cmsPrice = 150
 
-// TODO: monthly price for ads once decided.
 // Enquiry alerts: the n8n flow tebeck.dev runs on itself (tap → Telegram ping + Sheet row, 9:00 reminder after 3 days).
 // 🤔 One-off because it runs on my shared n8n (Railway, ~US$5–10 a month in all, plan unchecked), not one server each.
-export const alertsPrice = 50
 
 export const services = [
-  { name: 'Website', price: `From £${site.priceFrom}`, note: `One-off, fixed price: about £${Math.round(site.priceFrom / 365)} a day over a year. You pay once you're happy with it.`, items: ['Design and all the wording', 'Mobile-first, fast, set up for Google', 'Call, WhatsApp and enquiry buttons', 'Free hosting, no monthly fee', 'Your domain, in your name'] },
-  { name: 'Edit it yourself', price: `+£${cmsPrice}, one-off`, note: 'Your own editing panel, built with Payload CMS', items: ['Log in and change words, photos and prices', 'More than one language included', 'No monthly fee to make changes', 'I look after the design, the content is yours'] },
-  { name: 'Care plan', price: `From £${carePrice} a month`, note: 'Optional, cancel any time', items: ['Changes by message: prices, photos, services', 'Backups and security updates', 'Monthly check on speed and Google'] },
-  { name: 'Enquiry alerts', price: `+£${alertsPrice}, one-off`, note: 'Built with n8n, runs on my server', items: ['Every WhatsApp or email tap pings your phone (Telegram)', 'Logged in a Google Sheet, with where they found you', 'A reminder if one has waited 3 days'] },
+  { name: 'Website', price: 'Fixed price', note: "One-off, agreed before I start. You pay once you're happy with it.", items: ['Design and all the wording', 'Mobile-first, fast, set up for Google', 'Call, WhatsApp and enquiry buttons', 'Free hosting, no monthly fee', 'Your domain, in your name'] },
+  { name: 'Edit it yourself', price: 'One-off', note: 'Your own editing panel, built with Payload CMS', items: ['Log in and change words, photos and prices', 'More than one language included', 'No monthly fee to make changes', 'I look after the design, the content is yours'] },
+  { name: 'Care plan', price: 'Monthly', note: 'Optional, cancel any time', items: ['Changes by message: prices, photos, services', 'Backups and security updates', 'Monthly check on speed and Google'] },
+  { name: 'Enquiry alerts', price: 'One-off', note: 'Built with n8n, runs on my server', items: ['Every WhatsApp or email tap pings your phone (Telegram)', 'Logged in a Google Sheet, with where they found you', 'A reminder if one has waited 3 days'] },
   { name: 'Ads', price: 'Monthly', note: 'Plus your ad budget', items: ['Google Business profile set up and kept fresh', 'Google and Meta ads set up and managed', 'A plain-English report each month'] },
   { name: 'Web and mobile apps', price: 'On quote', note: 'Bookings, payments, logins, or an app in the stores?', items: ['Web apps with Next.js or TanStack Start', 'Dashboards that show your numbers in plain English', 'iOS and Android apps with React Native', 'Backend, APIs and Postgres databases', 'Payments with Stripe'] },
   { name: 'Animation', price: 'On quote', note: 'Want people to stop scrolling and look?', items: ['Scroll effects and motion', 'Interactive and 3D bits', 'Still fast on a phone'] },
@@ -58,7 +53,7 @@ export const faqs = [
   ['I already have a website. Can you redo it?', 'Yes. I rebuild it and move your web address across, so you keep your domain and email.'],
   ['Do I need to write anything?', 'No. Tell me about your business in your own words and I write it up. You approve everything before it goes live.'],
   ['Who owns the website?', 'You do. The domain is registered in your name, not mine.'],
-  ['Can I change the website myself?', `That's what the Edit it yourself add-on is for (£${cmsPrice}, one-off). I set up Payload CMS, an editing panel for your site: you log in, change the words, photos and prices, and press publish. No code, no monthly fee. Already on Sanity, Contentstack or WordPress, or need one of them? I work with those too, headless, priced on quote. I look after the design and anything that needs a developer. More than one language comes with it: every word in each language, same login. More than one venue? Payload handles that too, each venue with its own pages, priced on quote.`],
+  ['Can I change the website myself?', `That's what the Edit it yourself add-on is for, a one-off cost. I set up Payload CMS, an editing panel for your site: you log in, change the words, photos and prices, and press publish. No code, no monthly fee. Already on Sanity, Contentstack or WordPress, or need one of them? I work with those too, headless, priced on quote. I look after the design and anything that needs a developer. More than one language comes with it: every word in each language, same login. More than one venue? Payload handles that too, each venue with its own pages, priced on quote.`],
   ['Do I pay for hosting?', "Hosting is on me: free, for as long as the site is with me. The only yearly cost is your domain: I buy it for you, in your name, and you pay me back what it costs, no markup."],
   ["I'm on Checkatrade. Do I still need a website?", "It helps. On Checkatrade you sit in a list next to your competitors, and the profile isn't yours. Your own site is just you, under your name, and it's the place to send people from your van, your cards and Google."],
   ['Can you get me to the top of Google?', "Nobody can honestly promise that. I build the site fast and set up properly for Google, and the Ads plan looks after your Google Business profile, which is what shows up when people nearby search for what you do."],
@@ -66,6 +61,6 @@ export const faqs = [
   ['Do you use AI?', "Yes. Claude Code, Codex and the like, for repetitive coding, like a builder uses a power drill. I decide what gets built, check every line and test it on real phones. I also build AI-powered features for clients: chatbots, automation, agentic tools."],
   ['What do you build it with?', "Whatever fits the job, not one tool for everything. A site that's mostly words and photos, like most trade sites, I build with Astro, so it loads fast even on one bar of signal. Bookings, payments or customer logins get Next.js or TanStack Start, a proper database like Postgres, and Stripe. Apps get React Native. No Wix or WordPress page builders. You don't need to know any of this: you get a fast site that can grow with you."],
   ['Where are you based?', 'London. I work with businesses across the UK, and everything can be done remotely.'],
-  ['Are there ongoing costs?', `The website is a one-off price and hosting is free. The only yearly cost is your domain, at cost. The care plan (from £${carePrice} a month) and ads are optional, cancel any time.`],
+  ['Are there ongoing costs?', `The website is a one-off price and hosting is free. The only yearly cost is your domain, at cost. The care plan and ads are monthly and optional, cancel any time.`],
   ['What if I don\'t like it?', 'You don\'t pay until you\'re happy with the site. No deposit upfront.'],
 ]

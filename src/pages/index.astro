@@ -8,7 +8,7 @@ import Logo from '@/components/Logo.astro'
 import Icon from '@/components/Icon.astro'
 import Boti from '@/components/Boti.astro'
 import BotiChat from '@/components/BotiChat.astro'
-import { site, services, cmsPrice, alertsPrice, faqs, steps, whatsapp as wa } from '@/site'
+import { site, services, faqs, steps, whatsapp as wa } from '@/site'
 import { work, home } from '@/work'
 import WorkCard from '@/components/WorkCard.astro'
 import PublishDemo from '@/components/PublishDemo.astro'
@@ -37,8 +37,8 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
 <BaseLayout
   dark
   schema={[{ '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }]}
-  title={`Websites for UK tradespeople, from £${site.priceFrom} | ${site.name}`}
-  description={`Websites for tradespeople, hospitality and small businesses across the UK, built by ${site.name}, a London developer. From £${site.priceFrom}, free hosting, no deposit: you pay once you're happy. Edit it yourself or let me look after it.`}
+  title={`Websites for UK tradespeople and small businesses | ${site.name}`}
+  description={`Websites for tradespeople, hospitality and small businesses across the UK, built by ${site.name}, a London developer. Fixed price, free hosting, no deposit: you pay once you're happy. Edit it yourself or let me look after it.`}
 >
   <!-- With motion, hold the headline back until SplitText has cut it, so it never flashes whole first.
        The style below unhides it after 2.5s no matter what, so a failed script can't leave it blank. -->
@@ -82,7 +82,6 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
           <div class="relative grid content-center gap-4">
             <div class="relative z-10 lg:pointer-events-none">
               <p data-intro-copy class="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-white/[0.05] px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
-                <span class="rounded-full bg-fill px-2 py-0.5 text-xs font-semibold text-on-accent">£{site.priceFrom}</span>
                 Fixed price <span class="text-muted">· pay when you’re happy</span>
               </p>
               <h1 data-letters class:list={[display, 'mt-6 text-[14.5vw] leading-[0.9] sm:text-[13vw] lg:text-[10vw]']}>
@@ -92,7 +91,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             <div class="relative lg:absolute lg:inset-y-0 lg:right-0 lg:grid lg:w-[34%] lg:content-center xl:w-[38%]">
               <figure class="m-0">
                 <PublishDemo />
-                <figcaption data-intro-copy class="mt-3 font-mono text-[11px] tracking-[0.2em] text-muted uppercase">Drawing of the +£{cmsPrice} editing panel · <a href="#edit-it-yourself" class="text-fg underline underline-offset-4">See it in action</a></figcaption>
+                <figcaption data-intro-copy class="mt-3 font-mono text-[11px] tracking-[0.2em] text-muted uppercase">Drawing of the editing panel · <a href="#edit-it-yourself" class="text-fg underline underline-offset-4">See it in action</a></figcaption>
               </figure>
             </div>
           </div>
@@ -150,7 +149,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <div id="edit-it-yourself" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-32">
           <div class="w-full"><CmsDemo /></div>
           <div>
-            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Edit it yourself · +£{cmsPrice}, one-off</p>
+            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Edit it yourself · one-off add-on</p>
             <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Change it <span class="text-accent">without calling me.</span></h3>
             <p class="mt-6 text-lg text-pretty text-muted">Your website comes with its own editing panel. Change prices, words or your number whenever you like. No waiting on me, no monthly fee.</p>
             <ol class="mt-8 divide-y divide-line border-y border-line">
@@ -170,7 +169,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <div id="enquiry-alerts" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-32">
           <div class="w-full lg:order-2"><LeadDemo /></div>
           <div class="lg:order-1">
-            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Enquiry alerts · +£{alertsPrice}, one-off</p>
+            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Enquiry alerts · one-off add-on</p>
             <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Never lose <span class="text-accent">an enquiry.</span></h3>
             <p class="mt-6 max-w-xl text-lg text-pretty text-muted">Busy on a job, the message gets buried, the customer rings someone else. With this, every time someone taps WhatsApp or email on your website, your phone pings and it goes in a list, so nothing slips.</p>
             <ol class="mt-8 divide-y divide-line border-y border-line">
@@ -266,7 +265,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </div>
         <p class="mt-8 text-muted">
           Or call <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">{site.phone}</a> or{' '}
-          <button type="button" data-boti-open="Get me a price" class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">get a price from Boti</button>
+          <button type="button" data-boti-open="Get me a quote" class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">get a quote from Boti</button>
         </p>
       </section>
     </main>

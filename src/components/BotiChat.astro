@@ -1,17 +1,17 @@
 ---
 // Boti's quote chat, the Tuco panel pattern (SoyMenu TucoButton/AgentChat): side panel, header face that follows the
 // state, empty state with chips, one avatar per turn, "thinking" row, oops on anything it can't answer.
-// Scripted, not AI: three questions, one fixed price, then an email to Thomas. Anything else it answers from the FAQ
+// Scripted, not AI: three questions, then a message to Thomas for a quote. Anything else it answers from the FAQ
 // in site.ts, so whatever the page says, Boti knows. Any [data-boti-open] opens it;
 // a value on it is sent as the first message.
 import Boti from '@/components/Boti.astro'
 import { site, faqs } from '@/site'
 
 const { trades } = Astro.props as { trades: string[] }
-const starters = ['Get me a price', 'Do I own the domain?', 'How long does it take?']
+const starters = ['Get me a quote', 'Do I own the domain?', 'How long does it take?']
 ---
 
-<dialog id="boti-chat" data-lenis-prevent aria-labelledby="boti-title" data-trades={JSON.stringify(trades)} data-price={site.priceFrom} data-turnaround={site.turnaround} data-email={site.email} data-phone={site.phone.replace(/\D/g, '')} data-faqs={JSON.stringify(faqs)} class="boti-chat fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-[440px] bg-transparent p-2 backdrop:bg-black/50 backdrop:backdrop-blur-sm">
+<dialog id="boti-chat" data-lenis-prevent aria-labelledby="boti-title" data-trades={JSON.stringify(trades)} data-turnaround={site.turnaround} data-email={site.email} data-phone={site.phone.replace(/\D/g, '')} data-faqs={JSON.stringify(faqs)} class="boti-chat fixed inset-y-0 right-0 left-auto m-0 h-dvh max-h-none w-full max-w-[440px] bg-transparent p-2 backdrop:bg-black/50 backdrop:backdrop-blur-sm">
   <div class="flex h-full flex-col overflow-hidden rounded-3xl bg-night text-fg shadow-2xl shadow-black/60 ring-1 ring-line ring-inset">
     <header class="flex items-center gap-3.5 border-b border-line px-4 py-3">
       <Boti mood="mini" id="boti-face" class="w-[60px] shrink-0" />
@@ -28,7 +28,7 @@ const starters = ['Get me a price', 'Do I own the domain?', 'How long does it ta
       <div data-empty class="flex h-full flex-col items-center justify-center text-center">
         <Boti class="w-32" />
         <p class="mt-4 text-xl font-bold">Hiya! How can I help?</p>
-        <p class="mt-1 text-sm text-muted">Ask me anything. I know Thomas's prices.</p>
+        <p class="mt-1 text-sm text-muted">Ask me anything about Thomas’s websites.</p>
         <div class="mt-6 flex flex-wrap justify-center gap-2">
           {starters.map((s) => <button type="button" data-say={s} class="min-h-11 rounded-xl bg-fg/[0.05] px-4 text-sm font-medium ring-1 ring-fg/15 transition ring-inset hover:bg-fill hover:text-on-accent">{s}</button>)}
         </div>
@@ -51,7 +51,7 @@ const starters = ['Get me a price', 'Do I own the domain?', 'How long does it ta
   const form = document.getElementById('chat-form') as HTMLFormElement
   const face = document.getElementById('boti-face')!
   const avatar = document.getElementById('boti-avatar') as HTMLTemplateElement
-  const { price, turnaround, email, phone } = dlg.dataset
+  const { turnaround, email, phone } = dlg.dataset
   const trades = JSON.parse(dlg.dataset.trades!) as string[]
   const faqs = JSON.parse(dlg.dataset.faqs!) as [string, string][]
   const faq = (start: string) => faqs.find(([q]) => q.startsWith(start))?.[1]
@@ -159,20 +159,20 @@ const starters = ['Get me a price', 'Do I own the domain?', 'How long does it ta
       step = 'idle'
       const has = /^y/.test(q)
       return say(
-        `Right then. A proper site for your business in ${lead.area}: £${price}, fixed price, live in ${turnaround}, free hosting, domain in your name, and you only pay once you’re happy.${has ? ' I’ll move your current address across.' : ''} Send it to Thomas?`,
+        `Right then. A proper site for your business in ${lead.area}: fixed price, live in ${turnaround}, free hosting, domain in your name, and you only pay once you’re happy.${has ? ' I’ll move your current address across.' : ''} Send it to Thomas for a quote?`,
         () => handoff(`Website for my ${lead.trade.toLowerCase()} business`, `Hi Thomas, Boti sent me. I'm a ${lead.trade.toLowerCase()} in ${lead.area}. ${has ? 'I have a website that needs redoing.' : "I don't have a website yet."}`),
       )
     }
-    for (const [re, start] of topics) if (re.test(q)) return say(faq(start)!, () => chips(['Get me a price']))
+    for (const [re, start] of topics) if (re.test(q)) return say(faq(start)!, () => chips(['Get me a quote']))
     if (/\b(rescue|broken|buggy|lovable|bolt|no-code|nocode|vibe)\b/.test(q)) return say('Built something with AI or no-code and it’s stuck, buggy or insecure? Thomas reviews it, fixes it or rebuilds what needs it. That one’s priced on quote.', () => handoff('Rescue', `Hi Thomas, ${t}`))
-    if (/\b(christmas|xmas|offer|discount|deal)\b/.test(q)) return say(`No discounts, just one fair price: £${price}, fixed, and you only pay once you’re happy with it. Want one?`, () => chips(['Get me a price']))
+    if (/\b(christmas|xmas|offer|discount|deal)\b/.test(q)) return say('No discounts, just one fair fixed price, and you only pay once you’re happy with it. Want a quote?', () => chips(['Get me a quote']))
     if (/\b(price|prices|cost|costs|quote|much|cheap)\b|£/.test(q)) return askTrade('Easy. What does your business do?')
-    if (/\b(long|time|weeks?|fast|when|quick)\b/.test(q)) return say(`Usually ${turnaround} from your first message to live. Want a price too?`, () => chips(['Get me a price']))
-    if (/\b(own|owns|owner|domain|mine)\b/.test(q)) return say('You do. The domain is registered in your name, not Thomas’s.', () => chips(['Get me a price']))
-    if (/\b(ai|robot|bot|human)\b/.test(q)) return say('I’m a robot with a script, not an AI. Thomas reads every WhatsApp and email himself.', () => chips(['Get me a price']))
-    if (/^(hi|hello|hiya|hey|yo)\b/.test(q)) return say('Hiya! Want a price for your website?', () => chips(['Get me a price']))
+    if (/\b(long|time|weeks?|fast|when|quick)\b/.test(q)) return say(`Usually ${turnaround} from your first message to live. Want a quote too?`, () => chips(['Get me a quote']))
+    if (/\b(own|owns|owner|domain|mine)\b/.test(q)) return say('You do. The domain is registered in your name, not Thomas’s.', () => chips(['Get me a quote']))
+    if (/\b(ai|robot|bot|human)\b/.test(q)) return say('I’m a robot with a script, not an AI. Thomas reads every WhatsApp and email himself.', () => chips(['Get me a quote']))
+    if (/^(hi|hello|hiya|hey|yo)\b/.test(q)) return say('Hiya! Want a quote for your website?', () => chips(['Get me a quote']))
     const known = closest(q)
-    if (known) return say(known, () => chips(['Get me a price']))
+    if (known) return say(known, () => chips(['Get me a quote']))
     return say('Ooh, that one’s beyond my wiring. Thomas will answer it properly.', () => handoff('Question from your website', `Hi Thomas, ${t}`), 'oops')
   }
 

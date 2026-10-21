@@ -3,7 +3,7 @@ import '@fontsource-variable/geist'
 import '@fontsource-variable/jetbrains-mono'
 import '@/styles/global.css'
 import Analytics from '@vercel/analytics/astro'
-import { site, services, carePrice, cmsPrice, alertsPrice } from '@/site'
+import { site, services } from '@/site'
 
 interface Props {
   title: string
@@ -30,13 +30,6 @@ const person = {
   knowsAbout: ['Websites for tradespeople', 'Small business websites', 'Hospitality websites', 'Websites for hotels, bars and venues', 'Website redesign', 'Local SEO', 'Google Ads', 'Meta Ads', 'Headless CMS', 'Payload CMS', 'Sanity', 'Contentstack', 'Headless WordPress', 'Web applications', 'Dashboards', 'Mobile apps', 'Astro', 'Next.js', 'TanStack Start', 'React', 'React Native', 'Expo', 'TypeScript', 'Node.js', 'PostgreSQL', 'Stripe', 'GSAP', 'n8n', 'Automation'],
   sameAs: [site.linkedin, site.github],
 }
-// What search engines and AI assistants should understand Thomas sells. Monthly prices carry a per-month unit.
-const prices: Record<string, object> = {
-  Website: { '@type': 'PriceSpecification', minPrice: site.priceFrom, priceCurrency: 'GBP' },
-  'Edit it yourself': { '@type': 'PriceSpecification', price: cmsPrice, priceCurrency: 'GBP' },
-  'Enquiry alerts': { '@type': 'PriceSpecification', price: alertsPrice, priceCurrency: 'GBP' },
-  'Care plan': { '@type': 'UnitPriceSpecification', minPrice: carePrice, priceCurrency: 'GBP', unitCode: 'MON' },
-}
 const business = {
   '@type': 'ProfessionalService',
   '@id': `${site.url}/#business`,
@@ -49,12 +42,10 @@ const business = {
   founder: { '@id': person['@id'] },
   address: person.address,
   areaServed: [{ '@type': 'Country', name: 'United Kingdom' }],
-  priceRange: `From £${site.priceFrom}`,
   sameAs: [site.gbp],
   makesOffer: services.map((x) => ({
     '@type': 'Offer',
     itemOffered: { '@type': 'Service', name: x.name, description: x.items.join('. ') },
-    ...(prices[x.name] && { priceSpecification: prices[x.name] }),
   })),
 }
 const jsonLd = {
@@ -119,7 +110,7 @@ const jsonLd = {
     <meta property="og:image" content={ogImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
-    <meta property="og:image:alt" content={`${site.name}: websites that make your phone ring. From £${site.priceFrom}, fixed price.`} />
+    <meta property="og:image:alt" content={`${site.name}: websites that make your phone ring. Fixed price, pay when you’re happy.`} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
