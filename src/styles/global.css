@@ -21,8 +21,8 @@
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
   /* Headlines. */
-  /* Wide Archivo, the home's tape and headline face, on every page (Thomas liked the tape's type and wanted it site-wide). */
-  --font-display: 'Archivo Variable', system-ui, sans-serif;
+  /* Bricolage Grotesque, the headline and tape face on every page: wide Archivo fought the round-stroke logo (Thomas). */
+  --font-display: 'Bricolage Grotesque Variable', system-ui, sans-serif;
 }
 
 @layer base {
@@ -95,7 +95,7 @@
   --color-accent: #3b82f6;
   --color-accent-ink: var(--color-accent);
   --color-on-accent: #ffffff;
-  --display-track: -0.035em;
+  --display-track: -0.025em;
   color-scheme: dark;
   @media (prefers-reduced-motion: no-preference) {
     transition: --color-accent 0.6s ease;
@@ -134,10 +134,9 @@
   @apply bg-night text-fg;
 }
 
-/* Display type: wide Archivo 800, sentence case, tight tracking. Mono is kept for small numbers only. */
+/* Display type: Bricolage 800, sentence case, tight tracking. Mono is kept for small numbers only. */
 @utility display {
-  @apply font-display font-extrabold tracking-[var(--display-track,-0.035em)];
-  font-stretch: 116%;
+  @apply font-display font-extrabold tracking-[var(--display-track,-0.025em)];
 }
 
 /* Highlighter behind the low half of the letters, drawn in on load. `clone` repeats it on every wrapped line. */
@@ -179,10 +178,9 @@
 @utility btn-ghost {
   @apply btn text-fg ring-1 ring-fg/15 ring-inset hover:bg-white hover:shadow-lg hover:shadow-fg/10 hover:ring-fg/30;
 }
-/* Small labels in the tape's voice: wide Archivo 800, upper case. */
+/* Small labels in the tape's voice: Bricolage 800, upper case. */
 @utility eyebrow {
   @apply font-display text-sm font-extrabold tracking-[0.02em] text-accent-ink uppercase;
-  font-stretch: 116%;
 }
 @utility h2 {
   @apply display text-[2.25rem] leading-[1] text-balance sm:text-[3.5rem];
@@ -605,7 +603,6 @@
   white-space: nowrap;
   font-family: var(--display);
   font-weight: 800;
-  font-stretch: 116%;
   font-size: clamp(1.25rem, 2.4vw, 2rem);
   line-height: 1;
   text-transform: uppercase;
@@ -621,8 +618,71 @@
   .tape-navy > div { animation-direction: reverse; animation-duration: 46s }
 }
 @keyframes tape { to { transform: translateX(-50%) } }
+/* Wide screens (xl): the navy tape stands up along the page's left edge, the page padded to clear it. It moves with
+   the scroll (scroll-driven animation); where that isn't supported, or under reduced motion, it just stands still. */
+.rail { display: none }
+@media (min-width: 80rem) {
+  .rail {
+    position: fixed;
+    top: 0;
+    bottom: 0; /* physical sides: with vertical writing, inset-block would mean left and right */
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    width: 3.5rem;
+    overflow: hidden;
+    writing-mode: vertical-rl;
+    text-orientation: sideways; /* every glyph turned, or the ’ in "you’re" stands upright and reads as a comma */
+    white-space: nowrap;
+    pointer-events: none;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: 1.25rem;
+    line-height: 1;
+    text-transform: uppercase;
+  }
+  .rail-navy { left: 0; background: var(--color-navy); color: #fff }
+  .rail > div { display: inline-flex; flex: none; align-items: center; gap: 1.5rem; padding-block-end: 1.5rem }
+  .rail i { width: 0.6em; height: 0.6em; border-radius: 50%; background: var(--color-fill); flex: none }
+  .rail-navy i { background: var(--color-pop) }
+}
+@media (min-width: 80rem) and (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: scroll()) {
+    .rail > div { animation: rail linear both; animation-timeline: scroll(root) }
+  }
+}
+@keyframes rail { to { transform: translateY(-50%) } }
 /* Narrow screens: a few degrees barely open the cross, so steeper angles there. */
 @media (max-width: 639px) {
   .tape-pop { rotate: -7deg }
   .tape-navy { rotate: 6deg }
 }
+
+/* Home navbar links in the headline face, a thick mint stroke drawn under them on hover and keyboard focus. */
+.nav-link {
+  position: relative;
+  isolation: isolate; /* keeps the stroke's z-index -1 behind the text, not behind the header */
+  align-items: center;
+  min-height: 2.75rem;
+  padding-inline: 0.875rem;
+  font-family: var(--display);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-fg);
+}
+.nav-link::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0.875rem;
+  bottom: 0.5rem;
+  height: 0.4375rem;
+  background: var(--color-pop);
+  z-index: -1;
+  scale: 0 1;
+  transform-origin: left;
+  transition: scale 0.25s cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+.nav-link:hover::after, .nav-link:focus-visible::after, .nav-link[aria-current]::after { scale: 1 1 }
+.nav-link:focus-visible { outline: 2px solid var(--color-accent); outline-offset: 2px; border-radius: 0.5rem }
+@media (prefers-reduced-motion: reduce) { .nav-link::after { transition: none } }

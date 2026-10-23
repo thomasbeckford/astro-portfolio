@@ -33,14 +33,14 @@ const sites = await Promise.all(
 const s = sites[0]
 ---
 
-<!-- Two columns from lg: the page's own copy (slot) and the try card on the left, the phone on the right. -->
+<!-- Two columns from lg: the page's own copy (slot) and the try-it line on the left, the phone on the right. -->
 <div data-builder={JSON.stringify(sites)} class="grid items-center gap-x-12 lg:grid-cols-[1.1fr_1fr]">
   <div>
   <slot />
+  <!-- The try-it is a line of the headline, not a form: the visitor types their name into the sentence itself. -->
   <div class="sb-try">
-    <label for="sb-name" class="block text-sm font-semibold text-muted">Try it. What’s your business called?</label>
-    <div class="sb-field"><input id="sb-name" autocomplete="off" spellcheck="false" maxlength="28" placeholder="Your business name" /></div>
-    <div class="mt-3.5 flex flex-wrap gap-2" role="group" aria-label="Trade">
+    <label class="sb-line"><span>Here’s one for</span><input id="sb-name" size="1" aria-label="Your business name" autocomplete="off" spellcheck="false" maxlength="28" placeholder="your business" /></label>
+    <div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Trade">
       {sites.map((x, i) => <button type="button" class="sb-chip" data-s={x.slug} aria-pressed={i === 0 ? 'true' : 'false'}>{x.trade}</button>)}
     </div>
     <p class="mt-3.5 text-sm text-muted">A live preview built from my example sites. Yours gets your own photos, words and colours.</p>
@@ -66,11 +66,14 @@ const s = sites[0]
 </div>
 
 <style>
-  .sb-try { margin-top: 2rem; padding: 1.25rem; border-radius: 1.625rem; background: #fff; box-shadow: 0 0 0 1px rgb(15 23 42 / 0.1), 0 24px 50px -30px rgb(15 23 42 / 0.35); max-width: 37.5rem }
-  .sb-field { margin-top: 0.625rem; padding: 0.375rem 0.375rem 0.375rem 1.125rem; border-radius: 1.125rem; background: rgb(15 23 42 / 0.045); box-shadow: inset 0 0 0 2px transparent; transition: box-shadow 0.2s, background-color 0.2s }
-  .sb-field:focus-within { background: #fff; box-shadow: inset 0 0 0 2px var(--color-accent) }
-  .sb-field input { width: 100%; height: 3.25rem; border: 0; background: none; outline: none; font-family: 'Archivo Variable', sans-serif; font-stretch: 110%; font-weight: 700; font-size: 1.5rem; letter-spacing: -0.02em; color: inherit }
-  .sb-field input::placeholder { color: rgb(15 23 42 / 0.55) }
+  .sb-try { margin-top: 2.5rem; max-width: 40rem }
+  /* Same display face as the h1, a size down: the grey lead-in and what they type on an underline, wrapping as one sentence. */
+  .sb-line { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.3em; font-family: var(--display); font-weight: 800; letter-spacing: -0.025em; font-size: clamp(1.75rem, 3.2vw, 3rem); line-height: 1.1 }
+  .sb-line span { color: var(--color-muted) }
+  .sb-line input { flex: 1 1 9ch; min-width: 0; padding: 0 0 0.12em; border: 0; border-bottom: 0.08em solid var(--color-fg); border-radius: 0; background: none; outline: none; font: inherit; letter-spacing: inherit; color: var(--color-fg); transition: border-color 0.2s }
+  .sb-line input::placeholder { color: rgb(15 23 42 / 0.55) }
+  /* no ring around a bare line: focus thickens it and turns it blue instead */
+  .sb-line input:focus { border-bottom-width: 0.14em; padding-bottom: 0.06em; border-color: var(--color-accent) }
   .sb-chip { min-height: 2.5rem; padding: 0 0.875rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(15 23 42 / 0.12); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: box-shadow 0.2s, background-color 0.2s, color 0.2s }
   .sb-chip:hover { box-shadow: inset 0 0 0 1.5px var(--color-fg) }
   .sb-chip[aria-pressed='true'] { background: var(--color-fg); color: #fff; box-shadow: none }
@@ -78,6 +81,8 @@ const s = sites[0]
   .sb-stage { position: relative; display: grid; place-items: center; height: 47.5rem }
   .sb-phone { position: relative; width: 21.25rem; height: 44.5rem; border-radius: 3.375rem; background: #0b0f19; padding: 0.75rem; box-shadow: 0 50px 90px -40px rgb(15 23 42 / 0.6), inset 0 0 0 2px #2a3242 }
   .sb-screen { position: relative; height: 100%; border-radius: 2.7rem; overflow: hidden; background: #111 }
+  /* a few degrees off straight, held out to the visitor */
+  @media (min-width: 1024px) { .sb-phone { rotate: 3deg } }
   .sb-notch { position: absolute; z-index: 5; top: 0.625rem; left: 50%; translate: -50% 0; width: 6rem; height: 1.75rem; border-radius: 1.25rem; background: #0b0f19 }
 
   /* isolation: the new layer's clip-path makes it a stacking context, and without one of its own the old layer's z-indexed text painted over it mid-wipe */
@@ -131,8 +136,6 @@ const s = sites[0]
   .sb-stripes i:nth-child(2) { height: 0.375rem; background: var(--color-pop) }
 
   @media (max-width: 1023px) {
-    .sb-try { padding: 0.875rem; border-radius: 1.375rem }
-    .sb-field input { font-size: 1.25rem; height: 2.875rem }
     .sb-stage { height: 37.5rem; margin-top: 1rem }
     .sb-stripes { inset-inline: -50vw }
     .sb-phone { width: 17.5rem; height: 36.625rem }

@@ -24,6 +24,17 @@ const flip = (parent: Element, reorder: () => void) => {
     if (a.left !== b.left || a.top !== b.top) k.animate([{ transform: `translate(${a.left - b.left}px, ${a.top - b.top}px)` }, { transform: 'none' }], { duration: 600, easing: ease })
   })
 }
+// Home navbar: the link of the section in view carries aria-current, which draws its mint stroke (CSS).
+const navLinks = all<HTMLAnchorElement>('.nav-link')
+if (navLinks.length) {
+  const io = new IntersectionObserver((es) => es.forEach((e) => {
+    const link = navLinks.find((a) => a.hash === `#${e.target.id}`)
+    if (e.isIntersecting) navLinks.forEach((a) => a === link ? a.setAttribute('aria-current', 'true') : a.removeAttribute('aria-current'))
+    else link?.removeAttribute('aria-current')
+  }), { rootMargin: '-45% 0px -50% 0px' }) // a thin band mid-screen: one section at a time
+  navLinks.forEach((a) => { const s = document.querySelector(a.hash); if (s) io.observe(s) })
+}
+
 // The hero intro (below) holds the headline letters until the panel has moved aside.
 let introGate = Promise.resolve()
 
@@ -241,6 +252,11 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
   })
   // Hero name: letters rise in one by one.
   all('[data-letters]').forEach((el) => {
+    // data-letters="wide": phones get the headline whole and at once, only the ringing word moves.
+    if (el.dataset.letters === 'wide' && !matchMedia('(min-width: 640px)').matches) {
+      const ring = [...el.querySelectorAll('span')].find((w) => w.textContent === el.dataset.ring)
+      return void setTimeout(() => ring?.classList.add('ringing'), 800)
+    }
     SplitText.create(el, { type: 'words,chars', mask: 'chars', onSplit: (s) => {
       el.style.visibility = 'visible' // a page may hold it hidden until now, so it never flashes whole
       // data-ring="word": that word starts ringing once everything has landed (.ringing in global.css).

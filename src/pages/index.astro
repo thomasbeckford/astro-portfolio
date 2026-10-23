@@ -1,5 +1,5 @@
 ---
-// The home: wide Archivo headlines on white. The hero lets the visitor try their own name on an example site
+// The home: Bricolage Grotesque headlines on white. The hero lets the visitor try their own name on an example site
 // (SiteBuilder, which also loads Archivo), then the example sites, price, questions and the ask. Motion comes from scripts/motion.ts.
 import { Image } from 'astro:assets'
 import BaseLayout from '@/layouts/BaseLayout.astro'
@@ -35,7 +35,7 @@ const waPath = 'M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8
 const perks = ['Fixed price', 'Pay when you’re happy', `Live in ${site.turnaround}`, 'Free hosting', 'Edit it yourself']
 const trades = ['Trades', 'Pubs', 'Hotels', 'Venues', 'Roofers', 'Electricians', 'Decorators', 'Landscapers', 'Builders', 'Golf bars']
 const loop = (xs: string[]) => [...xs, ...xs, ...xs, ...xs]
-const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%] tracking-[-0.035em]'
+const display = 'font-(family-name:--display) font-extrabold tracking-[-0.025em]'
 ---
 
 <BaseLayout
@@ -44,23 +44,24 @@ const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%]
   description={`Websites for tradespeople, hospitality and small businesses across the UK, built by ${site.name}, a London developer. Fixed price, free hosting, no deposit: you pay once you're happy. Edit it yourself or let me look after it.`}
 >
   <!-- With motion, hold the headline back until SplitText has cut it, so it never flashes whole first.
-       The style below unhides it after 2.5s no matter what, so a failed script can't leave it blank. -->
+       The style below unhides it after 2.5s no matter what, so a failed script can't leave it blank.
+       Phones skip the hold and the letters (data-letters="wide"): there the headline is the first thing read, it shows at once. -->
   <script is:inline>
-    if (matchMedia('(prefers-reduced-motion: no-preference)').matches) document.documentElement.setAttribute('data-hold', '')
+    if (matchMedia('(prefers-reduced-motion: no-preference) and (min-width: 640px)').matches) document.documentElement.setAttribute('data-hold', '')
   </script>
   <style is:inline>
     html[data-hold] #hero h1, html[data-hold] [data-stripes] { visibility: hidden; animation: unhide 0s 2.5s forwards }
     @keyframes unhide { to { visibility: visible } }
   </style>
 
-  <div class="overflow-x-clip bg-paper [--color-paper:#ffffff] [--display:'Archivo_Variable',system-ui,sans-serif]">
+  <div class="overflow-x-clip bg-paper xl:pl-14 [--color-paper:#ffffff] [--display:var(--font-display)]">
     <!-- A floating island, not a full-width bar: the page shows around it. -->
     <header class="fixed top-3.5 left-1/2 z-40 flex h-[3.875rem] w-[min(57.5rem,calc(100%-1.5rem))] -translate-x-1/2 items-center justify-between gap-3 rounded-full bg-white/80 pr-2 pl-5 shadow-[0_0_0_1px_rgb(15_23_42/0.08),0_14px_34px_-18px_rgb(15_23_42/0.35)] backdrop-blur-md">
       <a href="/" aria-label="tebeck, home" class="py-2"><Logo class="text-[1.75rem]" animated /></a>
       <nav aria-label="Main" class="flex items-center gap-1.5 text-sm font-semibold">
-        <a href="#sites" class="hidden rounded-full px-3.5 py-2 transition hover:bg-fg/5 md:inline">Work</a>
-        <a href="#services" class="hidden rounded-full px-3.5 py-2 transition hover:bg-fg/5 md:inline">Services</a>
-        <a href="#faq" class="hidden rounded-full px-3.5 py-2 transition hover:bg-fg/5 md:inline">Questions</a>
+        <a href="#sites" class="nav-link hidden md:inline-flex">Work</a>
+        <a href="#services" class="nav-link hidden md:inline-flex">Services</a>
+        <a href="#faq" class="nav-link hidden md:inline-flex">Questions</a>
         <a href={whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp Thomas" class="hidden size-11 place-items-center rounded-full bg-whatsapp text-white transition hover:scale-105 sm:grid"><svg viewBox="0 0 24 24" class="size-5.5" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg></a>
         <a href="#contact" class="btn-primary min-h-11 px-5">Get a quote</a>
       </nav>
@@ -71,18 +72,18 @@ const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%]
       <svg viewBox="0 0 24 24" class="size-7" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>
     </a>
 
+    <!-- Wide screens: the navy tape also runs down the left edge and moves with the scroll (one only: a second on the right was dizzying, Thomas). -->
+    <div aria-hidden="true" class="rail rail-navy"><div>{loop(trades).map((t) => <><span>{t}</span><i /></>)}</div></div>
+
     <main id="main" tabindex="-1" class="outline-none">
       <!-- Hero: the line and the try-it card on the left, the phone wearing the visitor's name on the right (SiteBuilder). -->
       <section id="hero" class="relative isolate px-4 pt-28 pb-12 sm:px-8 lg:pt-32">
         <div class="mx-auto max-w-[80rem]">
           <SiteBuilder>
-            <p class="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
-              Fixed price <span class="text-muted">· pay when you’re happy</span>
-            </p>
-            <h1 data-letters data-ring="ring." class:list={[display, 'mt-6 text-[clamp(2.625rem,4.9vw,5.125rem)] leading-[0.98] text-balance']}>
-              Websites that make your phone <span class="text-accent">ring.</span>
+            <h1 data-letters="wide" data-ring="ring." class:list={[display, 'text-[clamp(2.625rem,4.9vw,5.125rem)] leading-[0.98] text-balance']}>
+              Websites that make your phone <span class="inline-block text-accent">ring.</span>
             </h1>
-            <p class="mt-6 max-w-lg text-lg text-pretty text-muted sm:text-xl">For UK small businesses, from trades to pubs, hotels and venues. Live in {site.turnaround}, and you pay once you’re happy.</p>
+            <p class="mt-6 max-w-lg text-lg text-pretty text-muted sm:text-xl">For UK small businesses, from trades to pubs, hotels and venues. Fixed price, live in {site.turnaround}, and you pay once you’re happy.</p>
             <div slot="after" class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
               <a href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Like it? Get a quote<Icon name="arrow" class="size-4" /></a>
               <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
@@ -150,7 +151,7 @@ const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%]
         <p class="eyebrow">Add-ons and bigger jobs</p>
         <h2 id="apps-title" data-split class:list={[display, 'mt-4 text-5xl leading-[0.95] sm:text-7xl lg:text-8xl']}>More than a website? <span class="text-accent">I build that too.</span></h2>
         <div class="mt-14 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-24">
-          <div class="w-full"><LeadDemo /></div>
+          <figure class="w-full"><LeadDemo /><figcaption class="mt-3 text-sm text-muted">An example business, not a client.</figcaption></figure>
           <ul class="divide-y divide-line border-y border-line">
             {addons.map(([id, tag, title, text]) => (
               <li id={id} class="scroll-mt-24 py-6">
@@ -204,12 +205,13 @@ const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%]
         <h2 data-split class:list={[display, 'text-[13vw] leading-[0.9] sm:text-[11vw]']}>Yours <span class="text-navy">next.</span></h2>
         <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div class="flex items-center gap-4">
-            <span class="size-14 shrink-0 overflow-hidden rounded-2xl bg-accent/10"><Image src={thomasFull} alt="" width={240} class="w-[180%] max-w-none -ml-[33%]" /></span>
-            <p class="max-w-md text-lg text-pretty text-muted">Tell me what you do and where. I'll come back with a fixed price. No obligation, no deposit. <span class="text-fg">Usually replies within a day.</span></p>
+            <span class="size-20 shrink-0 overflow-hidden rounded-2xl bg-accent/10 sm:size-24"><Image src={thomasFull} alt="Thomas Beckford" width={360} class="w-[180%] max-w-none -ml-[33%]" /></span>
+            <p class="max-w-md text-lg text-pretty text-muted"><span class="text-fg">I'm Thomas.</span> Tell me what you do and where. I'll come back with a fixed price. No obligation, no deposit. <span class="text-fg">Usually replies within a day.</span></p>
           </div>
           <div class="flex flex-wrap gap-3">
             <a href={whatsapp} target="_blank" rel="noopener" class="btn min-h-14 bg-whatsapp px-7 text-[#1f2737] shadow-xl shadow-navy/25 hover:scale-[1.03] max-sm:w-full"><svg viewBox="0 0 24 24" class="size-6" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>WhatsApp me</a>
             <a href={mailto} class="btn-ghost min-h-14 px-7 max-sm:w-full">Or email for a quote<Icon name="arrow" class="size-4" /></a>
+            <p class="w-full text-sm font-medium text-balance text-fg">No deposit · Pay when you’re happy · Domain in your name</p>
           </div>
         </div>
         <p class="mt-8 text-muted">
@@ -237,7 +239,7 @@ const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%]
           </div>
         </nav>
       </div>
-      <p aria-hidden="true" class:list={[display, 'mt-14 text-center text-[clamp(1.5rem,8.5vw,9.5rem)] leading-[0.9] whitespace-nowrap text-fg/[0.06] select-none']}>Thomas Beckford</p>
+      <p aria-hidden="true" class:list={[display, 'mt-14 text-center text-[clamp(1.5rem,10.5vw,9.5rem)] leading-[0.9] whitespace-nowrap text-fg/[0.06] select-none']}>Thomas Beckford</p>
       <p class="border-t border-line py-5 text-center text-xs">© {new Date().getFullYear()} {site.name} · London, UK</p>
     </footer>
   </div>
