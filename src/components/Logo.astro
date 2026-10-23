@@ -1,9 +1,35 @@
 ---
-// Brand mark: TB monogram, the T's crossbar runs into the B. Same shapes as public/favicon.svg.
-const { class: cls = 'size-9' } = Astro.props
+// Brand: the "tebeck" wordmark, hand-built from round strokes (no font), its full stop in the brand blue (tebeck.dev).
+// public/favicon.svg is the short form, "t.". Strokes are centerlines on a baseline at y=100, x-height 34..100.
+// `animated`: once per load the word writes itself stroke by stroke, in pen order, then the dot drops in and bounces;
+// after that the dot gets restless now and then and taps out a double hop. Off by default: a logo that moves on every
+// page gets tiring. Hovering the link always runs a wave through the letters and the dot jumps at the end of it.
+const { class: cls = 'text-2xl', animated = false } = Astro.props
+
+// [letter x offset, strokes in pen order]
+const letters: [number, string[]][] = [
+  [0, ['M14 -2 V66 A25 25 0 0 0 39 91 H44', 'M0 34 H40']],
+  [52, ['M9 66 H59 A25 25 0 1 0 51.7 83.7']],
+  [124, ['M9 -6 V91', 'M9 66 A25 25 0 1 1 9 66.01']],
+  [196, ['M9 66 H59 A25 25 0 1 0 51.7 83.7']],
+  [268, ['M51.7 48.3 A25 25 0 1 0 51.7 83.7']],
+  [334, ['M9 -6 V91', 'M52 34 L12 72', 'M28 58 L54 91']],
+]
+let n = 0
 ---
 
-<svg viewBox="0 0 32 32" aria-hidden="true" class={cls}>
-  <rect width="32" height="32" rx="7" style="fill: var(--color-accent)"></rect>
-  <path d="M5.6 8h15a3.5 3.5 0 0 1 0 7h-6M14.6 15h7a4.5 4.5 0 0 1 0 9h-7M14.6 8v16" fill="none" style="stroke: var(--color-on-accent)" stroke-width="3.6" stroke-linejoin="round" stroke-linecap="square"></path>
-</svg>
+<span class:list={['wordmark', animated && 'wordmark-play', cls]}>
+  <span class="sr-only">tebeck</span>
+  <svg aria-hidden="true" viewBox="-10 -16 450 126">
+    {
+      letters.map(([x, strokes], i) => (
+        <g style={`--i:${i}`}>
+          {strokes.map((d) => (
+            <path d={d} transform={`translate(${x} 0)`} pathLength="1" style={`--s:${n++}`} />
+          ))}
+        </g>
+      ))
+    }
+    <g class="wordmark-hop"><circle class="wordmark-dot" cx="420" cy="91" r="18" /></g>
+  </svg>
+</span>

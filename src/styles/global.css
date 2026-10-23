@@ -15,14 +15,18 @@
   /* Fills under on-accent text (buttons, badges). Always the brand blue, so white text passes AA on the dark home too. */
   --color-fill: #2563eb;
   --color-fill-ink: #1d4ed8;
+  /* Club colours for the home's bands and tapes: deep navy and one mint pop next to the brand blue (Thomas: never yellow with the blue, it reads Boca; orange did not fit either). */
+  --color-navy: #0b1a3d;
+  --color-pop: #34d399;
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
   /* Headlines. */
-  --font-display: var(--font-sans);
+  /* Wide Archivo, the home's tape and headline face, on every page (Thomas liked the tape's type and wanted it site-wide). */
+  --font-display: 'Archivo Variable', system-ui, sans-serif;
 }
 
 @layer base {
-  /* Boti's chat is a modal: the page behind it stays put. */
+  /* An open dialog (the site preview) is modal: the page behind it stays put. */
   html:has(dialog[open]) {
     overflow: hidden;
   }
@@ -74,8 +78,8 @@
   @apply bg-[#2563eb] text-fg;
 }
 
-/* Home only (BaseLayout `dark`): near-black showcase. Same token names, so every utility follows. The accent is the
-   current trade's neon: the hero script sets --color-accent on <html> and the registered property fades between them. */
+/* /work (BaseLayout `dark`): near-black showcase. Same token names, so every utility follows. --color-accent is a
+   registered property, so a script that changes it fades between colours. */
 @property --color-accent {
   syntax: '<color>';
   inherits: true;
@@ -117,26 +121,9 @@
     box-shadow: none;
   }
 }
-/* Light tokens back, for pieces that stay paper inside the showcase (Boti's chat panel). */
-@utility paper {
-  --color-paper: #eceef4;
-  --color-fg: #1f2737;
-  --color-muted: #5d6577;
-  --color-line: rgb(31 39 55 / 0.12);
-  --color-accent: #2563eb;
-  --color-accent-ink: #1d4ed8;
-  --color-on-accent: #ffffff;
-  color-scheme: light;
-  @apply text-fg;
-}
 /* Soft light in the current accent, behind the phone and the big moments. */
 @utility glow {
   background: radial-gradient(closest-side, color-mix(in oklab, var(--color-accent) 38%, transparent), transparent);
-}
-
-/* Boti, neon: a soft halo in the current accent. Never name things cookie-*: EasyList's cookie filters hide those. */
-@utility mascot-glow {
-  filter: drop-shadow(0 0 14px color-mix(in oklab, var(--color-accent) 45%, transparent)) drop-shadow(0 8px 24px rgb(0 0 0 / 0.5));
 }
 
 @utility night-band {
@@ -147,9 +134,10 @@
   @apply bg-night text-fg;
 }
 
-/* Display type: Geist 800, sentence case, tight tracking. Mono is kept for small numbers and labels only. */
+/* Display type: wide Archivo 800, sentence case, tight tracking. Mono is kept for small numbers only. */
 @utility display {
-  @apply font-display font-extrabold tracking-[var(--display-track,-0.045em)];
+  @apply font-display font-extrabold tracking-[var(--display-track,-0.035em)];
+  font-stretch: 116%;
 }
 
 /* Highlighter behind the low half of the letters, drawn in on load. `clone` repeats it on every wrapped line. */
@@ -191,8 +179,10 @@
 @utility btn-ghost {
   @apply btn text-fg ring-1 ring-fg/15 ring-inset hover:bg-white hover:shadow-lg hover:shadow-fg/10 hover:ring-fg/30;
 }
+/* Small labels in the tape's voice: wide Archivo 800, upper case. */
 @utility eyebrow {
-  @apply font-mono text-xs font-medium tracking-[0.08em] text-accent-ink uppercase;
+  @apply font-display text-sm font-extrabold tracking-[0.02em] text-accent-ink uppercase;
+  font-stretch: 116%;
 }
 @utility h2 {
   @apply display text-[2.25rem] leading-[1] text-balance sm:text-[3.5rem];
@@ -362,39 +352,7 @@
   }
 }
 
-/* Boti (components/Boti.astro): stills of the hero's 3D robot. 'done' swaps in the cheering one and hops. */
-.boti-cheer {
-  opacity: 0;
-}
-[data-mood='done'] > .boti-cheer {
-  opacity: 1;
-}
-[data-mood='done']:has(> .boti-cheer) > .boti-main {
-  opacity: 0;
-}
-[data-mood='thinking'] > img {
-  rotate: -4deg;
-}
-[data-mood='oops'] > img {
-  rotate: 6deg;
-}
-[data-mood] > img {
-  transition: rotate 0.3s ease-out, opacity 0.3s ease-out;
-}
 @media (prefers-reduced-motion: no-preference) {
-  [data-mood='done']:has(> .boti-cheer) > img {
-    animation: boti-hop 1.1s cubic-bezier(0.3, 0, 0.3, 1) infinite;
-  }
-  /* Re-added on every face change: a little pop so you see it react. */
-  .mascot-pop {
-    animation: mascot-pop 320ms cubic-bezier(0.3, 1.6, 0.6, 1);
-  }
-  .boti-chat[open] {
-    animation: chat-in 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-  .bubble-in {
-    animation: bubble-in 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
   /* FAQ: the row slides open (browsers without height interpolation just snap) and the answer rises in. */
   .faq {
     interpolate-size: allow-keywords;
@@ -409,25 +367,6 @@
   }
   .faq[open] > p {
     animation: bubble-in 0.5s cubic-bezier(0.16, 1, 0.3, 1) 0.08s both;
-  }
-}
-@keyframes boti-hop {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  35% {
-    translate: 0 -10px;
-  }
-}
-@keyframes mascot-pop {
-  from {
-    scale: 0.85;
-  }
-}
-@keyframes chat-in {
-  from {
-    translate: 100% 0;
   }
 }
 @keyframes bubble-in {
@@ -457,3 +396,233 @@
 [data-curtain] { animation: kit-curtain-out 0s 2.5s forwards; }
 @keyframes kit-curtain-out { to { visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { [data-curtain] { display: none; } }
+
+/* Wordmark (Logo.astro): round strokes drawn as an inline SVG, a blue full stop. Sized by font-size like text. */
+.wordmark {
+  display: inline-block;
+  line-height: 1;
+  user-select: none;
+}
+.wordmark > svg {
+  display: block;
+  height: 1.1em;
+  overflow: visible;
+  fill: none;
+  stroke: var(--color-fg);
+  stroke-width: 18;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.wordmark g,
+.wordmark-dot {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.wordmark-dot {
+  fill: var(--color-fill);
+  stroke: none;
+}
+/* `animated`: each stroke draws itself in pen order (--s), then the dot drops and bounces twice (1.5s); every 9s after
+   it taps a double hop. Hover: a wave through the letters, the dot jumps as it arrives. Lengths are SVG user units
+   (1em of wordmark is ~115). The still wordmark is the reduced-motion fallback. */
+@media (prefers-reduced-motion: no-preference) {
+  .wordmark-play path {
+    stroke-dasharray: 1 2;
+    animation: wm-write 0.24s cubic-bezier(0.4, 0, 0.6, 1) calc(0.1s + var(--s) * 0.13s) both;
+  }
+  .wordmark-play .wordmark-dot {
+    animation: wm-drop 1.1s 1.45s both, wm-idle 9s 4.5s infinite;
+  }
+  @media (hover: hover) {
+    a:hover > .wordmark g {
+      animation: wm-wave 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) calc(var(--i) * 35ms);
+    }
+    /* On the wrapper, not the dot: sharing the dot's `animation` would restart wm-drop on hover-out. */
+    a:hover > .wordmark .wordmark-hop {
+      animation: wm-hop 0.7s 0.18s;
+    }
+  }
+}
+/* Hidden until its turn: a zero-length dash would still paint a round cap. */
+@keyframes wm-write {
+  from {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes wm-drop {
+  0% {
+    translate: 0 -330px;
+    opacity: 0;
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
+  }
+  10% {
+    opacity: 1;
+  }
+  40% {
+    translate: 0 0;
+    scale: 1.35 0.65;
+    animation-timing-function: cubic-bezier(0, 0, 0.5, 1);
+  }
+  62% {
+    translate: 0 -105px;
+    scale: 0.9 1.15;
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
+  }
+  80% {
+    translate: 0 0;
+    scale: 1.2 0.8;
+    animation-timing-function: cubic-bezier(0, 0, 0.5, 1);
+  }
+  90% {
+    translate: 0 -30px;
+    scale: 1;
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
+  }
+}
+@keyframes wm-wave {
+  40% {
+    translate: 0 -21px;
+    rotate: -4deg;
+  }
+}
+/* Mostly still; the last 10% of each cycle is a small squash, hop, squash, hop. */
+@keyframes wm-idle {
+  0%,
+  88%,
+  100% {
+    translate: 0 0;
+    scale: 1;
+  }
+  90%,
+  95% {
+    scale: 1.2 0.8;
+    animation-timing-function: cubic-bezier(0, 0, 0.5, 1);
+  }
+  92.5% {
+    translate: 0 -68px;
+    scale: 0.92 1.1;
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
+  }
+  97.5% {
+    translate: 0 -33px;
+    scale: 1;
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
+  }
+}
+@keyframes wm-hop {
+  0%,
+  100% {
+    translate: 0 0;
+    animation-timing-function: cubic-bezier(0, 0, 0.5, 1);
+  }
+  15% {
+    scale: 1.25 0.75;
+  }
+  50% {
+    translate: 0 -120px;
+    scale: 0.9 1.15;
+    animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
+  }
+  85% {
+    scale: 1.2 0.8;
+  }
+}
+
+/* The hero's "ring." rings (motion.ts adds .ringing once its letters land), the phones' WhatsApp button buzzes now and
+   then, the WhatsApp buttons' green dot pops on hover. All in the wordmark's spirit: short, then still. */
+@media (prefers-reduced-motion: no-preference) {
+  .ringing {
+    transform-origin: 50% 80%;
+    animation: ring 6s 0.4s infinite;
+  }
+  #wa-fab > svg {
+    animation: ring 9s 5s infinite;
+  }
+  @media (hover: hover) {
+    .btn-whatsapp:hover::before {
+      animation: dot-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+  }
+}
+/* A phone on a table: a few fast shakes, then quiet for the rest of the cycle. */
+@keyframes ring {
+  0%,
+  12%,
+  100% {
+    rotate: 0deg;
+  }
+  1.5%,
+  4.5%,
+  7.5% {
+    rotate: -4deg;
+  }
+  3%,
+  6%,
+  9% {
+    rotate: 4deg;
+  }
+}
+@keyframes dot-pop {
+  40% {
+    scale: 1.8;
+  }
+}
+
+/* Home: a deep navy section (Bigger jobs). Same token names, so every utility inside follows. */
+@utility navy-band {
+  --color-paper: #102350;
+  --color-fg: #f1f4fb;
+  --color-muted: #a9b4cf;
+  --color-line: rgb(255 255 255 / 0.12);
+  --color-accent: #34d399;
+  --color-accent-ink: #34d399;
+  @apply bg-navy text-fg;
+  & .btn-ghost:hover {
+    background-color: rgb(255 255 255 / 0.08);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.3);
+  }
+}
+
+/* Home: crossed tapes that run across the page (marquee). Decorative; the same words are in the copy. */
+.tapes {
+  position: relative;
+  height: 12rem;
+  pointer-events: none;
+}
+.tape {
+  position: absolute;
+  inset-inline: -5%;
+  top: 50%;
+  padding-block: 0.875rem;
+  overflow: hidden;
+  white-space: nowrap;
+  font-family: var(--display);
+  font-weight: 800;
+  font-stretch: 116%;
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+.tape-pop { background: var(--color-pop); color: var(--color-navy); rotate: -3deg; translate: 0 -50%; z-index: 1; box-shadow: 0 0 0 3px var(--color-navy) }
+.tape-navy { background: var(--color-navy); color: #fff; rotate: 2.5deg; translate: 0 -50% }
+.tape > div { display: inline-flex; align-items: center; gap: 1.5rem; padding-inline-end: 1.5rem }
+.tape i { width: 0.6em; height: 0.6em; border-radius: 50%; background: var(--color-fill); flex: none }
+.tape-navy i { background: var(--color-pop) }
+@media (prefers-reduced-motion: no-preference) {
+  .tape > div { animation: tape 38s linear infinite }
+  .tape-navy > div { animation-direction: reverse; animation-duration: 46s }
+}
+@keyframes tape { to { transform: translateX(-50%) } }
+/* Narrow screens: a few degrees barely open the cross, so steeper angles there. */
+@media (max-width: 639px) {
+  .tape-pop { rotate: -7deg }
+  .tape-navy { rotate: 6deg }
+}

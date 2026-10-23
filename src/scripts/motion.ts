@@ -340,7 +340,9 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
   all('[data-letters]').forEach((el) => {
     SplitText.create(el, { type: 'words,chars', mask: 'chars', onSplit: (s) => {
       el.style.visibility = 'visible' // a page may hold it hidden until now, so it never flashes whole
-      const t = gsap.from(s.chars, { paused: true, yPercent: 110, rotate: 6, duration: 1.1, ease: 'expo.out', stagger: 0.05, delay: parseFloat(el.dataset.delay ?? (document.querySelector('[data-curtain]') ? '0.7' : '0.15')) }) // wait out the curtain
+      // data-ring="word": that word starts ringing once everything has landed (.ringing in global.css).
+      const ring = s.words.find((w) => w.textContent === el.dataset.ring)
+      const t = gsap.from(s.chars, { paused: true, yPercent: 110, rotate: 6, duration: 1.1, ease: 'expo.out', stagger: 0.05, delay: parseFloat(el.dataset.delay ?? (document.querySelector('[data-curtain]') ? '0.7' : '0.15')), onComplete: () => ring?.classList.add('ringing') }) // wait out the curtain
       introGate.then(() => t.play())
       return t
     } })
@@ -403,6 +405,11 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
           .fromTo(col.querySelectorAll('[data-cup-pair]'), { '--draw': 0 }, { '--draw': 1, duration: 0.4, ease: 'power2.inOut' }, at + 0.9)
       })
     }
+  })
+  // Club stripes: each band sweeps across from alternating sides as it comes into view.
+  all('[data-stripes]').forEach((el) => {
+    gsap.set(el, { visibility: 'visible' })
+    gsap.from(el.children, { scaleX: 0, transformOrigin: (i: number) => (i % 2 ? 'right' : 'left'), duration: 1.1, ease: 'expo.out', stagger: 0.08, scrollTrigger: { trigger: el, start: 'top 90%' } })
   })
   // Images and cards fading up as they arrive.
   all('[data-rise]').forEach((el) => {

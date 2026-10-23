@@ -1,21 +1,17 @@
 ---
-// The home, in the example sites' look: giant condensed type on near-black. The robot says hello, the example sites do
-// the selling (a grid of scroll-through previews), then price, questions and the ask. Motion comes from scripts/motion.ts.
-import '@fontsource-variable/big-shoulders-display'
+// The home: wide Archivo headlines on white. The hero lets the visitor try their own name on an example site
+// (SiteBuilder, which also loads Archivo), then the example sites, price, questions and the ask. Motion comes from scripts/motion.ts.
 import { Image } from 'astro:assets'
 import BaseLayout from '@/layouts/BaseLayout.astro'
 import Logo from '@/components/Logo.astro'
 import Icon from '@/components/Icon.astro'
-import Boti from '@/components/Boti.astro'
-import BotiChat from '@/components/BotiChat.astro'
 import { site, services, faqs, steps, whatsapp as wa } from '@/site'
 import { work, home } from '@/work'
 import WorkCard from '@/components/WorkCard.astro'
-import PublishDemo from '@/components/PublishDemo.astro'
+import SiteBuilder from '@/components/SiteBuilder.astro'
 import LeadDemo from '@/components/LeadDemo.astro'
 import DashDemo from '@/components/DashDemo.astro'
 import CmsDemo from '@/components/CmsDemo.astro'
-import { trades } from '@/trades'
 import thomasFull from '@/assets/thombeck.png'
 
 // The quote message comes with blanks to fill, so a lead arrives with what I need to price the site.
@@ -31,11 +27,14 @@ const builds = [
   ['AI features', 'Chatbots, automation and agents that do real work.', 'LLM APIs · agents'],
 ]
 const waPath = 'M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.8-1.2.2-.6.2-1.1.1-1.2l-.4-.2Z'
-const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppercase'
+// The tapes under the hero: what you get on the mint one, who it's for on the navy one. Each list runs four times so the -50% loop is seamless.
+const perks = ['Fixed price', 'Pay when you’re happy', `Live in ${site.turnaround}`, 'Free hosting', 'Edit it yourself']
+const trades = ['Trades', 'Pubs', 'Hotels', 'Venues', 'Roofers', 'Electricians', 'Decorators', 'Landscapers', 'Builders', 'Golf bars']
+const loop = (xs: string[]) => [...xs, ...xs, ...xs, ...xs]
+const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%] tracking-[-0.035em]'
 ---
 
 <BaseLayout
-  dark
   schema={[{ '@type': 'FAQPage', mainEntity: faqs.map(([q, a]) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })) }]}
   title={`Websites for UK tradespeople and small businesses | ${site.name}`}
   description={`Websites for tradespeople, hospitality and small businesses across the UK, built by ${site.name}, a London developer. Fixed price, free hosting, no deposit: you pay once you're happy. Edit it yourself or let me look after it.`}
@@ -44,70 +43,59 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
        The style below unhides it after 2.5s no matter what, so a failed script can't leave it blank. -->
   <script is:inline>
     if (matchMedia('(prefers-reduced-motion: no-preference)').matches) document.documentElement.setAttribute('data-hold', '')
-    // Wide screens at the top of the page get the intro: the editing panel full screen first, the rest after (motion.ts).
-    if (matchMedia('(min-width: 1024px) and (prefers-reduced-motion: no-preference)').matches && !location.hash && scrollY < 10) document.documentElement.setAttribute('data-intro', '')
   </script>
   <style is:inline>
-    html[data-hold] #hero h1 { visibility: hidden; animation: unhide 0s 2.5s forwards }
-    html[data-intro] #hero h1, html[data-intro] [data-intro-copy] { visibility: hidden; animation: unhide 0s 4s forwards }
-    html[data-intro] #hero [data-publish] { visibility: hidden; animation: unhide 0s 3s forwards }
-    /* The demo's resting state (the first example site, live) only shows without motion; with it, the loop opens on the panel. */
-    html[data-hold] #hero [data-pd-card] { visibility: hidden; animation: unhide 0s 4s forwards }
+    html[data-hold] #hero h1, html[data-hold] [data-stripes] { visibility: hidden; animation: unhide 0s 2.5s forwards }
     @keyframes unhide { to { visibility: visible } }
   </style>
 
-  <div class="overflow-x-clip [--display:'Big_Shoulders_Display_Variable',system-ui,sans-serif]">
-    <header class="fixed inset-x-0 top-0 z-40 flex items-center justify-between gap-3 bg-linear-to-b from-paper/90 to-transparent px-4 py-3 sm:px-8">
-      <a href="/" class="flex items-center gap-2.5 font-semibold"><Logo class="size-9" /><span class="max-[420px]:sr-only">{site.name}</span></a>
-      <nav aria-label="Main" class="flex items-center gap-2 text-sm font-semibold sm:gap-6">
-        <a href="#sites" class="hidden transition hover:text-accent md:inline">Work</a>
-        <a href="#services" class="hidden transition hover:text-accent md:inline">Services</a>
-        <a href="#faq" class="hidden transition hover:text-accent md:inline">Questions</a>
-        <button type="button" data-boti-open aria-label="Ask Boti, the quote helper" class="flex h-11 items-center gap-2 rounded-full bg-white/[0.06] p-1 ring-1 ring-line transition hover:ring-fg/30 sm:pr-4">
-          <Boti mood="mini" class="w-9" /><span class="hidden sm:inline">Ask Boti</span>
-        </button>
+  <div class="overflow-x-clip bg-paper [--color-paper:#ffffff] [--display:'Archivo_Variable',system-ui,sans-serif]">
+    <!-- A floating island, not a full-width bar: the page shows around it. -->
+    <header class="fixed top-3.5 left-1/2 z-40 flex h-[3.875rem] w-[min(57.5rem,calc(100%-1.5rem))] -translate-x-1/2 items-center justify-between gap-3 rounded-full bg-white/80 pr-2 pl-5 shadow-[0_0_0_1px_rgb(15_23_42/0.08),0_14px_34px_-18px_rgb(15_23_42/0.35)] backdrop-blur-md">
+      <a href="/" aria-label="tebeck, home" class="py-2"><Logo class="text-[1.75rem]" animated /></a>
+      <nav aria-label="Main" class="flex items-center gap-1.5 text-sm font-semibold">
+        <a href="#sites" class="hidden rounded-full px-3.5 py-2 transition hover:bg-fg/5 md:inline">Work</a>
+        <a href="#services" class="hidden rounded-full px-3.5 py-2 transition hover:bg-fg/5 md:inline">Services</a>
+        <a href="#faq" class="hidden rounded-full px-3.5 py-2 transition hover:bg-fg/5 md:inline">Questions</a>
+        <a href={whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp Thomas" class="hidden size-11 place-items-center rounded-full bg-whatsapp text-white transition hover:scale-105 sm:grid"><svg viewBox="0 0 24 24" class="size-5.5" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg></a>
         <a href="#contact" class="btn-primary min-h-11 px-5">Get a quote</a>
       </nav>
     </header>
 
     <!-- Phones get a WhatsApp button; it bows out at the contact section. -->
-    <a id="wa-fab" href={whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp Thomas" class="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-[#1f2737] shadow-xl shadow-black/50 transition-[scale] duration-300 data-off:scale-0 sm:hidden">
+    <a id="wa-fab" href={whatsapp} target="_blank" rel="noopener" aria-label="WhatsApp Thomas" class="fixed right-4 bottom-[calc(1rem+env(safe-area-inset-bottom,0px))] z-30 grid size-14 place-items-center rounded-full bg-whatsapp text-white shadow-xl shadow-black/20 transition-[scale] duration-300 data-off:scale-0 sm:hidden">
       <svg viewBox="0 0 24 24" class="size-7" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>
     </a>
 
     <main id="main" tabindex="-1" class="outline-none">
-      <!-- Hero: the giant line on the left, PublishDemo (the editing panel publishing a change, a different example site each loop) on the right. -->
-      <section id="hero" class="relative isolate">
-        <div class="grid min-h-[100dvh] grid-rows-[1fr_auto] px-4 pt-24 pb-8 sm:px-8">
-          <div class="relative grid content-center gap-4">
-            <div class="relative z-10 lg:pointer-events-none">
-              <p data-intro-copy class="pointer-events-auto inline-flex items-center gap-2 rounded-full bg-white/[0.05] px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
-                Fixed price <span class="text-muted">· pay when you’re happy</span>
-              </p>
-              <h1 data-letters class:list={[display, 'mt-6 text-[14.5vw] leading-[0.9] sm:text-[13vw] lg:text-[10vw]']}>
-                <span class="block">Websites that</span> <span class="block">make your</span> <span class="block text-accent">phone ring.</span>
-              </h1>
-            </div>
-            <div class="relative lg:absolute lg:inset-y-0 lg:right-0 lg:grid lg:w-[34%] lg:content-center xl:w-[38%]">
-              <figure class="m-0">
-                <PublishDemo />
-                <figcaption data-intro-copy class="mt-3 font-mono text-[11px] tracking-[0.2em] text-muted uppercase">Drawing of the editing panel · <a href="#edit-it-yourself" class="text-fg underline underline-offset-4">See it in action</a></figcaption>
-              </figure>
-            </div>
-          </div>
-          <div data-intro-copy class="mt-8 grid gap-6 border-t border-line pt-6 md:grid-cols-[1fr_auto] md:items-center">
-            <p class="max-w-lg text-lg text-pretty text-muted">Websites for UK small businesses, from trades to pubs, hotels and venues. Fixed price, live in {site.turnaround}, and you pay once you’re happy. Want to change the words and photos yourself? Add your own <a href="#edit-it-yourself" class="text-fg underline underline-offset-4">editing panel</a>.</p>
-            <div class="flex flex-wrap gap-3">
-              <a href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Get a free quote<Icon name="arrow" class="size-4" /></a>
+      <!-- Hero: the line and the try-it card on the left, the phone wearing the visitor's name on the right (SiteBuilder). -->
+      <section id="hero" class="relative isolate px-4 pt-28 pb-12 sm:px-8 lg:pt-32">
+        <div class="mx-auto max-w-[80rem]">
+          <SiteBuilder>
+            <p class="inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-sm font-medium ring-1 ring-line">
+              Fixed price <span class="text-muted">· pay when you’re happy</span>
+            </p>
+            <h1 data-letters data-ring="ring." class:list={[display, 'mt-6 text-[clamp(2.625rem,4.9vw,5.125rem)] leading-[0.98] text-balance']}>
+              Websites that make your phone <span class="text-accent">ring.</span>
+            </h1>
+            <p class="mt-6 max-w-lg text-lg text-pretty text-muted sm:text-xl">For UK small businesses, from trades to pubs, hotels and venues. Live in {site.turnaround}, and you pay once you’re happy.</p>
+            <div slot="after" class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+              <a href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Like it? Get a quote<Icon name="arrow" class="size-4" /></a>
               <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
             </div>
-          </div>
+          </SiteBuilder>
         </div>
       </section>
 
+      <!-- Two tapes cross under the hero, running opposite ways. -->
+      <div aria-hidden="true" class="tapes">
+        <div class="tape tape-navy"><div>{loop(trades).map((t) => <><span>{t}</span><i /></>)}</div></div>
+        <div class="tape tape-pop"><div>{loop(perks).map((t) => <><span>{t}</span><i /></>)}</div></div>
+      </div>
+
       <!-- The six template sites (live ones are on /work): a grid of looping scroll-throughs (recorded from each site). -->
-      <section id="sites" aria-labelledby="sites-title" class="scroll-mt-20 px-4 pt-32 sm:px-8">
-        <h2 id="sites-title" data-split class:list={[display, 'text-[15vw] leading-[0.9] sm:text-[9.5vw]']}><span class="block">Pick a look.</span> <span class="block text-accent">Make it yours.</span></h2>
+      <section id="sites" aria-labelledby="sites-title" class="scroll-mt-20 px-4 pt-20 sm:px-8">
+        <h2 id="sites-title" data-split class:list={[display, 'text-[10vw] leading-[0.95] sm:text-[6vw]']}><span class="block">Pick a look.</span> <span class="block text-accent">Make it yours.</span></h2>
         <p class="mt-6 max-w-md text-lg text-muted">Full websites, each with its own look, for trades and for hospitality: bars, hotels and venues, with bookings built in. Open one and have a look around.</p>
         <ul class="mt-14 grid gap-x-8 gap-y-14 sm:grid-cols-2 lg:grid-cols-3">
           {home.map((c) => <WorkCard c={c} />)}
@@ -117,12 +105,15 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         )}
       </section>
 
+      <!-- Club stripes between sections, drawn across on scroll (motion.ts). -->
+      <div class="mt-28"><div aria-hidden="true" data-stripes class="grid gap-2"><i class="h-8 bg-fill"></i><i class="h-4 bg-navy"></i><i class="h-2 bg-pop"></i><i class="h-4 bg-navy"></i><i class="h-8 bg-fill"></i></div></div>
+
       <!-- The three steps as giant type with one big way to get in touch, the steps themselves beside them, the add-ons as a quiet list. -->
       <section id="services" class="scroll-mt-20 px-4 py-24 sm:px-8 sm:py-32">
         <div class="mx-auto max-w-[96rem]">
         <div class="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
           <div>
-            <h2 data-split class:list={[display, 'text-6xl leading-[0.9] sm:text-8xl']}>Three steps. <span class="text-muted">You only do the first one.</span></h2>
+            <h2 data-split class:list={[display, 'text-5xl leading-[0.95] sm:text-7xl']}>Three steps. <span class="text-muted">You only do the first one.</span></h2>
             <a href={whatsapp} target="_blank" rel="noopener" class="btn mt-12 min-h-20 w-full justify-between rounded-2xl bg-whatsapp px-7 text-xl text-[#1f2737] shadow-xl shadow-whatsapp/20 hover:shadow-whatsapp/40 sm:text-2xl">
               <span class="flex items-center gap-3"><svg viewBox="0 0 24 24" class="size-8" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>WhatsApp me</span>
               <span class="text-sm font-medium max-sm:hidden">One message, no forms</span>
@@ -132,7 +123,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
             <ol class="divide-y divide-line border-y border-line">
               {steps.map((s) => (
                 <li class="grid grid-cols-[auto_1fr] gap-6 py-6">
-                  <span aria-hidden="true" class:list={[display, 'text-6xl leading-none text-accent']}>{s.n}</span>
+                  <span aria-hidden="true" class:list={[display, 'text-5xl leading-none text-accent tabular-nums']}>{s.n}</span>
                   <div><h3 class="text-xl font-semibold">{s.title}</h3><p class="mt-1 text-pretty text-muted">{s.text}</p></div>
                 </li>
               ))}
@@ -149,13 +140,13 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <div id="edit-it-yourself" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-32">
           <div class="w-full"><CmsDemo /></div>
           <div>
-            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Edit it yourself · one-off add-on</p>
-            <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Change it <span class="text-accent">without calling me.</span></h3>
+            <p class="eyebrow">Edit it yourself · one-off add-on</p>
+            <h3 class:list={[display, 'mt-4 text-4xl leading-[0.95] sm:text-5xl']}>Change it <span class="text-accent">without calling me.</span></h3>
             <p class="mt-6 text-lg text-pretty text-muted">Your website comes with its own editing panel. Change prices, words or your number whenever you like. No waiting on me, no monthly fee.</p>
             <ol class="mt-8 divide-y divide-line border-y border-line">
               {[['Log in', 'Your own password. No code.'], ['Change it', 'Prices, words, phone number, areas.'], ['Press Publish changes', 'Live in a minute or two.']].map(([t, x], i) => (
                 <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
-                  <span aria-hidden="true" class:list={[display, 'text-3xl leading-none text-accent']}>{i + 1}</span>
+                  <span aria-hidden="true" class:list={[display, 'text-2xl leading-none text-accent']}>{i + 1}</span>
                   <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>
                 </li>
               ))}
@@ -169,13 +160,13 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <div id="enquiry-alerts" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-32">
           <div class="w-full lg:order-2"><LeadDemo /></div>
           <div class="lg:order-1">
-            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Enquiry alerts · one-off add-on</p>
-            <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Never lose <span class="text-accent">an enquiry.</span></h3>
+            <p class="eyebrow">Enquiry alerts · one-off add-on</p>
+            <h3 class:list={[display, 'mt-4 text-4xl leading-[0.95] sm:text-5xl']}>Never lose <span class="text-accent">an enquiry.</span></h3>
             <p class="mt-6 max-w-xl text-lg text-pretty text-muted">Busy on a job, the message gets buried, the customer rings someone else. With this, every time someone taps WhatsApp or email on your website, your phone pings and it goes in a list, so nothing slips.</p>
             <ol class="mt-8 divide-y divide-line border-y border-line">
               {[['Someone taps WhatsApp or email', 'On any page of your website.'], ['Your phone pings', 'A Telegram alert, and a row in a Google Sheet: when, how, and where they came from when the link says (Google, your ad).'], ['A nudge if it waits', 'Not marked as dealt with after 3 days? You get a reminder at 9 in the morning.']].map(([t, x], i) => (
                 <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
-                  <span aria-hidden="true" class:list={[display, 'text-3xl leading-none text-accent']}>{i + 1}</span>
+                  <span aria-hidden="true" class:list={[display, 'text-2xl leading-none text-accent']}>{i + 1}</span>
                   <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>
                 </li>
               ))}
@@ -187,10 +178,10 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
       </section>
 
       <!-- For the bigger clients: what else gets built, with the two businesses above as the proof. -->
-      <section id="apps" aria-labelledby="apps-title" class="scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
+      <section id="apps" aria-labelledby="apps-title" class="navy-band scroll-mt-20 px-4 py-24 sm:px-8 sm:py-32">
         <div class="mx-auto max-w-[96rem]">
-        <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Bigger jobs</p>
-        <h2 id="apps-title" data-split class:list={[display, 'mt-4 text-6xl leading-[0.9] sm:text-8xl lg:text-9xl']}>More than a website? <span class="text-accent">I build that too.</span></h2>
+        <p class="eyebrow">Bigger jobs</p>
+        <h2 id="apps-title" data-split class:list={[display, 'mt-4 text-5xl leading-[0.95] sm:text-7xl lg:text-8xl']}>More than a website? <span class="text-accent">I build that too.</span></h2>
         <div class="mt-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
           <p class="max-w-xl text-lg text-pretty text-muted">Bookings, payments, logins, apps in the stores, or the backend behind it. <span class="text-fg">SoyMenu is a web app I built on my own. ArquerosYa, which I co-founded, is a web app plus iOS and Android apps.</span></p>
           <a href={wa('Hi Thomas, I have a bigger project in mind.')} target="_blank" rel="noopener" class="btn-ghost min-h-14 px-7 max-sm:w-full">Tell me about it<Icon name="arrow" class="size-4" /></a>
@@ -198,7 +189,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <ol class="mt-14 grid gap-px overflow-hidden rounded-3xl bg-line ring-1 ring-line sm:grid-cols-2 xl:grid-cols-4">
           {builds.map(([title, text, stack], i) => (
             <li data-rise class="flex flex-col bg-paper p-7 sm:p-8">
-              <span aria-hidden="true" class:list={[display, 'text-6xl leading-none text-accent']}>{String(i + 1).padStart(2, '0')}</span>
+              <span aria-hidden="true" class:list={[display, 'text-5xl leading-none text-accent']}>{String(i + 1).padStart(2, '0')}</span>
               <h3 class="mt-10 text-2xl font-semibold">{title}</h3>
                             <p class="mt-auto pt-8 font-mono text-xs tracking-[0.15em] text-muted uppercase">{stack}</p>
             </li>
@@ -207,13 +198,13 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         <div id="dashboards" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-32">
           <div class="w-full lg:order-2"><DashDemo /></div>
           <div class="lg:order-1">
-            <p class="font-mono text-xs tracking-[0.2em] text-accent uppercase">Dashboards · on quote</p>
-            <h3 class:list={[display, 'mt-4 text-5xl leading-[0.9] sm:text-6xl']}>Your numbers, <span class="text-accent">on one screen.</span></h3>
+            <p class="eyebrow">Dashboards · on quote</p>
+            <h3 class:list={[display, 'mt-4 text-4xl leading-[0.95] sm:text-5xl']}>Your numbers, <span class="text-accent">on one screen.</span></h3>
             <p class="mt-6 max-w-xl text-lg text-pretty text-muted">Jobs, invoices and costs, on one screen. Am I making money, who owes me, is next week full?</p>
             <ol class="mt-8 divide-y divide-line border-y border-line">
               {[['It reads what you already use', 'Spreadsheets, or your invoicing or booking tool.'], ['Answers, not charts', 'Plain English, on your phone.'], ['Logins for your team', 'Each person sees what they need.']].map(([t, x], i) => (
                 <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
-                  <span aria-hidden="true" class:list={[display, 'text-3xl leading-none text-accent']}>{i + 1}</span>
+                  <span aria-hidden="true" class:list={[display, 'text-2xl leading-none text-accent']}>{i + 1}</span>
                   <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>
                 </li>
               ))}
@@ -224,19 +215,18 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </div>
       </section>
 
-      <!-- Questions: all collapsed, one open at a time. Anything else goes to Boti. -->
-      <section id="faq" class="scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
+      <!-- Questions: all collapsed, one open at a time. -->
+      <section id="faq" class="scroll-mt-20 px-4 py-24 sm:px-8 sm:py-32">
         <div class="mx-auto grid max-w-[96rem] gap-12 lg:grid-cols-[1fr_1.6fr] lg:gap-32">
           <div class="lg:sticky lg:top-24 lg:self-start">
-            <h2 data-split class:list={[display, 'text-6xl leading-[0.9] sm:text-8xl']}>Ask <span class="text-accent">Boti.</span></h2>
-            <Boti class="mt-8 hidden w-36 lg:block" />
-            <button type="button" data-boti-open class="btn-ghost mt-8">Ask something else</button>
+            <h2 data-split class:list={[display, 'text-5xl leading-[0.95] sm:text-7xl']}>Good <span class="text-accent">questions.</span></h2>
+            <a href="#contact" class="btn-ghost mt-8">Ask something else</a>
           </div>
           <div class="divide-y divide-line border-y border-line">
             {faqs.map(([q, a]) => (
               <details name="faq" class="faq group">
                 <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-lg font-semibold text-pretty transition-colors hover:text-accent group-open:text-accent [&::-webkit-details-marker]:hidden">
-                  <span class="transition-transform duration-300 group-hover:translate-x-1.5 group-open:translate-x-1.5">{q}</span><span aria-hidden="true" class="grid size-8 shrink-0 place-items-center rounded-full text-2xl leading-none text-muted ring-1 ring-line transition duration-300 group-hover:ring-accent group-open:rotate-45 group-open:bg-fill group-open:text-on-accent group-open:ring-accent">+</span>
+                  <span class="transition-transform duration-300 group-hover:translate-x-1.5 group-open:translate-x-1.5">{q}</span><span aria-hidden="true" class="grid size-8 shrink-0 place-items-center rounded-full text-2xl leading-none text-muted ring-1 ring-line [transition:color_.3s,background-color_.3s,box-shadow_.3s,rotate_.3s_cubic-bezier(0.34,1.56,0.64,1)] group-hover:ring-accent group-open:rotate-45 group-open:bg-fill group-open:text-on-accent group-open:ring-accent">+</span>
                 </summary>
                 <p class="max-w-2xl pb-6 text-pretty text-muted">{a}</p>
               </details>
@@ -245,14 +235,11 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
         </div>
       </section>
 
-      <!-- The ask: one giant line, one person behind it, three ways in. -->
-      <!-- The 3D robot (scripts/robot.ts) beside "Yours next.", following the pointer. -->
-      <section id="contact" class="relative scroll-mt-20 border-t border-line px-4 py-24 sm:px-8 sm:py-32">
-        <h2 data-split class:list={[display, 'text-[19vw] leading-[0.85] sm:text-[16vw]']}>Yours <span class="text-accent">next.</span></h2>
-        <div id="robot-stage" class="relative mt-6 h-72 sm:h-[26rem] lg:absolute lg:top-2 lg:right-8 lg:mt-0 lg:h-[18rem] lg:w-[24%] xl:h-[22rem]">
-          <p aria-hidden="true" class="pointer-events-none absolute right-0 bottom-2 left-0 z-10 text-center font-mono text-[11px] tracking-[0.2em] text-muted uppercase motion-reduce:hidden"><span class="pointer-coarse:hidden">Move your mouse. Click the robot</span><span class="hidden pointer-coarse:inline">Tap anywhere, then tap the robot</span></p>
-          <canvas class="absolute inset-0 size-full touch-pan-y" role="img" aria-label="A small 3D robot hovering beside the heading"></canvas>
-        </div>
+      <!-- The ask on the brand blue, the stripes running into it: one giant line, one person behind it, three ways in.
+           The primary button turns white here so it shows on the blue. -->
+      <div aria-hidden="true" data-stripes class="grid gap-2"><i class="h-2 bg-pop"></i><i class="h-4 bg-navy"></i><i class="h-3 bg-fill"></i><i class="h-6 bg-fill"></i></div>
+      <section id="contact" class="accent-band relative scroll-mt-20 px-4 py-24 [--color-fill-ink:#e0e7ff] [--color-fill:#ffffff] [--color-on-accent:#1d4ed8] sm:px-8 sm:py-32">
+        <h2 data-split class:list={[display, 'text-[13vw] leading-[0.9] sm:text-[11vw]']}>Yours <span class="text-navy">next.</span></h2>
         <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div class="flex items-center gap-4">
             <span class="size-14 shrink-0 overflow-hidden rounded-2xl bg-accent/10"><Image src={thomasFull} alt="" width={240} class="w-[180%] max-w-none -ml-[33%]" /></span>
@@ -264,16 +251,15 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
           </div>
         </div>
         <p class="mt-8 text-muted">
-          Or call <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">{site.phone}</a> or{' '}
-          <button type="button" data-boti-open="Get me a quote" class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">get a quote from Boti</button>
+          Or call <a href={`tel:${site.phone.replace(/\s/g, '')}`} class="inline-block py-1 font-semibold text-fg underline-offset-4 hover:underline">{site.phone}</a>.
         </p>
       </section>
     </main>
 
-    <footer class="border-t border-line px-4 pt-14 text-sm text-muted sm:px-8">
+    <footer class="px-4 pt-14 text-sm text-muted sm:px-8">
       <div class="flex flex-wrap justify-between gap-10">
         <div>
-          <Logo class="size-10" />
+          <Logo class="text-4xl" />
           <p class="mt-4 max-w-xs text-pretty">Websites for local businesses, built and looked after. London, UK.</p>
           <a href={`mailto:${site.email}`} class="mt-4 inline-block py-2 font-semibold text-fg underline-offset-4 hover:underline">{site.email}</a>
         </div>
@@ -289,7 +275,7 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
           </div>
         </nav>
       </div>
-      <p aria-hidden="true" class:list={[display, 'mt-14 text-center text-[clamp(2.5rem,13vw,13rem)] leading-[0.85] whitespace-nowrap text-fg/[0.06] select-none']}>Thomas Beckford</p>
+      <p aria-hidden="true" class:list={[display, 'mt-14 text-center text-[clamp(1.5rem,8.5vw,9.5rem)] leading-[0.9] whitespace-nowrap text-fg/[0.06] select-none']}>Thomas Beckford</p>
       <p class="border-t border-line py-5 text-center text-xs">© {new Date().getFullYear()} {site.name} · London, UK</p>
     </footer>
   </div>
@@ -308,7 +294,6 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
     </div>
   </dialog>
 
-  <BotiChat trades={trades.filter((t) => !t.pick).map((t) => t.name)} />
 </BaseLayout>
 
 <script>
@@ -350,9 +335,4 @@ const display = 'font-(family-name:--display) font-black tracking-[-0.01em] uppe
   })
   // An example's "Get one like this" jumps this page to #contact: close the preview on the way.
   addEventListener('hashchange', () => preview.close())
-
-  // The robot (in #contact): its own small chunk, loaded after the page. No WebGL: the stage stays empty.
-  const robot = document.getElementById('robot-stage')!
-  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches
-  import('@/scripts/robot').then((m) => m.mount(robot, reduced, document.getElementById('contact')!)).catch(() => robot.replaceChildren())
 </script>

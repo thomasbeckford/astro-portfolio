@@ -1,0 +1,239 @@
+---
+// The home hero's "see your own website": the visitor types their business name and picks a trade, and the phone shows
+// that example site (templates.ts: its colours, font, first photo and words) wearing their name. A second after they stop,
+// the phone rings with the kind of message that trade's site brings in: an illustration, no names or numbers.
+// Until someone touches it, it demos itself. Without JS it rests on the first site; without motion it doesn't autoplay.
+import { getImage } from 'astro:assets'
+import '@fontsource/anton'
+import '@fontsource-variable/archivo/wdth.css'
+import '@fontsource-variable/oswald'
+import '@fontsource-variable/big-shoulders-display'
+import { demos } from '@/templates'
+import { photos } from '@/components/kit/media'
+
+const asks: Record<string, string> = {
+  electrician: 'Can you fit an EV charger next week?',
+  roofer: 'Few tiles slipped after the storm, can you look?',
+  decorator: 'Quote for a hallway and stairs?',
+  landscaper: 'Could you redo our back garden?',
+  builder: 'Thinking about a loft conversion…',
+  joiner: 'Fitted wardrobes for two bedrooms?',
+  golf: 'Bay for 6 on Friday at 8?',
+  games: 'Darts for a birthday, 12 of us',
+  hotel: 'Double room, 2 nights from Friday?',
+}
+const sites = await Promise.all(
+  demos.map(async (d) => ({
+    slug: d.slug, trade: d.trade, mark: d.mark, font: d.font, kicker: d.hero.kicker.split(' · ')[0], lede: d.hero.lede, cta: d.hero.cta,
+    ask: asks[d.slug] ?? 'Are you free next week?',
+    img: photos(d.slug)[0] ? (await getImage({ src: photos(d.slug)[0], width: 640, format: 'webp' })).src : '',
+    css: `--bg:${d.colors.bg};--fg:${d.colors.fg};--accent:${d.colors.accent};--on:${d.colors.onAccent}`,
+  })),
+)
+const s = sites[0]
+---
+
+<!-- Two columns from lg: the page's own copy (slot) and the try card on the left, the phone on the right. -->
+<div data-builder={JSON.stringify(sites)} class="grid items-center gap-x-12 lg:grid-cols-[1.1fr_1fr]">
+  <div>
+  <slot />
+  <div class="sb-try">
+    <label for="sb-name" class="block text-sm font-semibold text-muted">Try it. What’s your business called?</label>
+    <div class="sb-field"><input id="sb-name" autocomplete="off" spellcheck="false" maxlength="28" placeholder="Your business name" /></div>
+    <div class="mt-3.5 flex flex-wrap gap-2" role="group" aria-label="Trade">
+      {sites.map((x, i) => <button type="button" class="sb-chip" data-s={x.slug} aria-pressed={i === 0 ? 'true' : 'false'}>{x.trade}</button>)}
+    </div>
+    <p class="mt-3.5 text-sm text-muted">A live preview built from my example sites. Yours gets your own photos, words and colours.</p>
+  </div>
+  <slot name="after" />
+  </div>
+
+  <div class="sb-stage" aria-hidden="true">
+    <div class="sb-stripes" data-stripes><i></i><i></i><i></i></div>
+    <div class="sb-phone"><div class="sb-screen">
+      <div class="sb-notch"></div>
+      <div class="sb-toast"><span class="sb-app" data-sb-initial></span><div class="sb-note"><p><span>Website</span><span>now</span></p><b>New enquiry</b><small data-sb-ask></small></div></div>
+      <div class="sb-roller"></div>
+      <div data-sb-layers>
+        <div class="sb-site" style={s.css}>
+          <div class="sb-photo" style={`background-image:url(${s.img})`}></div>
+          <div class="sb-bar"><span data-sb-mark>{s.mark}</span><span>{s.cta.split(' ').slice(0, 2).join(' ')}</span></div>
+          <div class="sb-body"><p class="sb-kick">{s.kicker}</p><p class:list={['sb-mark', `f-${s.font}`]} data-sb-mark>{s.mark}</p><p class="sb-lede">{s.lede}</p><span class="sb-go">{s.cta}</span><p class="sb-tel">Example site · tebeck.dev</p></div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<style>
+  .sb-try { margin-top: 2rem; padding: 1.25rem; border-radius: 1.625rem; background: #fff; box-shadow: 0 0 0 1px rgb(15 23 42 / 0.1), 0 24px 50px -30px rgb(15 23 42 / 0.35); max-width: 37.5rem }
+  .sb-field { margin-top: 0.625rem; padding: 0.375rem 0.375rem 0.375rem 1.125rem; border-radius: 1.125rem; background: rgb(15 23 42 / 0.045); box-shadow: inset 0 0 0 2px transparent; transition: box-shadow 0.2s, background-color 0.2s }
+  .sb-field:focus-within { background: #fff; box-shadow: inset 0 0 0 2px var(--color-accent) }
+  .sb-field input { width: 100%; height: 3.25rem; border: 0; background: none; outline: none; font-family: 'Archivo Variable', sans-serif; font-stretch: 110%; font-weight: 700; font-size: 1.5rem; letter-spacing: -0.02em; color: inherit }
+  .sb-field input::placeholder { color: rgb(15 23 42 / 0.55) }
+  .sb-chip { min-height: 2.5rem; padding: 0 0.875rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(15 23 42 / 0.12); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: box-shadow 0.2s, background-color 0.2s, color 0.2s }
+  .sb-chip:hover { box-shadow: inset 0 0 0 1.5px var(--color-fg) }
+  .sb-chip[aria-pressed='true'] { background: var(--color-fg); color: #fff; box-shadow: none }
+
+  .sb-stage { position: relative; display: grid; place-items: center; height: 47.5rem; overflow: visible clip; overflow-clip-margin: 3.75rem }
+  .sb-phone { position: relative; width: 21.25rem; height: 44.5rem; border-radius: 3.375rem; background: #0b0f19; padding: 0.75rem; box-shadow: 0 50px 90px -40px rgb(15 23 42 / 0.6), inset 0 0 0 2px #2a3242 }
+  .sb-screen { position: relative; height: 100%; border-radius: 2.7rem; overflow: hidden; background: #111 }
+  .sb-notch { position: absolute; z-index: 5; top: 0.625rem; left: 50%; translate: -50% 0; width: 6rem; height: 1.75rem; border-radius: 1.25rem; background: #0b0f19 }
+
+  [data-sb-layers] :global(.sb-site) { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); color: var(--fg) }
+  [data-sb-layers] :global(.sb-photo) { position: absolute; inset: 0 0 34% 0; background: center/cover }
+  [data-sb-layers] :global(.sb-photo)::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 55%, transparent), transparent 30%, color-mix(in srgb, var(--bg) 40%, transparent) 60%, var(--bg)) }
+  [data-sb-layers] :global(.sb-bar) { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; padding: 3.125rem 1rem 0; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap }
+  [data-sb-layers] :global(.sb-bar span:first-child) { overflow: hidden; text-overflow: ellipsis }
+  [data-sb-layers] :global(.sb-bar span:last-child) { background: var(--accent); color: var(--on); padding: 0.375rem 0.625rem; border-radius: 999px; letter-spacing: 0; text-transform: none }
+  [data-sb-layers] :global(.sb-body) { position: relative; z-index: 2; margin-top: auto; padding: 0 1.125rem 1.625rem }
+  [data-sb-layers] :global(.sb-kick) { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent) }
+  [data-sb-layers] :global(.sb-mark) { margin-top: 0.375rem; line-height: 0.95; white-space: nowrap; overflow: hidden; font-size: 64px }
+  [data-sb-layers] :global(.sb-lede) { margin-top: 0.75rem; font-size: 13px; line-height: 1.45; opacity: 0.85; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden }
+  [data-sb-layers] :global(.sb-go) { margin-top: 1rem; display: inline-flex; padding: 0.75rem 1.125rem; border-radius: 999px; background: var(--accent); color: var(--on); font-size: 13px; font-weight: 700 }
+  [data-sb-layers] :global(.sb-tel) { margin-top: 0.75rem; font-size: 11px; opacity: 0.6 }
+  [data-sb-layers] :global(.f-archivo) { font-family: 'Archivo Variable'; font-stretch: 125%; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em }
+  [data-sb-layers] :global(.f-anton) { font-family: 'Anton'; text-transform: uppercase }
+  [data-sb-layers] :global(.f-geist) { font-family: 'Geist Variable'; font-weight: 700; letter-spacing: -0.04em }
+  [data-sb-layers] :global(.f-oswald) { font-family: 'Oswald Variable'; font-weight: 700; text-transform: uppercase }
+  [data-sb-layers] :global(.f-shoulders) { font-family: 'Big Shoulders Display Variable'; font-weight: 900; text-transform: uppercase }
+
+  .sb-roller { position: absolute; z-index: 4; left: -10%; right: -10%; top: -1rem; height: 1rem; border-radius: 0.5rem; opacity: 0; box-shadow: 0 6px 20px rgb(0 0 0 / 0.35) }
+  /* An iOS-style banner: frosted, the site's own icon (its accent, the name's first letter), app name and time on top. */
+  .sb-toast { position: absolute; z-index: 6; top: 2.75rem; left: 0.5rem; right: 0.5rem; display: flex; gap: 0.625rem; align-items: center; padding: 0.625rem 0.75rem 0.6875rem; border-radius: 1.375rem; background: rgb(246 246 248 / 0.84); backdrop-filter: blur(20px) saturate(1.8); color: #111; box-shadow: 0 10px 28px -6px rgb(0 0 0 / 0.3); opacity: 0; translate: 0 -1.5rem; scale: 0.96; transition: opacity 0.3s, translate 0.45s cubic-bezier(0.4, 0, 1, 1), scale 0.45s cubic-bezier(0.4, 0, 1, 1) }
+  .sb-toast:global(.show) { opacity: 1; translate: 0 0; scale: 1; transition: opacity 0.35s, translate 0.7s cubic-bezier(0.16, 1, 0.3, 1), scale 0.7s cubic-bezier(0.16, 1, 0.3, 1) }
+  .sb-app { flex: none; display: grid; place-items: center; width: 2.375rem; height: 2.375rem; border-radius: 0.6875rem; background: var(--accent); color: var(--on); font: 800 1.0625rem/1 'Archivo Variable', sans-serif; text-transform: uppercase }
+  .sb-note { min-width: 0; flex: 1; line-height: 1.3 }
+  .sb-note p { display: flex; justify-content: space-between; font-size: 11px; color: rgb(60 60 67 / 0.65) }
+  .sb-note b { display: block; margin-top: 1px; font-size: 13.5px; font-weight: 600 }
+  .sb-note small { display: block; font-size: 13px; color: rgb(60 60 67 / 0.9); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
+
+  @media (prefers-reduced-motion: no-preference) {
+    [data-sb-layers] :global(.sb-site.in) { animation: sb-paint 0.7s cubic-bezier(0.7, 0, 0.2, 1) both }
+    .sb-roller:global(.go) { animation: sb-roll 0.7s cubic-bezier(0.7, 0, 0.2, 1) both }
+    .sb-chip:active { scale: 0.96 }
+    .sb-chip { transition-property: box-shadow, background-color, color, scale }
+    /* A message arrives: the phone lifts a touch while the banner is up, no shaking. */
+    .sb-phone { transition: translate 0.9s cubic-bezier(0.16, 1, 0.3, 1) }
+    .sb-stage:global(.sb-ring) .sb-phone { translate: 0 -0.5rem }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sb-toast, .sb-toast:global(.show) { translate: 0; scale: 1; transition: opacity 0.3s }
+  }
+  /* a new trade paints over the old one, top to bottom, behind a roller in its accent colour */
+  @keyframes sb-paint { from { clip-path: inset(0 0 100% 0) } to { clip-path: inset(0) } }
+  @keyframes sb-roll { 0% { top: -1rem; opacity: 1 } 95% { opacity: 1 } 100% { top: 100%; opacity: 0 } }
+
+  /* Club stripes running behind the phone: three thin bands, blue, mint, blue (five heavy ones plus a sticker read as too much, Thomas). */
+  .sb-stripes { position: absolute; inset-inline: 10% -50vw; top: 58%; display: grid; gap: 0.375rem }
+  .sb-stripes i { height: 1rem; background: var(--color-fill) }
+  .sb-stripes i:nth-child(2) { height: 0.375rem; background: var(--color-pop) }
+
+  @media (max-width: 1023px) {
+    .sb-try { padding: 0.875rem; border-radius: 1.375rem }
+    .sb-field input { font-size: 1.25rem; height: 2.875rem }
+    .sb-stage { height: 37.5rem; margin-top: 1rem }
+    .sb-stripes { inset-inline: -50vw }
+    .sb-phone { width: 17.5rem; height: 36.625rem }
+  }
+</style>
+
+<script>
+  type Site = { slug: string; trade: string; mark: string; font: string; kicker: string; lede: string; cta: string; ask: string; img: string; css: string }
+  const root = document.querySelector<HTMLElement>('[data-builder]')!
+  const sites: Site[] = JSON.parse(root.dataset.builder!)
+  const input = root.querySelector<HTMLInputElement>('#sb-name')!
+  const layers = root.querySelector<HTMLElement>('[data-sb-layers]')!
+  const stage = root.querySelector<HTMLElement>('.sb-stage')!
+  const roller = root.querySelector<HTMLElement>('.sb-roller')!
+  const toast = root.querySelector<HTMLElement>('.sb-toast')!
+  const chips = [...root.querySelectorAll<HTMLButtonElement>('.sb-chip')]
+  let cur = sites[0], typed = '', auto = true
+
+  // Biggest size that keeps the name on one line.
+  const fit = (m: HTMLElement) => {
+    let px = 64
+    m.style.fontSize = px + 'px'
+    while (m.scrollWidth > m.clientWidth && px > 18) m.style.fontSize = --px + 'px'
+  }
+  const rename = () => {
+    const top = layers.lastElementChild!
+    top.querySelectorAll<HTMLElement>('[data-sb-mark]').forEach((el) => (el.textContent = typed || cur.mark))
+    const m = top.querySelector<HTMLElement>('.sb-mark')!
+    fit(m)
+    // A trade's font only downloads once a layer uses it: measure again when it lands.
+    document.fonts.ready.then(() => fit(m))
+  }
+  function pick(d: Site) {
+    cur = d
+    chips.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === d.slug)))
+    const el = layers.lastElementChild!.cloneNode(true) as HTMLElement
+    el.setAttribute('style', d.css)
+    el.classList.add('in')
+    el.querySelector<HTMLElement>('.sb-photo')!.style.backgroundImage = `url(${d.img})`
+    el.querySelector('.sb-bar span:last-child')!.textContent = d.cta.split(' ').slice(0, 2).join(' ')
+    el.querySelector('.sb-kick')!.textContent = d.kicker
+    el.querySelector('.sb-lede')!.textContent = d.lede
+    el.querySelector('.sb-go')!.textContent = d.cta
+    el.querySelector('.sb-mark')!.className = `sb-mark f-${d.font}`
+    layers.append(el)
+    rename()
+    roller.style.background = d.css.match(/--accent:([^;]+)/)![1]
+    roller.classList.remove('go'); void roller.offsetWidth; roller.classList.add('go')
+    // Without motion there is no animationend: drop the old layer straight away.
+    const drop = () => { while (layers.children.length > 1) layers.firstElementChild!.remove() }
+    matchMedia('(prefers-reduced-motion: reduce)').matches ? drop() : el.addEventListener('animationend', drop, { once: true })
+  }
+
+  let ringT = 0
+  function ring() {
+    clearTimeout(ringT)
+    toast.setAttribute('style', cur.css)
+    toast.querySelector('[data-sb-ask]')!.textContent = cur.ask
+    toast.querySelector('[data-sb-initial]')!.textContent = (typed || cur.mark).charAt(0)
+    toast.classList.add('show')
+    stage.classList.add('sb-ring')
+    ringT = setTimeout(() => { toast.classList.remove('show'); stage.classList.remove('sb-ring') }, 3600)
+  }
+  let idle = 0
+  const ringSoon = () => { clearTimeout(idle); idle = setTimeout(ring, 1100) }
+
+  // Until someone touches it, it demos itself: types a name, paints a trade, the phone rings. Made-up names.
+  const samples: [string, string][] = [['Pennine Roofing', 'roofer'], ['Spark & Sons', 'electrician'], ['Fresh Coat Co', 'decorator'], ['The Back Nine', 'golf']]
+  let timers: number[] = []
+  let io: IntersectionObserver | undefined
+  const later = (fn: () => void, ms: number) => timers.push(setTimeout(() => auto && fn(), ms))
+  // The demo's half-typed name goes; the visitor starts from an empty box.
+  function stopAuto() {
+    if (!auto) return
+    auto = false
+    timers.forEach(clearTimeout)
+    io?.disconnect()
+    input.value = typed = ''
+    rename()
+  }
+  function play(i = 0) {
+    timers = []
+    const [name, slug] = samples[i % samples.length]
+    input.value = typed = ''
+    pick(sites.find((d) => d.slug === slug) ?? sites[0])
+    ;[...name].forEach((ch, j) => later(() => { input.value += ch; typed = input.value; rename() }, 900 + j * 75))
+    const done = 900 + name.length * 75
+    later(ring, done + 500)
+    later(() => play(i + 1), done + 4200)
+  }
+
+  chips.forEach((b) => b.addEventListener('click', () => { stopAuto(); pick(sites.find((d) => d.slug === b.dataset.s)!); ringSoon() }))
+  input.addEventListener('focus', stopAuto)
+  input.addEventListener('input', () => { stopAuto(); typed = input.value.trim(); rename(); ringSoon() })
+  document.fonts.ready.then(() => fit(layers.querySelector('.sb-mark')!))
+  // Autoplay only on screen, so it never fights the visitor further down the page.
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) auto = false
+  else {
+    let started = false
+    io = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) { if (started) stopAuto(); return }
+      if (!started && auto) { started = true; play() }
+    }).observe(stage)
+  }
+</script>

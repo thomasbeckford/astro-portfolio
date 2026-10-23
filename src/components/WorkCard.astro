@@ -1,5 +1,5 @@
 ---
-// One site in the work grid: its looping scroll-through, name and a line about it.
+// One site in the work grid: its looping scroll-through with its name and a line about it in a strip under it, inside the card.
 import Vid from '@/components/kit/Vid.astro'
 import Icon from '@/components/Icon.astro'
 import type { work } from '@/work'
@@ -7,11 +7,15 @@ const { c } = Astro.props as { c: (typeof work)[number] }
 ---
 <li data-rise>
   <a href={c.href} data-preview={c.external ? undefined : c.name} {...(c.external && { target: '_blank', rel: 'noopener' })} class="group block">
-    <div class="relative aspect-[4/3] overflow-hidden rounded-2xl bg-panel ring-1 ring-fg/10">
-      <Vid src={c.src} poster={`${c.src}.jpg`} class="size-full" />
-      <span aria-hidden="true" class="absolute right-4 bottom-4 grid size-12 scale-75 place-items-center rounded-full bg-fill text-on-accent opacity-0 shadow-lg transition duration-300 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100"><Icon name="arrow" class="size-5 -rotate-45" /></span>
+    <div class="overflow-hidden rounded-2xl bg-panel ring-1 ring-fg/10">
+      <div class="relative aspect-[4/3]">
+        <Vid src={c.src} poster={`${c.src}.jpg`} class="size-full" />
+        <span aria-hidden="true" class="absolute right-4 bottom-4 grid size-12 scale-75 place-items-center rounded-full bg-fill text-on-accent opacity-0 shadow-lg transition duration-300 group-hover:scale-100 group-hover:opacity-100 group-focus-visible:scale-100 group-focus-visible:opacity-100"><Icon name="arrow" class="size-5 -rotate-45" /></span>
+      </div>
+      <div class="border-t border-fg/10 bg-fg/[0.03] px-5 py-4">
+        <p class="display text-xl uppercase transition-colors group-hover:text-accent">{c.name}</p>
+        <p class="mt-1 text-muted">{c.sub}</p>
+      </div>
     </div>
-    <p class="mt-5 text-2xl font-medium transition-colors group-hover:text-accent">{c.name}</p>
-    <p class="mt-1 text-lg text-muted">{c.sub}</p>
   </a>
 </li>
