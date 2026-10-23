@@ -223,7 +223,13 @@ const s = sites[0]
     later(() => play(i + 1), done + 4200)
   }
 
-  chips.forEach((b) => b.addEventListener('click', () => { stopAuto(); pick(sites.find((d) => d.slug === b.dataset.s)!); ringSoon() }))
+  // On a phone the preview sits under the chips, off screen: the first tap brings it into view so the change is seen.
+  let shown = false
+  chips.forEach((b) => b.addEventListener('click', () => {
+    stopAuto(); pick(sites.find((d) => d.slug === b.dataset.s)!); ringSoon()
+    if (!shown && stage.getBoundingClientRect().top > innerHeight * 0.6) stage.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' })
+    shown = true
+  }))
   input.addEventListener('focus', stopAuto)
   input.addEventListener('input', () => { stopAuto(); typed = input.value.trim(); rename(); ringSoon() })
   document.fonts.ready.then(() => fit(layers.querySelector('.sb-mark')!))

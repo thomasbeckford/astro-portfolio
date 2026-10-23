@@ -10,8 +10,6 @@ import { work, home } from '@/work'
 import WorkCard from '@/components/WorkCard.astro'
 import SiteBuilder from '@/components/SiteBuilder.astro'
 import LeadDemo from '@/components/LeadDemo.astro'
-import DashDemo from '@/components/DashDemo.astro'
-import CmsDemo from '@/components/CmsDemo.astro'
 import thomasFull from '@/assets/thombeck.png'
 
 // The quote message comes with blanks to fill, so a lead arrives with what I need to price the site.
@@ -19,6 +17,12 @@ const quote = "Hi Thomas, I'd like a quote for a website for my business.\n\nBus
 const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Website quote')}&body=${encodeURIComponent(quote)}`
 const whatsapp = wa(quote)
 const [, ...extras] = services
+// The add-ons beside the demo: anchor, how it's paid, the promise, one line on what it does.
+const addons = [
+  ['edit-it-yourself', 'Edit it yourself · one-off', 'Change it without calling me.', 'Your own editing panel: prices, words, your number. No monthly fee.'],
+  ['enquiry-alerts', 'Enquiry alerts · one-off', 'Never lose an enquiry.', 'Every WhatsApp or email tap pings your phone and goes in a list, with a nudge if it waits 3 days.'],
+  ['dashboards', 'Dashboards · on quote', 'Your numbers, on one screen.', 'Jobs, invoices and costs. Am I making money, who owes me, is next week full?'],
+]
 // What the 'Bigger jobs' section lists: title, what it is, what it's built with.
 const builds = [
   ['Web apps', 'Bookings, payments, customer logins and dashboards.', 'Next.js · TanStack Start · Stripe'],
@@ -136,53 +140,28 @@ const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%]
           </div>
         </div>
 
-        <!-- The Edit it yourself add-on in action, drawn as an animation (CmsDemo): log in, change a price, publish. -->
-        <div id="edit-it-yourself" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-32">
-          <div class="w-full"><CmsDemo /></div>
-          <div>
-            <p class="eyebrow">Edit it yourself · one-off add-on</p>
-            <h3 class:list={[display, 'mt-4 text-4xl leading-[0.95] sm:text-5xl']}>Change it <span class="text-accent">without calling me.</span></h3>
-            <p class="mt-6 text-lg text-pretty text-muted">Your website comes with its own editing panel. Change prices, words or your number whenever you like. No waiting on me, no monthly fee.</p>
-            <ol class="mt-8 divide-y divide-line border-y border-line">
-              {[['Log in', 'Your own password. No code.'], ['Change it', 'Prices, words, phone number, areas.'], ['Press Publish changes', 'Live in a minute or two.']].map(([t, x], i) => (
-                <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
-                  <span aria-hidden="true" class:list={[display, 'text-2xl leading-none text-accent']}>{i + 1}</span>
-                  <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>
-                </li>
-              ))}
-            </ol>
-            <p class="mt-4 text-sm text-pretty text-muted">Built with Payload CMS, or Sanity, Contentstack or headless WordPress if the job needs it. The animation is an example site. Estancia La Josefina runs on Payload too. Rather just message me? That is the Care plan.</p>
-          </div>
-        </div>
-
-        <!-- Enquiry alerts: the n8n flow this site runs on itself, drawn as an animation (LeadDemo). Text first here, so the
-             two demos alternate sides. -->
-        <div id="enquiry-alerts" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-32">
-          <div class="w-full lg:order-2"><LeadDemo /></div>
-          <div class="lg:order-1">
-            <p class="eyebrow">Enquiry alerts · one-off add-on</p>
-            <h3 class:list={[display, 'mt-4 text-4xl leading-[0.95] sm:text-5xl']}>Never lose <span class="text-accent">an enquiry.</span></h3>
-            <p class="mt-6 max-w-xl text-lg text-pretty text-muted">Busy on a job, the message gets buried, the customer rings someone else. With this, every time someone taps WhatsApp or email on your website, your phone pings and it goes in a list, so nothing slips.</p>
-            <ol class="mt-8 divide-y divide-line border-y border-line">
-              {[['Someone taps WhatsApp or email', 'On any page of your website.'], ['Your phone pings', 'A Telegram alert, and a row in a Google Sheet: when, how, and where they came from when the link says (Google, your ad).'], ['A nudge if it waits', 'Not marked as dealt with after 3 days? You get a reminder at 9 in the morning.']].map(([t, x], i) => (
-                <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
-                  <span aria-hidden="true" class:list={[display, 'text-2xl leading-none text-accent']}>{i + 1}</span>
-                  <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>
-                </li>
-              ))}
-            </ol>
-            <p class="mt-4 text-sm text-pretty text-muted">Built with n8n, running on my server. This website uses the same setup for its own enquiries. The animation shows an example site.</p>
-          </div>
-        </div>
         </div>
       </section>
 
-      <!-- For the bigger clients: what else gets built, with the two businesses above as the proof. -->
+      <!-- Add-ons and bigger jobs in one band: one demo (enquiry alerts, the n8n flow this site runs on itself), each add-on
+           in a line beside it, then what else gets built. Three full demos here read as the guts, not the result. -->
       <section id="apps" aria-labelledby="apps-title" class="navy-band scroll-mt-20 px-4 py-24 sm:px-8 sm:py-32">
         <div class="mx-auto max-w-[96rem]">
-        <p class="eyebrow">Bigger jobs</p>
+        <p class="eyebrow">Add-ons and bigger jobs</p>
         <h2 id="apps-title" data-split class:list={[display, 'mt-4 text-5xl leading-[0.95] sm:text-7xl lg:text-8xl']}>More than a website? <span class="text-accent">I build that too.</span></h2>
-        <div class="mt-8 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
+        <div class="mt-14 grid gap-10 lg:grid-cols-[1.4fr_1fr] lg:items-center lg:gap-24">
+          <div class="w-full"><LeadDemo /></div>
+          <ul class="divide-y divide-line border-y border-line">
+            {addons.map(([id, tag, title, text]) => (
+              <li id={id} class="scroll-mt-24 py-6">
+                <p class="eyebrow">{tag}</p>
+                <h3 class="mt-2 text-2xl font-semibold">{title}</h3>
+                <p class="mt-1 text-pretty text-muted">{text}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div class="mt-24 grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
           <p class="max-w-xl text-lg text-pretty text-muted">Bookings, payments, logins, apps in the stores, or the backend behind it. <span class="text-fg">SoyMenu is a web app I built on my own. ArquerosYa, which I co-founded, is a web app plus iOS and Android apps.</span></p>
           <a href={wa('Hi Thomas, I have a bigger project in mind.')} target="_blank" rel="noopener" class="btn-ghost min-h-14 px-7 max-sm:w-full">Tell me about it<Icon name="arrow" class="size-4" /></a>
         </div>
@@ -195,23 +174,6 @@ const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%]
             </li>
           ))}
         </ol>
-        <div id="dashboards" class="mt-24 grid scroll-mt-20 gap-10 lg:grid-cols-[1fr_1.4fr] lg:items-center lg:gap-32">
-          <div class="w-full lg:order-2"><DashDemo /></div>
-          <div class="lg:order-1">
-            <p class="eyebrow">Dashboards · on quote</p>
-            <h3 class:list={[display, 'mt-4 text-4xl leading-[0.95] sm:text-5xl']}>Your numbers, <span class="text-accent">on one screen.</span></h3>
-            <p class="mt-6 max-w-xl text-lg text-pretty text-muted">Jobs, invoices and costs, on one screen. Am I making money, who owes me, is next week full?</p>
-            <ol class="mt-8 divide-y divide-line border-y border-line">
-              {[['It reads what you already use', 'Spreadsheets, or your invoicing or booking tool.'], ['Answers, not charts', 'Plain English, on your phone.'], ['Logins for your team', 'Each person sees what they need.']].map(([t, x], i) => (
-                <li class="grid grid-cols-[1.5rem_1fr] gap-4 py-4">
-                  <span aria-hidden="true" class:list={[display, 'text-2xl leading-none text-accent']}>{i + 1}</span>
-                  <div><p class="font-semibold">{t}</p><p class="mt-1 text-pretty text-muted">{x}</p></div>
-                </li>
-              ))}
-            </ol>
-            <p class="mt-4 text-sm text-pretty text-muted">Built with TanStack Start, the way I'm building my own back-office for restaurants. The animation shows an example business.</p>
-          </div>
-        </div>
         </div>
       </section>
 
