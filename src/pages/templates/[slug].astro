@@ -32,7 +32,7 @@ import Counter from '@/components/kit/Counter.astro'
 import Prices from '@/components/kit/Prices.astro'
 import Cookies from '@/components/kit/Cookies.astro'
 import DemoPill from '@/components/kit/DemoPill.astro'
-import { site } from '@/site'
+import { site, whatsapp } from '@/site'
 import { demos, type Demo } from '@/templates'
 import Games from '@/components/demos/Games.astro'
 import Hotel from '@/components/demos/Hotel.astro'
@@ -85,8 +85,33 @@ const vars = `${theme};background:${c.bg}`
   {(d.curtain ?? d.hero.variant === 'poster') && <Curtain />}
   {d.cookies && <Cookies style={theme} title={d.cookies === true ? undefined : d.cookies} />}
   <DemoPill />
+  <!-- Arrived from the home's "Open it as a whole site" with a name typed: the example wears that name, and the pill
+       says it can be made real. Headline sizes were fitted to the example's name, so they scale by the length change. -->
+  <script is:inline define:vars={{ mark: d.mark, full: d.name, wa: whatsapp(''), trade: d.trade.toLowerCase() }}>
+    (() => {
+      let name = ''
+      try { if (new URLSearchParams(location.search).has('yours')) name = sessionStorage.getItem('tebeck-yours') || '' } catch {}
+      if (!name) return
+      // The full name goes first, or "Ironside Roofing" comes out as "<name> Roofing".
+      const esc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), re = new RegExp(`${esc(full)}|${esc(mark)}`, 'g') // case-sensitive: the decorator's "two coats" copy stays
+      const main = document.getElementById('main'), w = document.createTreeWalker(main, NodeFilter.SHOW_TEXT)
+      const fitted = new Set()
+      for (let n; (n = w.nextNode()); ) if (re.test(n.data)) {
+        re.lastIndex = 0
+        n.data = n.data.replace(re, () => name)
+        const el = n.parentElement.closest('[style*="vw)"]')
+        if (el) fitted.add(el)
+      }
+      // Only headlines that now hold the name rescale; golf's fitted "rough" keeps its size.
+      fitted.forEach((el) => el.setAttribute('style', el.getAttribute('style').replace(/, ([\d.]+)vw\)/, (_, v) => `, ${(v * mark.length / name.length).toFixed(2)}vw)`)))
+      main.querySelectorAll('[aria-label]').forEach((el) => el.setAttribute('aria-label', el.getAttribute('aria-label').replace(re, () => name)))
+      const cta = document.querySelector('#demo-pill a:last-child')
+      // Straight to WhatsApp with the name and the example already said: the chat arrives with its context.
+      if (cta) Object.assign(cta, { textContent: 'Make it real', href: wa + encodeURIComponent(`Hi Thomas, I'm ${name}. I'd like a website like your ${trade} example.`) })
+    })()
+  </script>
   <!-- Overscroll shows the page's own colour, not tebeck's paper. -->
-  <style is:inline set:html={`html,body{background:${c.bg}}`}></style>
+  <style is:inline set:html={`html,body{background:${c.bg}}#main>:first-child:not(header),#main>header:first-child+*{view-transition-name:site}`}></style>
 </BaseLayout>
 
 <script>

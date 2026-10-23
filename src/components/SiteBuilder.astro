@@ -44,6 +44,8 @@ const s = sites[0]
       {sites.map((x, i) => <button type="button" class="sb-chip" data-s={x.slug} aria-pressed={i === 0 ? 'true' : 'false'}>{x.trade}</button>)}
     </div>
     <p class="mt-3.5 text-sm text-muted">A live preview built from my example sites. Yours gets your own photos, words and colours.</p>
+    <!-- The phone grows into the whole example site, under the visitor's name (the name rides in sessionStorage, not the URL). -->
+    <a href={`/templates/${s.slug}`} data-sb-open class="sb-open">Open it as a whole site <span aria-hidden="true">→</span></a>
   </div>
   <slot name="after" />
   </div>
@@ -75,6 +77,10 @@ const s = sites[0]
   /* no ring around a bare line: focus thickens it and turns it blue instead */
   .sb-line input:focus { border-bottom-width: 0.14em; padding-bottom: 0.06em; border-color: var(--color-accent) }
   .sb-chip { min-height: 2.5rem; padding: 0 0.875rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(15 23 42 / 0.12); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: box-shadow 0.2s, background-color 0.2s, color 0.2s }
+  .sb-open { display: inline-flex; align-items: center; gap: 0.4em; min-height: 2.75rem; margin-top: 0.25rem; font-weight: 700; color: var(--color-accent); text-decoration: underline; text-underline-offset: 0.25em }
+  .sb-open:hover { text-decoration-thickness: 2px }
+  /* the phone and the example's hero share a name, so the browser morphs one into the other across the navigation */
+  .sb-phone { view-transition-name: site }
   .sb-chip:hover { box-shadow: inset 0 0 0 1.5px var(--color-fg) }
   .sb-chip[aria-pressed='true'] { background: var(--color-fg); color: #fff; box-shadow: none }
 
@@ -173,7 +179,15 @@ const s = sites[0]
     // A trade's font only downloads once a layer uses it: measure again when it lands.
     document.fonts.ready.then(() => fit(m))
   }
+  const open = root.querySelector<HTMLAnchorElement>('[data-sb-open]')!
+  open.addEventListener('click', () => {
+    // Mid-demo the name is the demo's own, not the visitor's.
+    const mine = auto ? '' : typed
+    try { mine ? sessionStorage.setItem('tebeck-yours', mine) : sessionStorage.removeItem('tebeck-yours') } catch {}
+    open.href = `/templates/${cur.slug}${mine ? '?yours' : ''}`
+  })
   function pick(d: Site) {
+    open.href = `/templates/${d.slug}` // right/middle-click open the trade on screen
     cur = d
     chips.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === d.slug)))
     const el = layers.lastElementChild!.cloneNode(true) as HTMLElement
