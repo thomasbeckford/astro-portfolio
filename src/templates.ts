@@ -387,7 +387,7 @@ export const demos: Demo[] = [
 ]
 
 
-// Not listed in demos (no page): the home's lead and dashboard animations (LeadDemo, DashDemo) still show Dave’s.
+// Not listed in demos (no page): the home's enquiry alerts animation (LeadDemo) still shows Dave’s.
 export const plumber: Demo = {
   slug: 'plumber',
   trade: 'Plumber',

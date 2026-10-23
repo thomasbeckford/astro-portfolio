@@ -198,7 +198,7 @@ const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%]
       </section>
 
       <!-- The ask on the brand blue, the stripes running into it: one giant line, one person behind it, three ways in.
-           The primary button turns white here so it shows on the blue. -->
+           WhatsApp leads (it's how trades message), email sits behind it as the quiet option. -->
       <div aria-hidden="true" data-stripes class="grid gap-2"><i class="h-2 bg-pop"></i><i class="h-4 bg-navy"></i><i class="h-3 bg-fill"></i><i class="h-6 bg-fill"></i></div>
       <section id="contact" class="accent-band relative scroll-mt-20 px-4 py-24 [--color-fill-ink:#e0e7ff] [--color-fill:#ffffff] [--color-on-accent:#1d4ed8] sm:px-8 sm:py-32">
         <h2 data-split class:list={[display, 'text-[13vw] leading-[0.9] sm:text-[11vw]']}>Yours <span class="text-navy">next.</span></h2>
@@ -208,8 +208,8 @@ const display = 'font-(family-name:--display) font-extrabold [font-stretch:116%]
             <p class="max-w-md text-lg text-pretty text-muted">Tell me what you do and where. I'll come back with a fixed price. No obligation, no deposit. <span class="text-fg">Usually replies within a day.</span></p>
           </div>
           <div class="flex flex-wrap gap-3">
-            <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 max-sm:w-full">WhatsApp me</a>
-            <a href={mailto} class="btn-primary min-h-14 px-7 max-sm:w-full">Get a free quote<Icon name="arrow" class="size-4" /></a>
+            <a href={whatsapp} target="_blank" rel="noopener" class="btn min-h-14 bg-whatsapp px-7 text-[#1f2737] shadow-xl shadow-navy/25 hover:scale-[1.03] max-sm:w-full"><svg viewBox="0 0 24 24" class="size-6" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>WhatsApp me</a>
+            <a href={mailto} class="btn-ghost min-h-14 px-7 max-sm:w-full">Or email for a quote<Icon name="arrow" class="size-4" /></a>
           </div>
         </div>
         <p class="mt-8 text-muted">
