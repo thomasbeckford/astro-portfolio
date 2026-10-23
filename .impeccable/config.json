@@ -23,6 +23,12 @@
         ],
         "createdAt": "2026-10-13T10:30:01.930Z",
         "reason": "User confirmed the faint grid background is intentional (2026-10-13)"
+      },
+      {
+        "rule": "overused-font",
+        "value": "geist",
+        "createdAt": "2026-10-23T01:01:05.809Z",
+        "reason": "Demo site font in SiteBuilder, intentional"
       }
     ]
   }

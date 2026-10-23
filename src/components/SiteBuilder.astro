@@ -80,7 +80,8 @@ const s = sites[0]
   .sb-screen { position: relative; height: 100%; border-radius: 2.7rem; overflow: hidden; background: #111 }
   .sb-notch { position: absolute; z-index: 5; top: 0.625rem; left: 50%; translate: -50% 0; width: 6rem; height: 1.75rem; border-radius: 1.25rem; background: #0b0f19 }
 
-  [data-sb-layers] :global(.sb-site) { position: absolute; inset: 0; display: flex; flex-direction: column; background: var(--bg); color: var(--fg) }
+  /* isolation: the new layer's clip-path makes it a stacking context, and without one of its own the old layer's z-indexed text painted over it mid-wipe */
+  [data-sb-layers] :global(.sb-site) { position: absolute; inset: 0; isolation: isolate; display: flex; flex-direction: column; background: var(--bg); color: var(--fg) }
   [data-sb-layers] :global(.sb-photo) { position: absolute; inset: 0 0 34% 0; background: center/cover }
   [data-sb-layers] :global(.sb-photo)::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 55%, transparent), transparent 30%, color-mix(in srgb, var(--bg) 40%, transparent) 60%, var(--bg)) }
   [data-sb-layers] :global(.sb-bar) { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; padding: 3.125rem 1rem 0; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap }
