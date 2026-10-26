@@ -385,37 +385,3 @@ export const demos: Demo[] = [
     sections: ['split', 'services', 'rail', 'steps', 'areas', 'contact'],
   },
 ]
-
-
-// Not listed in demos (no page): the home's enquiry alerts animation (LeadDemo) still shows Dave’s.
-export const plumber: Demo = {
-  slug: 'plumber',
-  trade: 'Plumber',
-  name: 'Dave’s Plumbing',
-  mark: 'Dave’s',
-  tel: '07700 900412',
-  look: ['Clean', 'Calm', 'Card stack'],
-  font: 'geist',
-  colors: { bg: '#f4f6fb', fg: '#0d1b3e', muted: '#55607a', accent: '#1d4ed8', onAccent: '#ffffff', panel: '#ffffff', alt: '#22d3ee' },
-  hero: { variant: 'scale', kicker: 'Gas Safe registered · Bromley', head: 'Leak? Boiler down? We’re on our way.', lede: 'Emergency call-outs, boilers and bathrooms across Bromley. Price agreed before we start.', cta: 'Get a fixed price' },
-  intro: { label: 'How we work', text: 'We tell you the price on the phone, turn up when we said we would, and leave the place cleaner than we found it.' },
-  services: {
-    variant: 'stack',
-    label: 'Services',
-    items: [
-      { title: 'Emergency call-outs', text: 'Burst pipe or no hot water? Day or night, seven days a week.', points: ['Price agreed on the phone', 'Water off and safe first', 'Proper fix, not a patch'] },
-      { title: 'Boilers', text: 'Repairs, yearly services and new boilers fitted, with the warranty registered for you.', points: ['Repairs and yearly services', 'New boilers fitted', 'Warranty registered for you'] },
-      { title: 'Bathrooms', text: 'From a new tap to the whole room, planned with you and finished on the date we agreed.', points: ['From one tap to the whole room', 'One team, start to finish', 'Finished on the agreed date'] },
-      { title: 'Leaks and blockages', text: 'Found, fixed and explained, so it doesn’t come back.', points: ['Found without ripping things up', 'Fixed and explained', 'Left clean and dry'] },
-    ],
-  },
-  band: 'Water where it should be.',
-  steps: [
-    { title: 'Call or message', text: 'Tell us what’s wrong. A photo helps.' },
-    { title: 'Price agreed', text: 'Before we pick up a spanner.' },
-    { title: 'Fixed, tidied', text: 'We test it with you and clean up.' },
-  ],
-  areas: ['Bromley', 'Beckenham', 'Penge', 'Sydenham', 'Catford', 'Eltham'],
-  contact: 'Need a plumber today?',
-  sections: ['intro', 'services', 'band', 'steps', 'areas', 'contact'],
-}

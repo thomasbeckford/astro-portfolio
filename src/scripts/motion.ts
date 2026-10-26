@@ -157,53 +157,6 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     // Reduced motion switched on mid-loop: gsap reverts the tweens, not the text, so put the first site back whole.
     cleanups.push(() => { show(sites[0]); label.textContent = 'Publish changes' })
   })
-  // Enquiry alerts (LeadDemo): a tap on WhatsApp, the phone pings, the row lands in the sheet, three days on the reminder
-  // comes, the row is marked Won. Same cursor and offset helper as the publish demo.
-  all('[data-leads]').forEach((st) => {
-    const q = (s: string) => st.querySelector<HTMLElement>(s)!
-    const site = q('[data-ld-site]'), sheet = q('[data-ld-sheet]'), wa = q('[data-ld-wa]'), row = q('[data-ld-row]'), status = q('[data-ld-status]')
-    const ping = q('[data-ld-note="ld-ping"]'), nudge = q('[data-ld-note="ld-nudge"]'), later = q('[data-ld-later]'), cursor = q('[data-ld-cursor]')
-    const at = (el: HTMLElement, fx = 0.5, fy = 0.5) => {
-      let x = el.offsetWidth * fx, y = el.offsetHeight * fy, e: HTMLElement | null = el
-      while (e && e !== st) { x += e.offsetLeft; y += e.offsetTop; e = e.offsetParent as HTMLElement | null }
-      return { x, y }
-    }
-    const click = () => gsap.to(cursor, { scale: 0.82, duration: 0.08, yoyo: true, repeat: 1 })
-    const mark = (won: boolean) => { status.textContent = won ? 'Won' : 'New'; gsap.set(status, { backgroundColor: won ? '#dcfce7' : '#fef3c7', color: won ? '#166534' : '#92400e' }) }
-    const tl = gsap.timeline({ paused: true, repeat: -1, repeatDelay: 0.2, repeatRefresh: true, defaults: { ease: 'power2.inOut' } })
-    tl.to([sheet, ping], { autoAlpha: 0, duration: 0.4 })
-      .call(() => mark(false))
-      .set([row, nudge, later], { autoAlpha: 0 }).set(row, { backgroundColor: 'rgba(29,78,216,0)' })
-      .set(cursor, { autoAlpha: 0, scale: 1, x: () => st.offsetWidth * 0.8, y: () => st.offsetHeight * 0.95 })
-      .to(site, { autoAlpha: 1, duration: 0.5 })
-      .to(cursor, { autoAlpha: 1, duration: 0.2 })
-      .to(cursor, { x: () => at(wa, 0.6).x, y: () => at(wa, 0.6).y, duration: 0.9 })
-      .call(click)
-      // The owner's side: the sheet with the ping dropping in, then the new row.
-      .to(cursor, { autoAlpha: 0, duration: 0.2 }, '+=0.3')
-      .to(site, { autoAlpha: 0, duration: 0.4 }, '<')
-      .to(sheet, { autoAlpha: 1, duration: 0.4 }, '<')
-      .fromTo(ping, { y: '-1.5em', autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: 'back.out(1.6)', immediateRender: false }, '+=0.2')
-      .fromTo(row, { x: '-1em', autoAlpha: 0 }, { x: 0, autoAlpha: 1, duration: 0.5, ease: 'power3.out', immediateRender: false }, '+=0.3')
-      .to(row, { backgroundColor: 'rgba(29,78,216,0.08)', duration: 0.3 }, '<')
-      .to(ping, { y: '-1.5em', autoAlpha: 0, duration: 0.4 }, '+=1.6')
-      // Nobody replied: three days on, the 9:00 reminder.
-      .fromTo(later, { scale: 0.9, autoAlpha: 0 }, { scale: 1, autoAlpha: 1, duration: 0.3, immediateRender: false }, '+=0.3')
-      .to(later, { autoAlpha: 0, duration: 0.3 }, '+=1')
-      .fromTo(nudge, { y: '-1.5em', autoAlpha: 0 }, { y: 0, autoAlpha: 1, duration: 0.5, ease: 'back.out(1.6)', immediateRender: false })
-      .to(nudge, { y: '-1.5em', autoAlpha: 0, duration: 0.4 }, '+=1.6')
-      // They call back, and mark it.
-      .set(cursor, { x: () => at(status).x + 40, y: () => at(status).y + 50 })
-      .to(cursor, { autoAlpha: 1, duration: 0.2 })
-      .to(cursor, { x: () => at(status).x, y: () => at(status).y, duration: 0.7 })
-      .call(click)
-      .call(() => mark(true), [], '+=0.1')
-      .to(row, { backgroundColor: 'rgba(22,163,74,0.08)', duration: 0.3 }, '<')
-      .to(cursor, { autoAlpha: 0, duration: 0.3 }, '+=0.4')
-      .to({}, { duration: 1.4 })
-    ScrollTrigger.create({ trigger: st, start: 'top 90%', end: 'bottom 10%', onToggle: (s) => (s.isActive ? tl.play() : tl.pause()) })
-    cleanups.push(() => { status.textContent = 'New'; status.removeAttribute('style') })
-  })
   // Collage photos drifting at their own speed.
   all('[data-speed]').forEach((el) => {
     const d = parseFloat(el.dataset.speed!) * 120
