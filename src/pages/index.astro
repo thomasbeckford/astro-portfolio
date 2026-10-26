@@ -76,15 +76,15 @@ const display = 'font-(family-name:--display) font-extrabold tracking-[-0.025em]
     <div aria-hidden="true" class="rail rail-navy"><div>{loop(trades).map((t) => <><span>{t}</span><i /></>)}</div></div>
 
     <main id="main" tabindex="-1" class="outline-none">
-      <!-- Hero: the line and the try-it card on the left, the phone wearing the visitor's name on the right (SiteBuilder). -->
+      <!-- Hero: the line across the top, then the pitch, the phone building a site and the try-it line (SiteBuilder). -->
       <section id="hero" class="relative isolate px-4 pt-28 pb-12 sm:px-8 lg:pt-32">
         <div class="mx-auto max-w-[80rem]">
           <SiteBuilder>
-            <h1 data-letters="wide" data-ring="ring." class:list={[display, 'text-[clamp(2.625rem,4.9vw,5.125rem)] leading-[0.98] text-balance']}>
+            <h1 data-letters="wide" data-ring="ring." class:list={[display, 'text-[clamp(2.5rem,4.2vw,4rem)] leading-[0.98] text-balance xl:text-center']}>
               Websites that make your phone <span class="inline-block text-accent">ring.</span>
             </h1>
-            <p class="mt-6 max-w-lg text-lg text-pretty text-muted sm:text-xl">For UK small businesses, from trades to pubs, hotels and venues. Fixed price, live in {site.turnaround}, and you pay once you’re happy.</p>
-            <div slot="after" class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
+            <p slot="aside" class="max-w-lg text-lg text-pretty text-muted sm:text-xl">For UK small businesses, from trades to pubs, hotels and venues. Fixed price, live in {site.turnaround}, and you pay once you’re happy.</p>
+            <div slot="aside" class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
               <a href={mailto} class="btn-primary min-h-14 px-7 text-base max-sm:w-full">Like it? Get a quote<Icon name="arrow" class="size-4" /></a>
               <a href={whatsapp} target="_blank" rel="noopener" class="btn-whatsapp min-h-14 px-7 text-base max-sm:w-full">WhatsApp me</a>
             </div>
@@ -263,13 +263,18 @@ const display = 'font-(family-name:--display) font-extrabold tracking-[-0.025em]
 <script>
   import '@/scripts/motion'
 
-  // The WhatsApp button bows out from the contact section, where it points, to the end of the page.
+  // The WhatsApp button bows out from the contact section, where it points, to the end of the page, and while the
+  // hero's "Open it as a whole site" is on screen (it sat right on top of it).
   const fab = document.getElementById('wa-fab')!
-  new IntersectionObserver(([e]) => {
-    const off = e.isIntersecting || e.boundingClientRect.top < 0
+  const hidden = new Set<Element>()
+  const io = new IntersectionObserver((es) => {
+    es.forEach((e) => (e.isIntersecting || (e.target.id === 'contact' && e.boundingClientRect.top < 0) ? hidden.add(e.target) : hidden.delete(e.target)))
+    const off = hidden.size > 0
     fab.toggleAttribute('data-off', off)
     fab.inert = off
-  }).observe(document.getElementById('contact')!)
+  })
+  io.observe(document.getElementById('contact')!)
+  io.observe(document.querySelector('[data-sb-open]')!)
 
   // Example sites open in the preview modal; modified clicks (new tab, etc.) still go straight there.
   const preview = document.getElementById('preview') as HTMLDialogElement

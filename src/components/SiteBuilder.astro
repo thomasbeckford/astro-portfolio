@@ -2,7 +2,8 @@
 // The home hero's "see your own website": the visitor types their business name and picks a trade, and the phone shows
 // that example site (templates.ts: its colours, font, first photo and words) wearing their name. A second after they stop,
 // the phone rings with the kind of message that trade's site brings in: an illustration, no names or numbers.
-// Until someone touches it, it demos itself. Without JS it rests on the first site; without motion it doesn't autoplay.
+// Each new site is built in 3D: the sheets lift off the phone and the next ones drop in. Until someone touches it, it demos
+// itself on a loop, like a video. Without JS it rests on the first site; without motion it doesn't autoplay or build.
 import { getImage } from 'astro:assets'
 import '@fontsource/anton'
 import '@fontsource-variable/archivo/wdth.css'
@@ -33,86 +34,106 @@ const sites = await Promise.all(
 const s = sites[0]
 ---
 
-<!-- Two columns from lg: the page's own copy (slot) and the try-it line on the left, the phone on the right. -->
-<div data-builder={JSON.stringify(sites)} class="grid items-center gap-x-12 lg:grid-cols-[1.1fr_1fr]">
-  <div>
+<!-- The headline (slot) on top, then the page's own pitch (slot "aside"), the try-it line and the phone; the grid
+     below places them per breakpoint. -->
+<div data-builder={JSON.stringify(sites)}>
   <slot />
-  <!-- The try-it is a line of the headline, not a form: the visitor types their name into the sentence itself. -->
-  <div class="sb-try">
-    <label class="sb-line"><span>Here’s one for</span><input id="sb-name" size="1" aria-label="Your business name" autocomplete="off" spellcheck="false" maxlength="28" placeholder="your business" /></label>
-    <div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Trade">
-      {sites.map((x, i) => <button type="button" class="sb-chip" data-s={x.slug} aria-pressed={i === 0 ? 'true' : 'false'}>{x.trade}</button>)}
-    </div>
-    <p class="mt-3.5 text-sm text-muted">A live preview built from my example sites. Yours gets your own photos, words and colours.</p>
-    <!-- The phone grows into the whole example site, under the visitor's name (the name rides in sessionStorage, not the URL). -->
-    <a href={`/templates/${s.slug}`} data-sb-open class="sb-open">Open it as a whole site <span aria-hidden="true">→</span></a>
-  </div>
-  <slot name="after" />
-  </div>
-
-  <div class="sb-stage" aria-hidden="true">
-    <div class="sb-stripes" data-stripes><i></i><i></i><i></i></div>
-    <div class="sb-phone"><div class="sb-screen">
-      <div class="sb-notch"></div>
-      <div class="sb-toast"><span class="sb-app" data-sb-initial></span><div class="sb-note"><p><span>Website</span><span>now</span></p><b>New enquiry</b><small data-sb-ask></small></div></div>
-      <div class="sb-roller"></div>
-      <div data-sb-layers>
-        <div class="sb-site" style={s.css}>
-          <div class="sb-photo" style={`background-image:url(${s.img})`}></div>
-          <div class="sb-bar"><span data-sb-mark>{s.mark}</span><span>{s.cta.split(' ').slice(0, 2).join(' ')}</span></div>
-          <div class="sb-body"><p class="sb-kick">{s.kicker}</p><p class:list={['sb-mark', `f-${s.font}`]} data-sb-mark>{s.mark}</p><p class="sb-lede">{s.lede}</p><span class="sb-go">{s.cta}</span><p class="sb-tel">Example site · tebeck.dev</p></div>
-        </div>
+  <div class="sb-grid">
+    <div class="sb-aside"><slot name="aside" /></div>
+    <!-- The try-it is a line of the headline, not a form: the visitor types their name into the sentence itself. -->
+    <div class="sb-try">
+      <label class="sb-line"><span>Here’s one for</span><input id="sb-name" aria-label="Your business name" autocomplete="off" spellcheck="false" maxlength="28" placeholder="your business" /></label>
+      <div class="mt-5 flex flex-wrap gap-2" role="group" aria-label="Trade">
+        {sites.map((x, i) => <button type="button" class="sb-chip" data-s={x.slug} aria-pressed={i === 0 ? 'true' : 'false'}>{x.trade}</button>)}
       </div>
-    </div></div>
+      <!-- The phone grows into the whole example site, under the visitor's name (the name rides in sessionStorage, not the URL). -->
+      <a href={`/templates/${s.slug}`} data-sb-open class="sb-open">Open it as a whole site <span aria-hidden="true">→</span></a>
+    </div>
+
+    <div class="sb-stage" aria-hidden="true">
+      <div class="sb-stripes" data-stripes><i></i><i></i><i></i></div>
+      <!-- The example site is four sheets (photo, words, button, nav bar), each the size of the screen with its part in place.
+           .sb-apart lifts them off the tilted phone like an exploded drawing; dropping it builds the site. -->
+      <div class="sb-phone"><div class="sb-screen">
+        <div class="sb-site" style={s.css}>
+          <div class="sb-sheet sb-s1"><div class="sb-photo" style={`background-image:url(${s.img})`}></div></div>
+          <div class="sb-sheet sb-s2"><p class="sb-kick">{s.kicker}</p><p class:list={['sb-mark', `f-${s.font}`]} data-sb-mark>{s.mark}</p><p class="sb-lede">{s.lede}</p></div>
+          <div class="sb-sheet sb-s3"><span class="sb-go">{s.cta}</span><p class="sb-tel">Example site · tebeck.dev</p></div>
+          <div class="sb-sheet sb-s4"><div class="sb-bar"><span data-sb-mark>{s.mark}</span><span>{s.cta.split(' ').slice(0, 2).join(' ')}</span></div></div>
+          <!-- Apart, each sheet gets a callout like an exploded drawing: what the visitor gets, part by part. -->
+          {[['Menu', 4, '7%'], ['Photos', 1, '22%'], ['Your name', 3, '72%'], ['Button', 2, '88%']].map(([t, i, y]) => <span class="sb-tag" style={`--i:${i};--y:${y}`}><b>{t}</b></span>)}
+        </div>
+        <div class="sb-notch"></div>
+        <div class="sb-toast"><span class="sb-app" data-sb-initial></span><div class="sb-note"><p><span>Website</span><span>now</span></p><b>New enquiry</b><small data-sb-ask></small></div></div>
+      </div></div>
+    </div>
   </div>
 </div>
 
 <style>
-  .sb-try { margin-top: 2.5rem; max-width: 40rem }
+  /* Phones: pitch, try-it, phone. lg: pitch over try-it beside the phone. xl: pitch | phone | try-it under a centred headline. */
+  .sb-grid { display: grid; gap: 2.5rem; margin-top: 2rem; grid-template-areas: 'aside' 'try' 'stage' }
+  .sb-aside { grid-area: aside }
+  .sb-try { grid-area: try; max-width: 40rem }
+  .sb-stage { grid-area: stage }
+  @media (min-width: 1024px) { .sb-grid { grid-template-columns: minmax(0, 1fr) 28rem; grid-template-rows: 1fr auto auto 1fr; grid-template-areas: '. stage' 'aside stage' 'try stage' '. stage'; column-gap: 3rem; row-gap: 3rem } }
+  @media (min-width: 1280px) {
+    .sb-grid { grid-template-columns: minmax(0, 1fr) 28rem minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: 'aside stage try'; align-items: center; margin-top: 0.5rem }
+  }
   /* Same display face as the h1, a size down: the grey lead-in and what they type on an underline, wrapping as one sentence. */
-  .sb-line { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.3em; font-family: var(--display); font-weight: 800; letter-spacing: -0.025em; font-size: clamp(1.75rem, 3.2vw, 3rem); line-height: 1.1 }
+  .sb-line { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.3em; font-family: var(--display); font-weight: 800; letter-spacing: -0.025em; font-size: clamp(1.5rem, 2.4vw, 2.125rem); line-height: 1.1 }
   .sb-line span { color: var(--color-muted) }
   .sb-line input { flex: 1 1 9ch; min-width: 0; padding: 0 0 0.12em; border: 0; border-bottom: 0.08em solid var(--color-fg); border-radius: 0; background: none; outline: none; font: inherit; letter-spacing: inherit; color: var(--color-fg); transition: border-color 0.2s }
+  @supports (field-sizing: content) { .sb-line input { field-sizing: content; flex: 0 1 auto; min-width: 4ch; max-width: 100% } }
   .sb-line input::placeholder { color: rgb(15 23 42 / 0.55) }
   /* no ring around a bare line: focus thickens it and turns it blue instead */
   .sb-line input:focus { border-bottom-width: 0.14em; padding-bottom: 0.06em; border-color: var(--color-accent) }
-  .sb-chip { min-height: 2.5rem; padding: 0 0.875rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(15 23 42 / 0.12); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: box-shadow 0.2s, background-color 0.2s, color 0.2s }
+  .sb-chip { min-height: 2.75rem; padding: 0 0.875rem; border-radius: 999px; box-shadow: inset 0 0 0 1.5px rgb(15 23 42 / 0.12); font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: box-shadow 0.2s, background-color 0.2s, color 0.2s }
   .sb-open { display: inline-flex; align-items: center; gap: 0.4em; min-height: 2.75rem; margin-top: 0.25rem; font-weight: 700; color: var(--color-accent); text-decoration: underline; text-underline-offset: 0.25em }
   .sb-open:hover { text-decoration-thickness: 2px }
-  /* the phone and the example's hero share a name, so the browser morphs one into the other across the navigation */
-  .sb-phone { view-transition-name: site }
   .sb-chip:hover { box-shadow: inset 0 0 0 1.5px var(--color-fg) }
   .sb-chip[aria-pressed='true'] { background: var(--color-fg); color: #fff; box-shadow: none }
 
-  .sb-stage { position: relative; display: grid; place-items: center; height: 47.5rem }
+  /* 3D all the way down from the stage to the sheets: overflow, isolation, filter or clip-path on any of them would flatten it. */
+  .sb-stage { position: relative; pointer-events: none; display: grid; place-items: center; height: 47.5rem; perspective: 2400px; --lift: 2.75rem; --tilt: 0.7 }
+  .sb-phone, .sb-screen, .sb-site { transform-style: preserve-3d }
   .sb-phone { position: relative; width: 21.25rem; height: 44.5rem; border-radius: 3.375rem; background: #0b0f19; padding: 0.75rem; box-shadow: 0 50px 90px -40px rgb(15 23 42 / 0.6), inset 0 0 0 2px #2a3242 }
-  .sb-screen { position: relative; height: 100%; border-radius: 2.7rem; overflow: hidden; background: #111 }
+  /* Two back plates a few pixels under the face give the phone a body when it lies back (flat, it read paper-thin). */
+  .sb-phone::before, .sb-phone::after { content: ''; position: absolute; inset: 0; border-radius: inherit; background: #262d3b; transform: translateZ(-0.3rem) }
+  .sb-phone::after { background: #171c27; transform: translateZ(-0.6rem) }
+  .sb-screen { position: relative; height: 100%; border-radius: 2.7rem; background: #111 }
   /* a few degrees off straight, held out to the visitor */
   @media (min-width: 1024px) { .sb-phone { rotate: 3deg } }
-  .sb-notch { position: absolute; z-index: 5; top: 0.625rem; left: 50%; translate: -50% 0; width: 6rem; height: 1.75rem; border-radius: 1.25rem; background: #0b0f19 }
+  .sb-notch { position: absolute; top: 0.625rem; left: 50%; translate: -50% 0; width: 6rem; height: 1.75rem; border-radius: 1.25rem; background: #0b0f19 }
 
-  /* isolation: the new layer's clip-path makes it a stacking context, and without one of its own the old layer's z-indexed text painted over it mid-wipe */
-  [data-sb-layers] :global(.sb-site) { position: absolute; inset: 0; isolation: isolate; display: flex; flex-direction: column; background: var(--bg); color: var(--fg) }
-  [data-sb-layers] :global(.sb-photo) { position: absolute; inset: 0 0 34% 0; background: center/cover }
-  [data-sb-layers] :global(.sb-photo)::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 55%, transparent), transparent 30%, color-mix(in srgb, var(--bg) 40%, transparent) 60%, var(--bg)) }
-  [data-sb-layers] :global(.sb-bar) { position: relative; z-index: 2; display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; padding: 3.125rem 1rem 0; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap }
-  [data-sb-layers] :global(.sb-bar span:first-child) { overflow: hidden; text-overflow: ellipsis }
-  [data-sb-layers] :global(.sb-bar span:last-child) { background: var(--accent); color: var(--on); padding: 0.375rem 0.625rem; border-radius: 999px; letter-spacing: 0; text-transform: none }
-  [data-sb-layers] :global(.sb-body) { position: relative; z-index: 2; margin-top: auto; padding: 0 1.125rem 1.625rem }
-  [data-sb-layers] :global(.sb-kick) { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent) }
-  [data-sb-layers] :global(.sb-mark) { margin-top: 0.375rem; line-height: 0.95; white-space: nowrap; overflow: hidden; font-size: 64px }
-  [data-sb-layers] :global(.sb-lede) { margin-top: 0.75rem; font-size: 13px; line-height: 1.45; opacity: 0.85; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden }
-  [data-sb-layers] :global(.sb-go) { margin-top: 1rem; display: inline-flex; padding: 0.75rem 1.125rem; border-radius: 999px; background: var(--accent); color: var(--on); font-size: 13px; font-weight: 700 }
-  [data-sb-layers] :global(.sb-tel) { margin-top: 0.75rem; font-size: 11px; opacity: 0.6 }
-  [data-sb-layers] :global(.f-archivo) { font-family: 'Archivo Variable'; font-stretch: 125%; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em }
-  [data-sb-layers] :global(.f-anton) { font-family: 'Anton'; text-transform: uppercase }
-  [data-sb-layers] :global(.f-geist) { font-family: 'Geist Variable'; font-weight: 700; letter-spacing: -0.04em }
-  [data-sb-layers] :global(.f-oswald) { font-family: 'Oswald Variable'; font-weight: 700; text-transform: uppercase }
-  [data-sb-layers] :global(.f-shoulders) { font-family: 'Big Shoulders Display Variable'; font-weight: 900; text-transform: uppercase }
+  .sb-site { position: absolute; inset: 0; color: var(--fg) }
+  /* Every sheet is the whole screen with its part in place, so landing them flat builds the page exactly. */
+  .sb-sheet { position: absolute; inset: 0; border-radius: 2.7rem; overflow: hidden }
+  .sb-s1 { --i: 1; background: var(--bg) }
+  .sb-s2 { --i: 3; isolation: isolate; display: flex; flex-direction: column; justify-content: flex-end; padding: 0 1.125rem 7.125rem }
+  .sb-s3 { --i: 2; display: flex; flex-direction: column; justify-content: flex-end; align-items: flex-start; padding: 0 1.125rem 1.625rem }
+  .sb-s4 { --i: 4 }
+  .sb-photo { position: absolute; inset: 0 0 34% 0; background: center/cover }
+  .sb-photo::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 55%, transparent), transparent 30%, color-mix(in srgb, var(--bg) 40%, transparent) 60%, var(--bg)) }
+  .sb-bar { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; padding: 3.125rem 1rem 0; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; white-space: nowrap }
+  .sb-bar span:first-child { overflow: hidden; text-overflow: ellipsis }
+  .sb-bar span:last-child { flex: none; background: var(--accent); color: var(--on); padding: 0.375rem 0.625rem; border-radius: 999px; letter-spacing: 0; text-transform: none }
+  .sb-kick { font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent) }
+  .sb-mark { margin-top: 0.375rem; line-height: 0.95; white-space: nowrap; overflow: hidden; font-size: 48px }
+  .sb-lede { margin-top: 0.75rem; font-size: 13px; line-height: 1.45; opacity: 0.85; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden }
+  .sb-go { display: inline-flex; padding: 0.75rem 1.125rem; border-radius: 999px; background: var(--accent); color: var(--on); font-size: 13px; font-weight: 700 }
+  .sb-tel { margin-top: 0.75rem; font-size: 11px; opacity: 0.6 }
+  .f-archivo { font-family: 'Archivo Variable'; font-stretch: 125%; font-weight: 900; text-transform: uppercase; letter-spacing: -0.02em }
+  .f-anton { font-family: 'Anton'; text-transform: uppercase }
+  .f-geist { font-family: 'Geist Variable'; font-weight: 700; letter-spacing: -0.04em }
+  .f-oswald { font-family: 'Oswald Variable'; font-weight: 700; text-transform: uppercase }
+  .f-shoulders { font-family: 'Big Shoulders Display Variable'; font-weight: 900; text-transform: uppercase }
 
-  .sb-roller { position: absolute; z-index: 4; left: -10%; right: -10%; top: -1rem; height: 1rem; border-radius: 0.5rem; opacity: 0; box-shadow: 0 6px 20px rgb(0 0 0 / 0.35) }
+  /* A callout lying on its sheet's plane, a leader line touching the sheet's edge. Hidden unless apart. */
+  .sb-tag { position: absolute; left: 100%; top: var(--y); translate: 0 -50%; display: flex; align-items: center; gap: 0.5rem; white-space: nowrap; font: 700 1.25rem/1 var(--display); letter-spacing: -0.01em; color: var(--color-fg); opacity: 0 }
+  .sb-tag::before { content: ''; width: 2.5rem; height: 7px; background: radial-gradient(circle at 3.5px 50%, var(--color-accent) 3px, transparent 3.5px), linear-gradient(var(--color-accent), var(--color-accent)) center / 100% 2px no-repeat }
   /* An iOS-style banner: frosted, the site's own icon (its accent, the name's first letter), app name and time on top. */
-  .sb-toast { position: absolute; z-index: 6; top: 2.75rem; left: 0.5rem; right: 0.5rem; display: flex; gap: 0.625rem; align-items: center; padding: 0.625rem 0.75rem 0.6875rem; border-radius: 1.375rem; background: rgb(246 246 248 / 0.84); backdrop-filter: blur(20px) saturate(1.8); color: #111; box-shadow: 0 10px 28px -6px rgb(0 0 0 / 0.3); opacity: 0; translate: 0 -1.5rem; scale: 0.96; transition: opacity 0.3s, translate 0.45s cubic-bezier(0.4, 0, 1, 1), scale 0.45s cubic-bezier(0.4, 0, 1, 1) }
+  .sb-toast { position: absolute; top: 2.75rem; left: 0.5rem; right: 0.5rem; display: flex; gap: 0.625rem; align-items: center; padding: 0.625rem 0.75rem 0.6875rem; border-radius: 1.375rem; background: rgb(246 246 248 / 0.84); backdrop-filter: blur(20px) saturate(1.8); color: #111; box-shadow: 0 10px 28px -6px rgb(0 0 0 / 0.3); opacity: 0; translate: 0 -1.5rem; scale: 0.96; transition: opacity 0.3s, translate 0.45s cubic-bezier(0.4, 0, 1, 1), scale 0.45s cubic-bezier(0.4, 0, 1, 1) }
   .sb-toast:global(.show) { opacity: 1; translate: 0 0; scale: 1; transition: opacity 0.35s, translate 0.7s cubic-bezier(0.16, 1, 0.3, 1), scale 0.7s cubic-bezier(0.16, 1, 0.3, 1) }
   .sb-app { flex: none; display: grid; place-items: center; width: 2.375rem; height: 2.375rem; border-radius: 0.6875rem; background: var(--accent); color: var(--on); font: 800 1.0625rem/1 'Archivo Variable', sans-serif; text-transform: uppercase }
   .sb-note { min-width: 0; flex: 1; line-height: 1.3 }
@@ -121,20 +142,51 @@ const s = sites[0]
   .sb-note small { display: block; font-size: 13px; color: rgb(60 60 67 / 0.9); white-space: nowrap; overflow: hidden; text-overflow: ellipsis }
 
   @media (prefers-reduced-motion: no-preference) {
-    [data-sb-layers] :global(.sb-site.in) { animation: sb-paint 0.7s cubic-bezier(0.7, 0, 0.2, 1) both }
-    .sb-roller:global(.go) { animation: sb-roll 0.7s cubic-bezier(0.7, 0, 0.2, 1) both }
     .sb-chip:active { scale: 0.96 }
     .sb-chip { transition-property: box-shadow, background-color, color, scale }
     /* A message arrives: the phone lifts a touch while the banner is up, no shaking. */
-    .sb-phone { transition: translate 0.9s cubic-bezier(0.16, 1, 0.3, 1) }
     .sb-stage:global(.sb-ring) .sb-phone { translate: 0 -0.5rem }
+
+    /* The build, like a looping video (no scroll pinning: it never holds back someone scrolling past).
+       Each loop builds the next site, it never takes a finished one apart: the phone lies back as the old sheets rise out
+       of frame (swap), the new site's four sheets come down into the air over the empty phone, labelled (apart), hold,
+       then settle onto it bottom one first and the phone stands up again (rest). */
+    /* standing up it swings a hair past upright and settles, like something with weight */
+    .sb-phone { transition: transform 1.2s cubic-bezier(0.6, 0, 0.25, 1.12) 0.25s, translate 0.9s cubic-bezier(0.16, 1, 0.3, 1), scale 1.2s cubic-bezier(0.65, 0, 0.35, 1) 0.25s, rotate 1.2s cubic-bezier(0.65, 0, 0.35, 1) 0.25s }
+    .sb-sheet, .sb-tag { transition: transform 0.95s cubic-bezier(0.16, 1, 0.3, 1) calc(var(--i) * 0.13s), opacity 0.3s calc(var(--i) * 0.13s), background-color 0.5s calc(var(--i) * 0.13s + 0.55s), box-shadow 0.5s calc(var(--i) * 0.13s + 0.55s) }
+    /* never a dead hold: while the parts are in the air the camera keeps creeping in and round */
+    .sb-phone:global(.sb-apart) { transform: rotateX(52deg) rotateZ(-28deg) scale(var(--tilt)); scale: 1.05; rotate: 7deg; transition-duration: 0.75s, 0.9s, 3.4s, 3.4s; transition-delay: 0s; transition-timing-function: cubic-bezier(0.45, 0, 0.2, 1), ease, cubic-bezier(0.3, 0, 0.2, 1), cubic-bezier(0.3, 0, 0.2, 1) }
+    /* on a phone screen the callouts need the room on the right, and the camera move stays small; lying back the phone
+       is half as tall, so it drops to the middle of the stage instead of leaving the bottom empty */
+    @media (max-width: 1023px) { .sb-phone:global(.sb-apart) { translate: -1.25rem 4.5rem; scale: 0.97; rotate: 3deg } }
+    :global(.sb-apart) :is(.sb-sheet, .sb-tag) { transform: translateZ(calc(var(--i) * var(--lift))); transition-duration: 0.75s, 0.3s, 0.3s, 0.3s; transition-delay: calc((4 - var(--i)) * 0.05s) }
+    /* the panes above the photo go clear, a hairline each: every part floats crisp over the one below */
+    :global(.sb-apart) .sb-sheet:not(.sb-s1) { box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--color-fg) 40%, transparent) }
+    /* the menu's name is the site's light text: on its own pane over the white page it goes page ink */
+    :global(.sb-apart) .sb-bar span:first-child { color: var(--color-fg); transition: color 0.3s 0.3s }
+    /* the name and its lines carry their own strip of the site's background: in the air, light text half over the photo
+       and half over white read as a ghost (flat it matches the photo's fade, so the built page doesn't change) */
+    .sb-s2::before { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(transparent 38%, var(--bg) 52% 84%, transparent 94%); opacity: 0; transition: opacity 0.3s 0.9s }
+    :global(.sb-apart) .sb-s2::before { opacity: 1; transition-delay: 0s }
+    /* callouts ride with their sheet but turn back to face the camera (the phone's tilt undone), so they read straight */
+    .sb-tag { transform-origin: 0 50%; transform: translateZ(0) rotateZ(28deg) rotateX(-52deg) }
+    :global(.sb-apart) .sb-tag { opacity: 1; transform: translateZ(calc(var(--i) * var(--lift))) rotateZ(28deg) rotateX(-52deg); transition: transform 0.75s cubic-bezier(0.45, 0, 0.2, 1) calc((4 - var(--i)) * 0.05s), opacity 0.2s }
+    /* a callout is drawn, not faded: the leader runs out from the sheet, then its word slides in after it */
+    .sb-tag::before { scale: 0 1; transform-origin: left; transition: scale 0.25s cubic-bezier(0.4, 0, 1, 1) }
+    .sb-tag b { opacity: 0; translate: -0.5rem 0; transition: opacity 0.2s, translate 0.2s }
+    :global(.sb-apart) .sb-tag::before { scale: 1; transition: scale 0.45s cubic-bezier(0.16, 1, 0.3, 1) calc(0.55s + (4 - var(--i)) * 0.09s) }
+    :global(.sb-apart) .sb-tag b { opacity: 1; translate: 0; transition: opacity 0.35s calc(0.75s + (4 - var(--i)) * 0.09s), translate 0.5s cubic-bezier(0.16, 1, 0.3, 1) calc(0.75s + (4 - var(--i)) * 0.09s) }
+    /* the demo's name gets a caret while it types (a box-shadow, so it takes no room from the fitted name) */
+    :global(.sb-typing) .sb-mark::after { content: ''; display: inline-block; width: 0; height: 0.8em; vertical-align: -0.04em; box-shadow: 0.07em 0 0 0.035em currentColor; animation: sb-caret 1s steps(1) infinite }
+    @keyframes sb-caret { 50% { opacity: 0 } }
+    /* the photo sheet casts onto the phone too, so the gap under it reads as height */
+    :global(.sb-apart) .sb-s1 { box-shadow: 0 1.5rem 2rem -1rem rgb(15 23 42 / 0.5) }
+    :global(.sb-swap) :is(.sb-sheet, .sb-tag) { transform: translateZ(calc(var(--i) * var(--lift) + 14rem)); opacity: 0; transition: transform 0.35s cubic-bezier(0.5, 0, 0.75, 0) calc((4 - var(--i)) * 0.03s), opacity 0.3s calc((4 - var(--i)) * 0.03s) }
+    :global(.sb-swap) .sb-tag { transform: translateZ(calc(var(--i) * var(--lift) + 14rem)) rotateZ(28deg) rotateX(-52deg) }
   }
   @media (prefers-reduced-motion: reduce) {
     .sb-toast, .sb-toast:global(.show) { translate: 0; scale: 1; transition: opacity 0.3s }
   }
-  /* a new trade paints over the old one, top to bottom, behind a roller in its accent colour */
-  @keyframes sb-paint { from { clip-path: inset(0 0 100% 0) } to { clip-path: inset(0) } }
-  @keyframes sb-roll { 0% { top: -1rem; opacity: 1 } 95% { opacity: 1 } 100% { top: 100%; opacity: 0 } }
 
   /* Club stripes coming out from behind the phone (a stub in the air to its left read as broken): three thin bands, blue, mint, blue (five heavy ones plus a sticker read as too much, Thomas). */
   .sb-stripes { position: absolute; inset-inline: 30% -50vw; top: 58%; display: grid; gap: 0.375rem }
@@ -142,10 +194,18 @@ const s = sites[0]
   .sb-stripes i:nth-child(2) { height: 0.375rem; background: var(--color-pop) }
 
   @media (max-width: 1023px) {
-    .sb-stage { height: 37.5rem; margin-top: 1rem }
+    .sb-stage { height: 37.5rem; --lift: 2.25rem; --tilt: 0.66 }
+    .sb-tag { font-size: 1.0625rem }
+    .sb-tag::before { width: 1.5rem }
     .sb-stripes { inset-inline: -50vw }
     .sb-phone { width: 17.5rem; height: 36.625rem }
   }
+  /* laptops: a smaller phone so the hero fits the screen; three columns: the stripes pass under the text, not through the chips */
+  @media (min-width: 1024px) {
+    .sb-stage { height: 41rem }
+    .sb-phone { width: 18.75rem; height: 39.25rem }
+  }
+  @media (min-width: 1280px) { .sb-stripes { top: 84% } }
 </style>
 
 <script>
@@ -153,17 +213,19 @@ const s = sites[0]
   const root = document.querySelector<HTMLElement>('[data-builder]')!
   const sites: Site[] = JSON.parse(root.dataset.builder!)
   const input = root.querySelector<HTMLInputElement>('#sb-name')!
-  const layers = root.querySelector<HTMLElement>('[data-sb-layers]')!
   const stage = root.querySelector<HTMLElement>('.sb-stage')!
-  const roller = root.querySelector<HTMLElement>('.sb-roller')!
+  const phone = root.querySelector<HTMLElement>('.sb-phone')!
+  const site = root.querySelector<HTMLElement>('.sb-site')!
+  const mark = site.querySelector<HTMLElement>('.sb-mark')!
   const toast = root.querySelector<HTMLElement>('.sb-toast')!
   const chips = [...root.querySelectorAll<HTMLButtonElement>('.sb-chip')]
-  let cur = sites[0], typed = '', auto = true
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches
+  let cur = sites[0], typed = '', auto = !still
 
   // Biggest size that keeps the name on one line; past 34px a long typed name wraps between words instead, and keeps
   // shrinking only while its longest word still won't fit (Thomas, 'testing enquiry esto es una' got cut).
   const fit = (m: HTMLElement) => {
-    let px = 64
+    let px = 48
     m.style.whiteSpace = ''
     m.style.fontSize = px + 'px'
     while (m.scrollWidth > m.clientWidth && px > 34) m.style.fontSize = --px + 'px'
@@ -172,40 +234,51 @@ const s = sites[0]
     while (m.scrollWidth > m.clientWidth && px > 18) m.style.fontSize = --px + 'px'
   }
   const rename = () => {
-    const top = layers.lastElementChild!
-    top.querySelectorAll<HTMLElement>('[data-sb-mark]').forEach((el) => (el.textContent = typed || cur.mark))
-    const m = top.querySelector<HTMLElement>('.sb-mark')!
-    fit(m)
-    // A trade's font only downloads once a layer uses it: measure again when it lands.
-    document.fonts.ready.then(() => fit(m))
+    site.querySelectorAll<HTMLElement>('[data-sb-mark]').forEach((el) => (el.textContent = typed || (auto ? '\u00a0' : cur.mark)))
+    fit(mark)
+    // A trade's font only downloads once the page uses it: measure again when it lands.
+    document.fonts.ready.then(() => fit(mark))
   }
   const open = root.querySelector<HTMLAnchorElement>('[data-sb-open]')!
   open.addEventListener('click', () => {
+    // Mid-build the phone still shows the last site: finish it now so the morph starts from the one being opened.
+    if (build.length) { build.forEach(clearTimeout); build = []; paint(cur); phone.classList.remove('sb-swap', 'sb-apart') }
     // Mid-demo the name is the demo's own, not the visitor's.
     const mine = auto ? '' : typed
     try { mine ? sessionStorage.setItem('tebeck-yours', mine) : sessionStorage.removeItem('tebeck-yours') } catch {}
     open.href = `/templates/${cur.slug}${mine ? '?yours' : ''}`
+    // The phone and the example's hero share a name, so the browser morphs one into the other. Named only now: a
+    // view-transition-name flattens the phone's 3D.
+    phone.style.viewTransitionName = 'site'
   })
-  function pick(d: Site) {
+  addEventListener('pageshow', () => (phone.style.viewTransitionName = ''))
+  const paint = (d: Site) => {
+    site.setAttribute('style', d.css)
+    site.querySelector<HTMLElement>('.sb-photo')!.style.backgroundImage = `url(${d.img})`
+    site.querySelector('.sb-bar span:last-child')!.textContent = d.cta.split(' ').slice(0, 2).join(' ')
+    site.querySelector('.sb-kick')!.textContent = d.kicker
+    site.querySelector('.sb-lede')!.textContent = d.lede
+    site.querySelector('.sb-go')!.textContent = d.cta
+    mark.className = `sb-mark f-${d.font}`
+    rename()
+  }
+  // Clear the phone, bring the next site's parts in labelled, hold, put them together (the CSS times each step).
+  let build: number[] = [], buildEnd = 0
+  // Autoplay holds the parts in the air long enough to read the callouts; a tap gets on with it.
+  const built = (hold = 500) => (still ? 0 : hold + 2700)
+  function pick(d: Site, hold = 500) {
     open.href = `/templates/${d.slug}` // right/middle-click open the trade on screen
     cur = d
     chips.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === d.slug)))
-    const el = layers.lastElementChild!.cloneNode(true) as HTMLElement
-    el.setAttribute('style', d.css)
-    el.classList.add('in')
-    el.querySelector<HTMLElement>('.sb-photo')!.style.backgroundImage = `url(${d.img})`
-    el.querySelector('.sb-bar span:last-child')!.textContent = d.cta.split(' ').slice(0, 2).join(' ')
-    el.querySelector('.sb-kick')!.textContent = d.kicker
-    el.querySelector('.sb-lede')!.textContent = d.lede
-    el.querySelector('.sb-go')!.textContent = d.cta
-    el.querySelector('.sb-mark')!.className = `sb-mark f-${d.font}`
-    layers.append(el)
-    rename()
-    roller.style.background = d.css.match(/--accent:([^;]+)/)![1]
-    roller.classList.remove('go'); void roller.offsetWidth; roller.classList.add('go')
-    // Without motion there is no animationend: drop the old layer straight away.
-    const drop = () => { while (layers.children.length > 1) layers.firstElementChild!.remove() }
-    matchMedia('(prefers-reduced-motion: reduce)').matches ? drop() : el.addEventListener('animationend', drop, { once: true })
+    clearTimeout(ringT); toast.classList.remove('show'); stage.classList.remove('sb-ring')
+    build.forEach(clearTimeout)
+    if (still) return paint(d)
+    buildEnd = Date.now() + built(hold)
+    phone.classList.add('sb-apart', 'sb-swap')
+    build = [
+      setTimeout(() => { paint(d); phone.classList.remove('sb-swap') }, 400),
+      setTimeout(() => { build = []; phone.classList.remove('sb-apart') }, 1300 + hold),
+    ]
   }
 
   let ringT = 0
@@ -219,9 +292,11 @@ const s = sites[0]
     ringT = setTimeout(() => { toast.classList.remove('show'); stage.classList.remove('sb-ring') }, 3600)
   }
   let idle = 0
-  const ringSoon = () => { clearTimeout(idle); idle = setTimeout(ring, 1100) }
+  // never while the phone is still apart: the banner would land under the raised sheets
+  const ringSoon = (ms = 1100) => { clearTimeout(idle); idle = setTimeout(ring, Math.max(ms, buildEnd - Date.now() + 300)) }
 
-  // Until someone touches it, it demos itself: types a name, paints a trade, the phone rings. Made-up names.
+  // Until someone touches it, it demos itself: builds a trade's site with a name on it, the phone rings. Made-up names.
+  // The demo's sites carry no name until it's typed (a stock name swapped for the typed one read as a glitch).
   const samples: [string, string][] = [['Pennine Roofing', 'roofer'], ['Spark & Sons', 'electrician'], ['Fresh Coat Co', 'decorator'], ['The Back Nine', 'golf']]
   let timers: number[] = []
   let io: IntersectionObserver | undefined
@@ -231,6 +306,7 @@ const s = sites[0]
     if (!auto) return
     auto = false
     timers.forEach(clearTimeout)
+    phone.classList.remove('sb-typing')
     io?.disconnect()
     input.value = typed = ''
     rename()
@@ -239,30 +315,33 @@ const s = sites[0]
     timers = []
     const [name, slug] = samples[i % samples.length]
     input.value = typed = ''
-    pick(sites.find((d) => d.slug === slug) ?? sites[0])
-    ;[...name].forEach((ch, j) => later(() => { input.value += ch; typed = input.value; rename() }, 900 + j * 75))
-    const done = 900 + name.length * 75
-    later(ring, done + 500)
-    later(() => play(i + 1), done + 4200)
+    pick(sites.find((d) => d.slug === slug) ?? sites[0], 1600)
+    // the name types itself onto its sheet while the parts are still in the air, under its "Your name" callout
+    later(() => phone.classList.add('sb-typing'), 1200)
+    ;[...name].forEach((ch, j) => later(() => { input.value += ch; typed = input.value; rename() }, 1400 + j * 75))
+    later(() => phone.classList.remove('sb-typing'), 1400 + name.length * 75 + 500)
+    later(ring, built(1600) + 400)
+    later(() => play(i + 1), built(1600) + 4500)
   }
 
   // On a phone the preview sits under the chips, off screen: the first tap brings it into view so the change is seen.
   let shown = false
   chips.forEach((b) => b.addEventListener('click', () => {
-    stopAuto(); pick(sites.find((d) => d.slug === b.dataset.s)!); ringSoon()
-    if (!shown && stage.getBoundingClientRect().top > innerHeight * 0.6) stage.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' })
+    const d = sites.find((x) => x.slug === b.dataset.s)!
+    stopAuto(); if (d !== cur) pick(d); ringSoon(600)
+    if (!shown && stage.getBoundingClientRect().top > innerHeight * 0.6) stage.scrollIntoView({ behavior: still ? 'auto' : 'smooth', block: 'center' })
     shown = true
   }))
   input.addEventListener('focus', stopAuto)
   input.addEventListener('input', () => { stopAuto(); typed = input.value.trim(); rename(); ringSoon() })
-  document.fonts.ready.then(() => fit(layers.querySelector('.sb-mark')!))
+  document.fonts.ready.then(() => fit(mark))
   // Autoplay only on screen, so it never fights the visitor further down the page.
-  if (matchMedia('(prefers-reduced-motion: reduce)').matches) auto = false
-  else {
+  if (auto) {
     let started = false
     io = new IntersectionObserver(([e]) => {
       if (!e.isIntersecting) { if (started) stopAuto(); return }
       if (!started && auto) { started = true; play() }
-    }).observe(stage)
+    })
+    io.observe(stage)
   }
 </script>
