@@ -18,7 +18,7 @@ export const site = {
 export const liveWork = [
   { href: 'https://www.estancialajosefina.com/en', name: 'Estancia La Josefina', sub: 'Live client site · Lodge in Patagonia · Payload CMS', src: '/work/josefina-scroll' },
   { href: 'https://arquerosya.com.ar/', name: 'ArquerosYa', sub: 'Co-founder · Hire a goalkeeper, Argentina', src: '/work/arquerosya-scroll' },
-  { href: 'https://soymenu.com.ar/', name: 'SoyMenu', sub: 'My own business · QR menus for restaurants, Argentina', src: '/work/soymenu-scroll' },
+  { href: 'https://soymenu.com.ar/', name: 'SoyMenu', sub: 'My own business since 2022 · QR menus, 40+ paying restaurants, Argentina', src: '/work/soymenu-scroll' },
 ]
 
 export const whatsapp = (text: string) => `https://wa.me/${site.phone.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`
