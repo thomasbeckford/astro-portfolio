@@ -111,7 +111,7 @@ const display = 'font-(family-name:--display) font-extrabold tracking-[-0.025em]
       </section>
 
       <!-- Club stripes between sections, drawn across on scroll (motion.ts). -->
-      <div class="mt-28"><div aria-hidden="true" data-stripes class="grid gap-2"><i class="h-8 bg-fill"></i><i class="h-4 bg-navy"></i><i class="h-2 bg-pop"></i><i class="h-4 bg-navy"></i><i class="h-8 bg-fill"></i></div></div>
+      <div class="mt-28"><div aria-hidden="true" data-stripes class="grid gap-2"><i class="h-8 bg-navy"></i><i class="h-2 bg-pop"></i><i class="h-3 bg-fill"></i><i class="h-2 bg-pop"></i><i class="h-8 bg-navy"></i></div></div>
 
       <!-- The three steps as giant type with one big way to get in touch, the steps themselves beside them, the add-ons as a quiet list. -->
       <section id="services" class="scroll-mt-20 px-4 py-24 sm:px-8 sm:py-32">
@@ -119,7 +119,7 @@ const display = 'font-(family-name:--display) font-extrabold tracking-[-0.025em]
         <div class="grid gap-14 lg:grid-cols-[1fr_1.1fr]">
           <div>
             <h2 data-split class:list={[display, 'text-5xl leading-[0.95] sm:text-7xl']}>Three steps. <span class="text-muted">You only do the first one.</span></h2>
-            <a href={whatsapp} target="_blank" rel="noopener" class="btn mt-12 min-h-20 w-full justify-between rounded-2xl bg-whatsapp px-7 text-xl text-[#1f2737] shadow-xl shadow-whatsapp/20 hover:shadow-whatsapp/40 sm:text-2xl">
+            <a href={whatsapp} target="_blank" rel="noopener" class="btn mt-12 min-h-20 w-full justify-between rounded-2xl bg-whatsapp px-7 text-xl text-white shadow-xl shadow-navy/20 hover:shadow-navy/40 sm:text-2xl">
               <span class="flex items-center gap-3"><svg viewBox="0 0 24 24" class="size-8" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>WhatsApp me</span>
               <span class="text-sm font-medium max-sm:hidden">One message, no forms</span>
             </a>
@@ -135,7 +135,7 @@ const display = 'font-(family-name:--display) font-extrabold tracking-[-0.025em]
             </ol>
             <ul class="mt-10 grid gap-x-8 gap-y-4 sm:grid-cols-2">
               {extras.map((x) => (
-                <li class="flex flex-wrap items-baseline justify-between gap-x-3 border-b border-line pb-3"><span class="font-semibold">{x.name}</span><span class="font-mono text-sm text-accent">{x.price}</span></li>
+                <li class="flex flex-wrap items-baseline justify-between gap-x-3 border-b border-line pb-3"><span class="font-semibold">{x.name}</span><span class="font-mono text-sm text-accent-ink">{x.price}</span></li>
               ))}
             </ul>
           </div>
@@ -188,7 +188,7 @@ const display = 'font-(family-name:--display) font-extrabold tracking-[-0.025em]
           <div class="divide-y divide-line border-y border-line">
             {faqs.map(([q, a]) => (
               <details name="faq" class="faq group">
-                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-lg font-semibold text-pretty transition-colors hover:text-accent group-open:text-accent [&::-webkit-details-marker]:hidden">
+                <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-5 text-lg font-semibold text-pretty transition-colors hover:text-accent-ink group-open:text-accent-ink [&::-webkit-details-marker]:hidden">
                   <span class="transition-transform duration-300 group-hover:translate-x-1.5 group-open:translate-x-1.5">{q}</span><span aria-hidden="true" class="grid size-8 shrink-0 place-items-center rounded-full text-2xl leading-none text-muted ring-1 ring-line [transition:color_.3s,background-color_.3s,box-shadow_.3s,rotate_.3s_cubic-bezier(0.34,1.56,0.64,1)] group-hover:ring-accent group-open:rotate-45 group-open:bg-fill group-open:text-on-accent group-open:ring-accent">+</span>
                 </summary>
                 <p class="max-w-2xl pb-6 text-pretty text-muted">{a}</p>
@@ -200,16 +200,16 @@ const display = 'font-(family-name:--display) font-extrabold tracking-[-0.025em]
 
       <!-- The ask on the brand blue, the stripes running into it: one giant line, one person behind it, three ways in.
            WhatsApp leads (it's how trades message), email sits behind it as the quiet option. -->
-      <div aria-hidden="true" data-stripes class="grid gap-2"><i class="h-2 bg-pop"></i><i class="h-4 bg-navy"></i><i class="h-3 bg-fill"></i><i class="h-6 bg-fill"></i></div>
-      <section id="contact" class="accent-band relative scroll-mt-20 px-4 py-24 [--color-fill-ink:#e0e7ff] [--color-fill:#ffffff] [--color-on-accent:#1d4ed8] sm:px-8 sm:py-32">
-        <h2 data-split class:list={[display, 'text-[13vw] leading-[0.9] sm:text-[11vw]']}>Yours <span class="text-navy">next.</span></h2>
+      <div aria-hidden="true" data-stripes class="grid gap-2"><i class="h-2 bg-pop"></i><i class="h-3 bg-fill"></i><i class="h-4 bg-navy"></i><i class="h-6 bg-navy"></i></div>
+      <section id="contact" class="accent-band relative scroll-mt-20 px-4 py-24 [--color-fill-ink:#fde3d4] [--color-fill:#ffffff] [--color-on-accent:#1c2334] sm:px-8 sm:py-32">
+        <h2 data-split class:list={[display, 'text-[13vw] leading-[0.9] sm:text-[11vw]']}>Yours <span class="text-pop">next.</span></h2>
         <div class="mt-12 grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div class="flex items-center gap-4">
             <span class="size-20 shrink-0 overflow-hidden rounded-2xl bg-accent/10 sm:size-24"><Image src={thomasFull} alt="Thomas Beckford" width={360} class="w-[180%] max-w-none -ml-[33%]" /></span>
             <p class="max-w-md text-lg text-pretty text-muted"><span class="text-fg">I'm Thomas.</span> Tell me what you do and where. I'll come back with a fixed price. No obligation, no deposit. <span class="text-fg">Usually replies within a day.</span></p>
           </div>
           <div class="flex flex-wrap gap-3">
-            <a href={whatsapp} target="_blank" rel="noopener" class="btn min-h-14 bg-whatsapp px-7 text-[#1f2737] shadow-xl shadow-navy/25 hover:scale-[1.03] max-sm:w-full"><svg viewBox="0 0 24 24" class="size-6" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>WhatsApp me</a>
+            <a href={whatsapp} target="_blank" rel="noopener" class="btn min-h-14 bg-white px-7 text-[#1f2737] shadow-xl shadow-black/25 hover:scale-[1.03] max-sm:w-full"><svg viewBox="0 0 24 24" class="size-6" fill="currentColor" aria-hidden="true"><path d={waPath} /></svg>WhatsApp me</a>
             <a href={mailto} class="btn-ghost min-h-14 px-7 max-sm:w-full">Or email for a quote<Icon name="arrow" class="size-4" /></a>
             <p class="w-full text-sm font-medium text-balance text-fg">No deposit · Pay when you’re happy · Domain in your name</p>
           </div>

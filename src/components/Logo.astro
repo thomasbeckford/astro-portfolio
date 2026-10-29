@@ -1,8 +1,9 @@
 ---
-// Brand: the "tebeck" wordmark, hand-built from round strokes (no font), its full stop in the brand blue (tebeck.dev).
+// Brand: the "tebeck" wordmark, hand-built from round strokes (no font), its full stop in the brand terracotta (tebeck.dev).
 // public/favicon.svg is the short form, "t.". Strokes are centerlines on a baseline at y=100, x-height 34..100.
 // `animated`: once per load the word writes itself stroke by stroke, in pen order, then the dot drops in and bounces;
-// after that the dot gets restless now and then and taps out a double hop. Off by default: a logo that moves on every
+// after that the dot breathes, and every few seconds it turns into a little bug that hops along the tops of the letters
+// to the t (each letter dips as it lands) and leaps back home. Off by default: a logo that moves on every
 // page gets tiring. Hovering the link always runs a wave through the letters and the dot jumps at the end of it.
 const { class: cls = 'text-2xl', animated = false } = Astro.props
 
@@ -33,3 +34,63 @@ let n = 0
     <g class="wordmark-hop"><circle class="wordmark-dot" cx="420" cy="91" r="18" /></g>
   </svg>
 </span>
+
+<script>
+  // The dot's walk (see the header). Stops are the dot's centre resting on a letter top: stroke top minus half the
+  // stroke (9) minus the dot's radius (18). [x, y, letter index that dips].
+  const HOME = [420, 91]
+  // Only x-height tops, and low arcs: the ascenders would carry it out of the nav's pill.
+  const STOPS = [[386, 7, 5], [302, 14, 4], [230, 14, 3], [170, 14, 2], [86, 14, 1], [40, 7, 0]]
+  const HOP = 340, REST = 160, LOOK = 700, LEAP = 900
+
+  function tour(svg: SVGSVGElement) {
+    const dot = svg.querySelector<SVGGElement>('.wordmark-hop')!
+    const letters = svg.querySelectorAll<SVGGElement>('g[style*="--i"]')
+    const frames: Keyframe[] = []
+    let t = 0
+    const at = (x: number, y: number, scale: string) => frames.push({ offset: t, translate: `${x - HOME[0]}px ${y - HOME[1]}px`, scale })
+    const hop = (a: number[], b: number[], ms: number, h: number) => {
+      const t0 = t
+      for (let i = 1; i <= 10; i++) {
+        const k = i / 10
+        t = t0 + ms * k
+        const s = k < 0.2 ? '0.9 1.15' : k === 1 ? '1.25 0.75' : '1'
+        at(a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k - 4 * h * k * (1 - k), s)
+      }
+    }
+    at(HOME[0], HOME[1], '1')
+    t = 120
+    at(HOME[0], HOME[1], '1.2 0.8')
+    let from = HOME
+    const dips: [number, number][] = []
+    for (const s of STOPS) {
+      hop(from, s, HOP, 24)
+      dips.push([t, s[2]])
+      t += REST
+      at(s[0], s[1], '1')
+      from = s
+    }
+    t += LOOK
+    at(from[0], from[1], '1.2 0.8')
+    // Home in two goes: a long leap back onto the k's arm, then down to the baseline (straight home would cut the k's leg).
+    hop(from, STOPS[0], LEAP, 35)
+    dips.push([t, STOPS[0][2]])
+    t += REST
+    at(STOPS[0][0], STOPS[0][1], '1')
+    hop(STOPS[0], HOME, HOP, 20)
+    t += 220
+    at(HOME[0], HOME[1], '1')
+    const total = t
+    for (const f of frames) f.offset = (f.offset as number) / total
+    dot.animate(frames, { duration: total })
+    for (const [ms, i] of dips)
+      letters[i]?.animate([{ translate: '0 0' }, { translate: '0 7px' }, { translate: '0 0' }], { duration: 260, delay: ms, easing: 'ease-out' })
+    return total
+  }
+
+  if (matchMedia('(prefers-reduced-motion: no-preference)').matches)
+    for (const svg of document.querySelectorAll<SVGSVGElement>('.wordmark-play svg')) {
+      const loop = () => setTimeout(() => loop(), document.hidden ? 2000 : tour(svg) + 7000) // hidden tab: just check again later
+      setTimeout(loop, 4200) // after the write-in and the drop
+    }
+</script>

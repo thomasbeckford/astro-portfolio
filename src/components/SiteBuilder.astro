@@ -190,7 +190,8 @@ const s = sites[0]
 
   /* Club stripes coming out from behind the phone (a stub in the air to its left read as broken): three thin bands, blue, mint, blue (five heavy ones plus a sticker read as too much, Thomas). */
   .sb-stripes { position: absolute; inset-inline: 30% -50vw; top: 58%; display: grid; gap: 0.375rem }
-  .sb-stripes i { height: 1rem; background: var(--color-fill) }
+  .sb-stripes i { height: 1rem; background: var(--color-navy) }
+  .sb-stripes i:nth-child(3) { height: 0.5rem; background: var(--color-fill) }
   .sb-stripes i:nth-child(2) { height: 0.375rem; background: var(--color-pop) }
 
   @media (max-width: 1023px) {

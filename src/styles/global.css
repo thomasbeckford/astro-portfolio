@@ -6,18 +6,21 @@
   --color-fg: #1f2737;
   --color-muted: #5d6577;
   --color-line: rgb(31 39 55 / 0.12);
-  --color-accent: #2563eb;
-  /* Accent for small text: #2563eb is 4.46:1 on paper, under AA. */
-  --color-accent-ink: #1d4ed8;
-  --color-whatsapp: #25d366;
-  /* Text on an accent fill. White on the blue; flips to near-black on the showcase neons. */
+  /* Terracotta, in small doses: the slate ink carries the dark surfaces (Thomas: the blue was too common, and not too much orange). */
+  --color-accent: #c2603c;
+  /* Accent for small text: #c2603c is 4.1:1 on paper, under AA; this is 4.9:1. */
+  --color-accent-ink: #a84b2a;
+  /* WhatsApp CTAs wear the ink, not the WhatsApp green: the green fought the terracotta (Thomas). */
+  --color-whatsapp: #1c2334;
+  /* Text on an accent fill. White on the terracotta; flips to near-black on the showcase neons. */
   --color-on-accent: #ffffff;
-  /* Fills under on-accent text (buttons, badges). Always the brand blue, so white text passes AA on the dark home too. */
-  --color-fill: #2563eb;
-  --color-fill-ink: #1d4ed8;
-  /* Club colours for the home's bands and tapes: deep navy and one mint pop next to the brand blue (Thomas: never yellow with the blue, it reads Boca; orange did not fit either). */
-  --color-navy: #0b1a3d;
-  --color-pop: #34d399;
+  /* Fills under on-accent text (buttons, badges). A step darker than the accent so white text passes AA (5:1). */
+  --color-fill: #b4532f;
+  --color-fill-ink: #a84b2a;
+  /* Club colours for the home's bands and tapes: slate ink and a soft peach next to the terracotta. Blue, mint and
+     the WhatsApp green all fought it (Thomas, 2026-10-29); never yellow either. */
+  --color-navy: #1c2334;
+  --color-pop: #f5c4a8;
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
   /* Headlines. */
@@ -75,7 +78,7 @@
   --color-line: rgb(255 255 255 / 0.22);
   --color-accent: #ffffff;
   --color-accent-ink: #ffffff;
-  @apply bg-[#2563eb] text-fg;
+  @apply bg-navy text-fg;
 }
 
 /* /work (BaseLayout `dark`): near-black showcase. Same token names, so every utility follows. --color-accent is a
@@ -83,7 +86,7 @@
 @property --color-accent {
   syntax: '<color>';
   inherits: true;
-  initial-value: #2563eb;
+  initial-value: #c2603c;
 }
 @utility showcase {
   --color-paper: #07080b;
@@ -91,8 +94,8 @@
   --color-fg: #e9ecf2;
   --color-muted: #8d95a7;
   --color-line: rgb(255 255 255 / 0.09);
-  /* The brand blue, a step lighter than #2563eb so it reads on near-black. */
-  --color-accent: #3b82f6;
+  /* The terracotta, a step lighter so it reads on near-black. */
+  --color-accent: #e07a55;
   --color-accent-ink: var(--color-accent);
   --color-on-accent: #ffffff;
   --display-track: -0.025em;
@@ -130,7 +133,7 @@
   --color-fg: #eef0f6;
   --color-muted: #9aa1b2;
   --color-line: rgb(255 255 255 / 0.1);
-  --color-accent: #60a5fa;
+  --color-accent: #f0956f;
   @apply bg-night text-fg;
 }
 
@@ -173,7 +176,7 @@
   @apply btn bg-fill text-on-accent hover:bg-fill-ink;
 }
 @utility btn-whatsapp {
-  @apply btn text-fg ring-1 ring-fg/20 ring-inset before:size-2 before:rounded-full before:bg-whatsapp hover:bg-whatsapp hover:text-[#1f2737] hover:ring-transparent hover:before:bg-[#1f2737]; /* quiet next to the primary: a green dot, green on hover */
+  @apply btn text-fg ring-1 ring-fg/20 ring-inset before:size-2 before:rounded-full before:bg-fill hover:bg-whatsapp hover:text-white hover:ring-transparent hover:before:bg-pop; /* quiet next to the primary: a dot, ink on hover */
 }
 @utility btn-ghost {
   @apply btn text-fg ring-1 ring-fg/15 ring-inset hover:bg-white hover:shadow-lg hover:shadow-fg/10 hover:ring-fg/30;
@@ -395,7 +398,7 @@
 @keyframes kit-curtain-out { to { visibility: hidden; } }
 @media (prefers-reduced-motion: reduce) { [data-curtain] { display: none; } }
 
-/* Wordmark (Logo.astro): round strokes drawn as an inline SVG, a blue full stop. Sized by font-size like text. */
+/* Wordmark (Logo.astro): round strokes drawn as an inline SVG, a terracotta full stop. Sized by font-size like text. */
 .wordmark {
   display: inline-block;
   line-height: 1;
@@ -420,16 +423,17 @@
   fill: var(--color-fill);
   stroke: none;
 }
-/* `animated`: each stroke draws itself in pen order (--s), then the dot drops and bounces twice (1.5s); every 9s after
-   it taps a double hop. Hover: a wave through the letters, the dot jumps as it arrives. Lengths are SVG user units
-   (1em of wordmark is ~115). The still wordmark is the reduced-motion fallback. */
+/* `animated`: each stroke draws itself in pen order (--s), then the dot drops and bounces twice (1.5s). After that it
+   breathes (on `transform`, so it stacks with the walk's scale/translate) and every few seconds walks the letters
+   (script in Logo.astro): alive all the time, Thomas 2026-10-29. Hover: a wave through the letters, the dot jumps as it
+   arrives. Lengths are SVG user units (1em of wordmark is ~115). The still wordmark is the reduced-motion fallback. */
 @media (prefers-reduced-motion: no-preference) {
   .wordmark-play path {
     stroke-dasharray: 1 2;
     animation: wm-write 0.24s cubic-bezier(0.4, 0, 0.6, 1) calc(0.1s + var(--s) * 0.13s) both;
   }
   .wordmark-play .wordmark-dot {
-    animation: wm-drop 1.1s 1.45s both, wm-idle 9s 4.5s infinite;
+    animation: wm-drop 1.1s 1.45s both, wm-breathe 2.4s 2.6s ease-in-out infinite;
   }
   @media (hover: hover) {
     a:hover > .wordmark g {
@@ -490,28 +494,13 @@
     rotate: -4deg;
   }
 }
-/* Mostly still; the last 10% of each cycle is a small squash, hop, squash, hop. */
-@keyframes wm-idle {
+@keyframes wm-breathe {
   0%,
-  88%,
   100% {
-    translate: 0 0;
-    scale: 1;
+    transform: scale(1);
   }
-  90%,
-  95% {
-    scale: 1.2 0.8;
-    animation-timing-function: cubic-bezier(0, 0, 0.5, 1);
-  }
-  92.5% {
-    translate: 0 -68px;
-    scale: 0.92 1.1;
-    animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
-  }
-  97.5% {
-    translate: 0 -33px;
-    scale: 1;
-    animation-timing-function: cubic-bezier(0.5, 0, 1, 1);
+  50% {
+    transform: scale(1.1, 0.9);
   }
 }
 @keyframes wm-hop {
@@ -575,12 +564,12 @@
 
 /* Home: a deep navy section (Bigger jobs). Same token names, so every utility inside follows. */
 @utility navy-band {
-  --color-paper: #102350;
+  --color-paper: #262f44;
   --color-fg: #f1f4fb;
-  --color-muted: #a9b4cf;
+  --color-muted: #a9b0c2;
   --color-line: rgb(255 255 255 / 0.12);
-  --color-accent: #34d399;
-  --color-accent-ink: #34d399;
+  --color-accent: #f0956f;
+  --color-accent-ink: #f0956f;
   @apply bg-navy text-fg;
   & .btn-ghost:hover {
     background-color: rgb(255 255 255 / 0.08);
