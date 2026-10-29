@@ -88,9 +88,41 @@ let n = 0
     return total
   }
 
+  // Keepy-uppy: the k's leg (knee at 362,58) kicks the dot straight up, a few times, higher each time.
+  function juggle(svg: SVGSVGElement) {
+    const dot = svg.querySelector<SVGGElement>('.wordmark-hop')!
+    const leg = svg.querySelectorAll<SVGGElement>('g[style*="--i"]')[5]?.querySelectorAll('path')[2]
+    if (!leg) return 0
+    leg.style.transformBox = 'view-box'
+    leg.style.transformOrigin = '362px 58px'
+    const frames: Keyframe[] = [{ offset: 0, translate: '0 0', scale: '1' }]
+    let t = 0
+    const kicks: number[] = []
+    for (const h of [40, 52, 70]) {
+      kicks.push(t)
+      t += 90
+      frames.push({ offset: t, translate: '0 0', scale: '0.85 1.2' })
+      const up = 140 + h * 3
+      for (let i = 1; i <= 10; i++) {
+        const k = i / 10
+        frames.push({ offset: t + up * 2 * k, translate: `0 ${-4 * h * k * (1 - k)}px`, scale: k === 1 ? '1.25 0.75' : '1' })
+      }
+      t += up * 2 + 60
+      frames.push({ offset: t, translate: '0 0', scale: '1' })
+    }
+    t += 160
+    frames.push({ offset: t, translate: '0 0', scale: '1' })
+    for (const f of frames) f.offset = (f.offset as number) / t
+    dot.animate(frames, { duration: t })
+    for (const ms of kicks)
+      leg.animate([{ rotate: '0deg' }, { rotate: '-35deg', offset: 0.35 }, { rotate: '0deg' }], { duration: 300, delay: ms, easing: 'ease-out' })
+    return t
+  }
+
   if (matchMedia('(prefers-reduced-motion: no-preference)').matches)
     for (const svg of document.querySelectorAll<SVGSVGElement>('.wordmark-play svg')) {
-      const loop = () => setTimeout(() => loop(), document.hidden ? 2000 : tour(svg) + 7000) // hidden tab: just check again later
+      let n = 0 // alternate: walk, juggle, walk...
+      const loop = () => setTimeout(() => loop(), document.hidden ? 2000 : (n++ % 2 ? juggle(svg) : tour(svg)) + 7000) // hidden tab: just check again later
       setTimeout(loop, 4200) // after the write-in and the drop
     }
 </script>

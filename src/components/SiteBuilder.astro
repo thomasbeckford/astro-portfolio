@@ -34,11 +34,11 @@ const sites = await Promise.all(
 const s = sites[0]
 ---
 
-<!-- The headline (slot) on top, then the page's own pitch (slot "aside"), the try-it line and the phone; the grid
-     below places them per breakpoint. -->
+<!-- The headline (slot), the page's own pitch (slot "aside"), the try-it line and the phone; the grid below places
+     them per breakpoint. -->
 <div data-builder={JSON.stringify(sites)}>
-  <slot />
   <div class="sb-grid">
+    <div class="sb-head"><slot /></div>
     <div class="sb-aside"><slot name="aside" /></div>
     <!-- The try-it is a line of the headline, not a form: the visitor types their name into the sentence itself. -->
     <div class="sb-try">
@@ -71,15 +71,14 @@ const s = sites[0]
 </div>
 
 <style>
-  /* Phones: pitch, try-it, phone. lg: pitch over try-it beside the phone. xl: pitch | phone | try-it under a centred headline. */
-  .sb-grid { display: grid; gap: 2.5rem; margin-top: 2rem; grid-template-areas: 'aside' 'try' 'stage' }
+  /* Phones: headline, pitch, try-it, phone. lg up: one reading column (headline, pitch, try-it) beside the phone, so the
+     eye goes read → act → play with it. (A centred one-line headline over three columns read as cramped, Thomas.) */
+  .sb-grid { display: grid; gap: 2.5rem; grid-template-areas: 'head' 'aside' 'try' 'stage' }
+  .sb-head { grid-area: head }
   .sb-aside { grid-area: aside }
   .sb-try { grid-area: try; max-width: 40rem }
   .sb-stage { grid-area: stage }
-  @media (min-width: 1024px) { .sb-grid { grid-template-columns: minmax(0, 1fr) 28rem; grid-template-rows: 1fr auto auto 1fr; grid-template-areas: '. stage' 'aside stage' 'try stage' '. stage'; column-gap: 3rem; row-gap: 3rem } }
-  @media (min-width: 1280px) {
-    .sb-grid { grid-template-columns: minmax(0, 1fr) 28rem minmax(0, 1fr); grid-template-rows: auto; grid-template-areas: 'aside stage try'; align-items: center; margin-top: 0.5rem }
-  }
+  @media (min-width: 1024px) { .sb-grid { grid-template-columns: minmax(0, 1fr) 28rem; grid-template-rows: 1fr auto auto auto 1fr; grid-template-areas: '. stage' 'head stage' 'aside stage' 'try stage' '. stage'; column-gap: 4rem; row-gap: 2rem } .sb-try { margin-top: 1.5rem } }
   /* Same display face as the h1, a size down: the grey lead-in and what they type on an underline, wrapping as one sentence. */
   .sb-line { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 0.3em; font-family: var(--display); font-weight: 800; letter-spacing: -0.025em; font-size: clamp(1.5rem, 2.4vw, 2.125rem); line-height: 1.1 }
   .sb-line span { color: var(--color-muted) }
