@@ -1,8 +1,6 @@
-// Scroll motion for /templates: Lenis smooth scroll driving GSAP ScrollTrigger, plus effects switched on by data
+// Scroll motion for /templates: GSAP ScrollTrigger on native scroll, plus effects switched on by data
 // attributes so the kit sections stay markup only. Reduced motion gets none of it: native scroll, static layout,
 // videos on their poster (CSS keeps the marquee still too).
-import Lenis from 'lenis'
-import 'lenis/dist/lenis.css'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
@@ -45,13 +43,7 @@ if (!reduced) {
   videos.forEach((v) => io.observe(v))
 }
 
-if (!reduced) {
-  // Lenis smooths wheel scrolling only; touch keeps the phone's own scroll.
-  const lenis = new Lenis({ anchors: true })
-  lenis.on('scroll', ScrollTrigger.update)
-  gsap.ticker.add((t) => lenis.raf(t * 1000))
-  gsap.ticker.lagSmoothing(0)
-}
+// Native scroll, no Lenis: the smoothed wheel read as lag (Thomas, 2026-11-12).
 
 const mm = gsap.matchMedia()
 mm.add('(prefers-reduced-motion: no-preference)', () => {
@@ -121,7 +113,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
     tl.to(card, { autoAlpha: 0, duration: 0.4 })
       .call(() => { i = (i + 1) % sites.length; show(sites[i]); input.textContent = old; label.textContent = 'Publish changes' })
       .set(site, { autoAlpha: 0 }).set(panel, { autoAlpha: 1 })
-      .set(btn, { backgroundColor: 'rgba(0,0,0,0.1)', color: '#222' }).set(field, { boxShadow: '0 0 0 0px #b4532f' })
+      .set(btn, { backgroundColor: 'rgba(0,0,0,0.1)', color: '#222' }).set(field, { boxShadow: '0 0 0 0px #1f7a4d' })
       .set(live, { boxShadow: '0 0 0 0em transparent' })
       .set(cursor, { autoAlpha: 0, scale: 1, x: () => st.offsetWidth * 0.75, y: () => st.offsetHeight * 0.9 })
       .fromTo(card, { yPercent: -8, autoAlpha: 0 }, { yPercent: 0, autoAlpha: 1, duration: 0.7, ease: 'power3.out', immediateRender: false })
@@ -129,7 +121,7 @@ mm.add('(prefers-reduced-motion: no-preference)', () => {
       .to(cursor, { autoAlpha: 1, duration: 0.2 })
       .to(cursor, { x: () => at(field, 0.7).x, y: () => at(field, 0.7).y, duration: 0.9 })
       .call(click)
-      .set(field, { boxShadow: '0 0 0 2px #b4532f' }, '+=0.15')
+      .set(field, { boxShadow: '0 0 0 2px #1f7a4d' }, '+=0.15')
       .call(() => { input.textContent = '' })
       .set(caret, { opacity: 1 })
       .fromTo(typed, { n: 0 }, { n: 1, duration: 0.9, ease: 'none', onUpdate: () => { const t = sites[i].cta; input.textContent = t.slice(0, Math.round(typed.n * t.length)) } })

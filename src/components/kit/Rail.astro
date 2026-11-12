@@ -16,7 +16,7 @@ const btn = 'grid size-12 place-items-center rounded-full border border-(--fg)/2
       <button type="button" data-rail-next aria-label="Next" class={btn}>→</button>
     </div>
   </div>
-  <ul data-rail-track data-lenis-prevent-horizontal tabindex="0" aria-label="Recent work, scroll sideways" class="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4 [scrollbar-width:none] sm:scroll-px-8 sm:px-8">
+  <ul data-rail-track tabindex="0" aria-label="Recent work, scroll sideways" class="mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-px-4 px-4 pb-4 [scrollbar-width:none] sm:scroll-px-8 sm:px-8">
     {items.map((p, i) => (
       <li class="w-[80vw] shrink-0 snap-start sm:w-[45vw] lg:w-[30vw]">
         <div class="aspect-[4/5] overflow-hidden bg-(--panel)"><Image src={pics[i]} alt="" widths={[500, 800, 1200]} sizes="(min-width: 1024px) 30vw, (min-width: 640px) 45vw, 80vw" class="size-full object-cover" /></div>

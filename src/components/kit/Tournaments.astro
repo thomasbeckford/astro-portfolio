@@ -61,7 +61,7 @@ const lines = {
       <h3 class="font-(family-name:--display) text-[clamp(1.75rem,5vw,3.25rem)] leading-none font-black tracking-[-0.03em] uppercase">The league cup</h3>
       <p class="text-sm text-(--muted)">Example draw and scores, against par.</p>
     </div>
-    <div tabindex="0" role="region" aria-label="League cup draw" data-lenis-prevent-horizontal class="-mx-4 mt-8 snap-x snap-mandatory scroll-px-4 overflow-x-auto px-4 pb-4 [scrollbar-color:var(--accent)_transparent] [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--accent) sm:-mx-8 sm:scroll-px-8 sm:px-8 sm:[scrollbar-width:thin] xl:mx-0 xl:overflow-visible xl:px-0">
+    <div tabindex="0" role="region" aria-label="League cup draw" class="-mx-4 mt-8 snap-x snap-mandatory scroll-px-4 overflow-x-auto px-4 pb-4 [scrollbar-color:var(--accent)_transparent] [scrollbar-width:none] focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-(--accent) sm:-mx-8 sm:scroll-px-8 sm:px-8 sm:[scrollbar-width:thin] xl:mx-0 xl:overflow-visible xl:px-0">
       <div data-cup class="grid w-max grid-cols-[repeat(7,11rem)] gap-x-6 xl:w-auto xl:grid-cols-7">
         {cols.map((c, ci) => <h4 id={`cup-${ci}`} class:list={['text-xs font-semibold tracking-widest uppercase', c.side === 'c' ? 'text-center text-(--accent)' : 'text-(--muted)', c.side === 'r' && 'text-right']}>{c.name}</h4>)}
         {cols.map((c, ci) => (

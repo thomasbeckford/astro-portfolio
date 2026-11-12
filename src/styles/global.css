@@ -6,21 +6,21 @@
   --color-fg: #1f2737;
   --color-muted: #5d6577;
   --color-line: rgb(31 39 55 / 0.12);
-  /* Terracotta, in small doses: the slate ink carries the dark surfaces (Thomas: the blue was too common, and not too much orange). */
-  --color-accent: #c2603c;
-  /* Accent for small text: #c2603c is 4.1:1 on paper, under AA; this is 4.9:1. */
-  --color-accent-ink: #a84b2a;
+  /* Workwear green, in small doses: the slate carries the dark surfaces (Thomas, 2026-11-12: the terracotta read as
+     Claude's brand, the navy as black, and mustard didn't land). */
+  --color-accent: #1f7a4d;
+  /* Accent for small text: #1f7a4d is 4.6:1 on paper, just over AA; this is the safe step. */
+  --color-accent-ink: #18633e;
   /* WhatsApp CTAs wear the ink, not the WhatsApp green: the green fought the terracotta (Thomas). */
-  --color-whatsapp: #1c2334;
-  /* Text on an accent fill. White on the terracotta; flips to near-black on the showcase neons. */
+  --color-whatsapp: #33415c;
+  /* Text on an accent fill: white on the green is 5.3:1. */
   --color-on-accent: #ffffff;
-  /* Fills under on-accent text (buttons, badges). A step darker than the accent so white text passes AA (5:1). */
-  --color-fill: #b4532f;
-  --color-fill-ink: #a84b2a;
-  /* Club colours for the home's bands and tapes: slate ink and a soft peach next to the terracotta. Blue, mint and
-     the WhatsApp green all fought it (Thomas, 2026-10-29); never yellow either. */
-  --color-navy: #1c2334;
-  --color-pop: #f5c4a8;
+  /* Fills under on-accent text (buttons, badges): the accent itself; hover goes a step darker. */
+  --color-fill: #1f7a4d;
+  --color-fill-ink: #18633e;
+  /* Club colours for the home's bands and tapes: slate and a pale green next to the accent. */
+  --color-navy: #33415c;
+  --color-pop: #d6efe1;
   --font-sans: 'Geist Variable', system-ui, sans-serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
   /* Headlines. */
@@ -86,7 +86,7 @@
 @property --color-accent {
   syntax: '<color>';
   inherits: true;
-  initial-value: #c2603c;
+  initial-value: #1f7a4d;
 }
 @utility showcase {
   --color-paper: #07080b;
@@ -94,10 +94,10 @@
   --color-fg: #e9ecf2;
   --color-muted: #8d95a7;
   --color-line: rgb(255 255 255 / 0.09);
-  /* The terracotta, a step lighter so it reads on near-black. */
-  --color-accent: #e07a55;
+  /* The green, a step lighter so it reads on near-black (ink text on it). */
+  --color-accent: #4cc38a;
   --color-accent-ink: var(--color-accent);
-  --color-on-accent: #ffffff;
+  --color-on-accent: #10131a;
   --display-track: -0.025em;
   color-scheme: dark;
   @media (prefers-reduced-motion: no-preference) {
