@@ -89,8 +89,10 @@ const vars = `${theme};background:${c.bg}`
        says it can be made real. Headline sizes were fitted to the example's name, so they scale by the length change. -->
   <script is:inline define:vars={{ mark: d.mark, full: d.name, wa: whatsapp(''), trade: d.trade.toLowerCase() }}>
     (() => {
-      let name = ''
-      try { if (new URLSearchParams(location.search).has('yours')) name = sessionStorage.getItem('tebeck-yours') || '' } catch {}
+      // ?name= is the outreach link (/templates/roofer?name=Smith+Roofing&ref=smith-roofing); ?yours comes from the home.
+      const q = new URLSearchParams(location.search)
+      let name = (q.get('name') || '').trim().slice(0, 40)
+      try { if (!name && q.has('yours')) name = sessionStorage.getItem('tebeck-yours') || '' } catch {}
       if (!name) return
       // The full name goes first, or "Ironside Roofing" comes out as "<name> Roofing".
       const esc = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), re = new RegExp(`${esc(full)}|${esc(mark)}`, 'g') // case-sensitive: the decorator's "two coats" copy stays
